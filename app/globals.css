@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+:root,
+[data-theme="matrix"] {
+  --theme-accent: #00ff66;
+  --theme-accent-rgb: 0, 255, 102;
+  --theme-accent-soft: rgba(0, 255, 102, 0.12);
+  --theme-accent-glow: rgba(0, 255, 102, 0.40);
+  --theme-border: rgba(0, 255, 102, 0.28);
+  --theme-border-hover: rgba(0, 255, 102, 0.75);
+  --theme-bg: #040906;
+  --theme-surface: #07130b;
+  --theme-card: #0b1c11;
+  --theme-card-hover: #102919;
+  --theme-badge-bg: rgba(0, 255, 102, 0.15);
+  --theme-text-main: #f0fdf4;
+  --theme-text-muted: #86efac;
+  --theme-text-subtle: #4ade80;
+}
+
+[data-theme="quantum"] {
+  --theme-accent: #00f0ff;
+  --theme-accent-rgb: 0, 240, 255;
+  --theme-accent-soft: rgba(0, 240, 255, 0.12);
+  --theme-accent-glow: rgba(0, 240, 255, 0.40);
+  --theme-border: rgba(0, 240, 255, 0.28);
+  --theme-border-hover: rgba(0, 240, 255, 0.75);
+  --theme-bg: #030814;
+  --theme-surface: #061126;
+  --theme-card: #0a1a3b;
+  --theme-card-hover: #0f2654;
+  --theme-badge-bg: rgba(0, 240, 255, 0.15);
+  --theme-text-main: #f0f9ff;
+  --theme-text-muted: #7dd3fc;
+  --theme-text-subtle: #38bdf8;
+}
+
+[data-theme="gothic"] {
+  --theme-accent: #ff1f5a;
+  --theme-accent-rgb: 255, 31, 90;
+  --theme-accent-soft: rgba(255, 31, 90, 0.12);
+  --theme-accent-glow: rgba(255, 31, 90, 0.45);
+  --theme-border: rgba(255, 31, 90, 0.30);
+  --theme-border-hover: rgba(255, 31, 90, 0.80);
+  --theme-bg: #09050c;
+  --theme-surface: #120a17;
+  --theme-card: #1c0f24;
+  --theme-card-hover: #291535;
+  --theme-badge-bg: rgba(255, 31, 90, 0.15);
+  --theme-text-main: #fff1f2;
+  --theme-text-muted: #fda4af;
+  --theme-text-subtle: #fb7185;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  background-color: var(--theme-bg);
+  color: #f1f5f9;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  background-color: var(--theme-bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  transition: background-color 0.35s ease;
+}
+
+::selection {
+  background-color: rgba(var(--theme-accent-rgb), 0.35);
+  color: #ffffff;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--theme-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--theme-accent-rgb), 0.25);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--theme-accent-rgb), 0.45);
+}
+
+/* Code & Mono font helpers */
+.font-mono-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Glow and outline utility classes */
+.theme-glow {
+  box-shadow: 0 0 25px -5px var(--theme-accent-glow);
+}
+
+.theme-glow-sm {
+  box-shadow: 0 0 12px -2px var(--theme-accent-glow);
+}
+
+.theme-border {
+  border-color: var(--theme-border);
+}
+
+.theme-border-hover:hover {
+  border-color: var(--theme-border-hover);
+}
+
+/* Subtle scanline overlay for retro-tech immersion */
+.tech-grid-overlay {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
