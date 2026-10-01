@@ -243,4 +243,4 @@ Distributed under the [MIT License](LICENSE). See `LICENSE` for more information
 
 ---
 
-**Ahmetcan Bağlı** — [GitHub](https://github.com/Fylgja0) · [LinkedIn](https://www.linkedin.com/in/ahmetcanbagli) · [Website](https://ahmetcanbagli.dev)
+**Ahmetcan Bağlı** — [GitHub](https://github.com/Fylgja0) · [LinkedIn](https://www.linkedin.com/in/ahmetcanbagli)
