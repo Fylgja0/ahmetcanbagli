@@ -7,7 +7,7 @@
 
 > Production-grade personal portfolio of **Ahmetcan Bağlı**, Big Data Analytics student (Associate Degree) at **Manisa Celal Bayar University** and software developer candidate focusing on **C#**, **.NET 10**, **Entity Framework Core 10**, **Microsoft SQL Server**, and **Python Data Science / ML**.
 
-* **Live Website:** [https://ahmetcanbagli.dev](https://ahmetcanbagli.dev)
+* **Live Website:** [https://ahmetcanbagli-portfolio.vercel.app](https://ahmetcanbagli-portfolio.vercel.app)
 * **GitHub Profile:** [@Fylgja0](https://github.com/Fylgja0)
 * **LinkedIn Profile:** [/in/ahmetcanbagli](https://www.linkedin.com/in/ahmetcanbagli)
 * **Contact Email:** `a.can.bagli@gmail.com`
@@ -167,7 +167,7 @@ This repository is optimized for one-click deployment on [Vercel](https://vercel
 
 3. **Custom Domain Setup:**
    * In your Vercel Project Dashboard, navigate to **Settings** > **Domains**.
-   * Enter your custom domain (e.g., `ahmetcanbagli.dev`).
+   * Enter your custom domain (e.g., `ahmetcanbagli-portfolio.vercel.app`).
    * Add the provided `A` or `CNAME` records at your DNS registrar.
    * Vercel will automatically provision SSL certificates and route traffic.
 

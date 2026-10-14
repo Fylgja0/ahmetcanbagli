@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { usePortfolio } from '@/context/portfolio-context';
 import { NAV_ITEMS, THEME_CONFIGS, PERSONAL_INFO } from '@/lib/data';
 import { LanguageId, ThemeId } from '@/types/portfolio';
@@ -23,8 +25,6 @@ const LANGUAGES: { id: LanguageId; label: string; code: string }[] = [
   { id: 'ru', label: 'Русский', code: 'RU' },
 ];
 
-const SECTIONS = ['hero', 'about', 'skills', 'projects', 'education', 'focus', 'contact'] as const;
-
 export function Navbar() {
   const {
     theme,
@@ -33,11 +33,10 @@ export function Navbar() {
     setLanguage,
     animationsEnabled,
     toggleAnimations,
-    activeSection,
-    setActiveSection,
     t,
   } = usePortfolio();
 
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -56,24 +55,15 @@ export function Navbar() {
     setMobileMenuOpen(false);
   });
 
-  // Scroll detection for navbar background & active section
+  // Scroll detection for navbar background styling
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-
-      const scrollPos = window.scrollY + 180;
-      for (let i = SECTIONS.length - 1; i >= 0; i--) {
-        const el = document.getElementById(SECTIONS[i]);
-        if (el && el.offsetTop <= scrollPos) {
-          setActiveSection(SECTIONS[i]);
-          break;
-        }
-      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [setActiveSection]);
+  }, []);
 
   const handleThemeSelect = (id: ThemeId) => {
     setTheme(id);
@@ -95,8 +85,9 @@ export function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand / Logo */}
-        <a
-          href="#hero"
+        <Link
+          href="/"
+          onClick={() => setMobileMenuOpen(false)}
           className="group flex items-center gap-2.5 text-white font-mono-code font-bold tracking-tight text-sm sm:text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)] rounded px-1.5 py-1"
         >
           <div className="w-8 h-8 rounded border border-[var(--theme-border)] bg-[var(--theme-card)] flex items-center justify-center text-[var(--theme-accent)] group-hover:scale-105 transition-transform">
@@ -112,7 +103,7 @@ export function Navbar() {
               {t.nav.brandSub}
             </span>
           </div>
-        </a>
+        </Link>
 
         {/* Desktop Navigation Links */}
         <nav
@@ -120,10 +111,9 @@ export function Navbar() {
           className="hidden lg:flex items-center gap-1 xl:gap-2 text-xs font-mono-code"
         >
           {NAV_ITEMS.map((item) => {
-            const sectionId = item.href.replace('#', '');
-            const isActive = activeSection === sectionId;
+            const isActive = pathname === item.href;
             return (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 className={`px-3 py-1.5 rounded transition-colors duration-150 relative ${
@@ -136,7 +126,7 @@ export function Navbar() {
                 {isActive && (
                   <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-[var(--theme-accent)] rounded-full" />
                 )}
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -290,10 +280,9 @@ export function Navbar() {
         <div className="lg:hidden border-t border-[var(--theme-border)] bg-[var(--theme-surface)]/95 backdrop-blur-xl px-4 py-4 space-y-3 font-mono-code text-sm">
           <nav aria-label="Mobile Navigation" className="flex flex-col space-y-1">
             {NAV_ITEMS.map((item) => {
-              const sectionId = item.href.replace('#', '');
-              const isActive = activeSection === sectionId;
+              const isActive = pathname === item.href;
               return (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
@@ -305,7 +294,7 @@ export function Navbar() {
                 >
                   <span>{item.label[language]}</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
-                </a>
+                </Link>
               );
             })}
           </nav>

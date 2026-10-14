@@ -13,7 +13,7 @@ export const PERSONAL_INFO = {
   email: 'a.can.bagli@gmail.com',
   github: 'https://github.com/Fylgja0',
   linkedin: 'https://www.linkedin.com/in/ahmetcanbagli',
-  canonicalUrl: 'https://ahmetcanbagli.dev/',
+  canonicalUrl: 'https://ahmetcanbagli-portfolio.vercel.app/',
 };
 
 export const THEME_CONFIGS: ThemeConfig[] = [
@@ -73,12 +73,21 @@ export const THEME_CONFIGS: ThemeConfig[] = [
 export const NAV_ITEMS: NavItem[] = [
   {
     label: {
+      tr: 'Ana Sayfa',
+      en: 'Home',
+      de: 'Startseite',
+      ru: 'Главная',
+    },
+    href: '/',
+  },
+  {
+    label: {
       tr: 'Hakkımda',
       en: 'About',
       de: 'Über mich',
       ru: 'Обо мне',
     },
-    href: '#about',
+    href: '/about',
   },
   {
     label: {
@@ -87,7 +96,7 @@ export const NAV_ITEMS: NavItem[] = [
       de: 'Kenntnisse',
       ru: 'Навыки',
     },
-    href: '#skills',
+    href: '/skills',
   },
   {
     label: {
@@ -96,7 +105,7 @@ export const NAV_ITEMS: NavItem[] = [
       de: 'Projekte',
       ru: 'Проекты',
     },
-    href: '#projects',
+    href: '/projects',
   },
   {
     label: {
@@ -105,7 +114,7 @@ export const NAV_ITEMS: NavItem[] = [
       de: 'Ausbildung',
       ru: 'Образование',
     },
-    href: '#education',
+    href: '/education',
   },
   {
     label: {
@@ -114,7 +123,7 @@ export const NAV_ITEMS: NavItem[] = [
       de: 'Fokus',
       ru: 'Фокус',
     },
-    href: '#focus',
+    href: '/focus',
   },
   {
     label: {
@@ -123,7 +132,7 @@ export const NAV_ITEMS: NavItem[] = [
       de: 'Kontakt',
       ru: 'Контакты',
     },
-    href: '#contact',
+    href: '/contact',
   },
 ];
 

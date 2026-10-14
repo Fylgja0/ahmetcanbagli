@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import { AppShell } from '@/components/layout/AppShell';
 
 export const viewport: Viewport = {
   themeColor: '#00ff66',
@@ -9,7 +10,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://ahmetcanbagli.dev'),
+  metadataBase: new URL('https://ahmetcanbagli-portfolio.vercel.app'),
   title: 'Ahmetcan Bağlı | Big Data Analytics Student & Software Developer Candidate',
   description:
     'Personal portfolio of Ahmetcan Bağlı, Big Data Analytics student (Associate Degree) at Manisa Celal Bayar University focusing on C#, .NET 10, SQL Server, and Python data science.',
@@ -26,11 +27,11 @@ export const metadata: Metadata = {
     'Big Data Analytics',
     'Associate Degree',
   ],
-  authors: [{ name: 'Ahmetcan Bağlı', url: 'https://ahmetcanbagli.dev' }],
+  authors: [{ name: 'Ahmetcan Bağlı', url: 'https://ahmetcanbagli-portfolio.vercel.app' }],
   creator: 'Ahmetcan Bağlı',
   publisher: 'Ahmetcan Bağlı',
   alternates: {
-    canonical: 'https://ahmetcanbagli.dev/',
+    canonical: 'https://ahmetcanbagli-portfolio.vercel.app/',
   },
   robots: {
     index: true,
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     alternateLocale: ['tr_TR', 'de_DE', 'ru_RU'],
-    url: 'https://ahmetcanbagli.dev/',
+    url: 'https://ahmetcanbagli-portfolio.vercel.app/',
     siteName: 'Ahmetcan Bağlı Portfolio',
     title: 'Ahmetcan Bağlı | Big Data Analytics Student & Software Developer Candidate',
     description:
@@ -68,7 +69,7 @@ const personJsonLd = {
   name: 'Ahmetcan Bağlı',
   givenName: 'Ahmetcan',
   familyName: 'Bağlı',
-  url: 'https://ahmetcanbagli.dev/',
+  url: 'https://ahmetcanbagli-portfolio.vercel.app/',
   email: 'mailto:a.can.bagli@gmail.com',
   sameAs: [
     'https://github.com/Fylgja0',
@@ -112,7 +113,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className="antialiased">
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

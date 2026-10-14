@@ -66,7 +66,7 @@ export default function Image() {
             fontSize: '20px',
           }}
         >
-          <span>https://ahmetcanbagli.dev</span>
+          <span>https://ahmetcanbagli-portfolio.vercel.app</span>
           <span>github.com/Fylgja0 · linkedin.com/in/ahmetcanbagli</span>
         </div>
       </div>

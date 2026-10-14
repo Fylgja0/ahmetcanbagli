@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { usePortfolio } from '@/context/portfolio-context';
 import { PERSONAL_INFO } from '@/lib/data';
 import {
@@ -47,20 +48,20 @@ export function HeroSection() {
 
           {/* Action CTAs */}
           <div className="flex flex-wrap items-center gap-4 pt-2">
-            <a
-              href="#projects"
+            <Link
+              href="/projects"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded font-mono-code text-sm font-semibold bg-[var(--theme-accent)] text-black hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--theme-accent)] shadow-md"
             >
               <span>{t.hero.primaryCta}</span>
               <ArrowRight className="w-4 h-4" aria-hidden="true" />
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              href="/contact"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded font-mono-code text-sm font-semibold border border-[var(--theme-border)] bg-[var(--theme-card)] text-white hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]"
             >
               <span>{t.hero.secondaryCta}</span>
               <Mail className="w-4 h-4" aria-hidden="true" />
-            </a>
+            </Link>
           </div>
 
           {/* Social profile buttons row */}

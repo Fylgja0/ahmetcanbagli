@@ -2,6 +2,7 @@ import { LanguageId, ThemeId } from '@/types/portfolio';
 
 export interface UiTranslations {
   nav: {
+    home: string;
     about: string;
     skills: string;
     projects: string;
@@ -18,6 +19,14 @@ export interface UiTranslations {
     brandSub: string;
     navIndex: string;
     mobileSub: string;
+  };
+  pageNav: {
+    backToHome: string;
+    nextPage: string;
+    prevPage: string;
+    explorePages: string;
+    explorePagesSub: string;
+    goToPage: string;
   };
   hero: {
     greeting: string;
@@ -170,6 +179,7 @@ export interface UiTranslations {
 export const translations: Record<LanguageId, UiTranslations> = {
   tr: {
     nav: {
+      home: 'Ana Sayfa',
       about: 'Hakkımda',
       skills: 'Yetenekler',
       projects: 'Projeler',
@@ -186,6 +196,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       brandSub: 'MCBU Büyük Veri Analitiği',
       navIndex: 'Gezinme Menüsü',
       mobileSub: 'MCBU Büyük Veri',
+    },
+    pageNav: {
+      backToHome: 'Ana Sayfaya Dön',
+      nextPage: 'Sonraki Sayfa',
+      prevPage: 'Önceki Sayfa',
+      explorePages: 'Bölümler ve Sayfalar',
+      explorePagesSub: 'Özel sayfalara giderek tüm detayları, proje mimarilerini ve yetenekleri inceleyin.',
+      goToPage: 'Sayfayı Aç',
     },
     hero: {
       greeting: 'Merhaba, ben',
@@ -354,6 +372,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
   },
   en: {
     nav: {
+      home: 'Home',
       about: 'About',
       skills: 'Skills',
       projects: 'Projects',
@@ -370,6 +389,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       brandSub: 'MCBU Big Data Analytics',
       navIndex: 'Navigation Index',
       mobileSub: 'MCBU Big Data',
+    },
+    pageNav: {
+      backToHome: 'Back to Home',
+      nextPage: 'Next Page',
+      prevPage: 'Previous Page',
+      explorePages: 'Sections & Pages',
+      explorePagesSub: 'Navigate to dedicated pages to explore project architecture, skills, and background in depth.',
+      goToPage: 'Open Page',
     },
     hero: {
       greeting: "Hello, I'm",
@@ -538,6 +565,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
   },
   de: {
     nav: {
+      home: 'Startseite',
       about: 'Über mich',
       skills: 'Kenntnisse',
       projects: 'Projekte',
@@ -554,6 +582,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       brandSub: 'MCBU Big Data Analytics',
       navIndex: 'Navigationsmenü',
       mobileSub: 'MCBU Big Data',
+    },
+    pageNav: {
+      backToHome: 'Zurück zur Startseite',
+      nextPage: 'Nächste Seite',
+      prevPage: 'Vorherige Seite',
+      explorePages: 'Bereiche & Seiten',
+      explorePagesSub: 'Besuchen Sie die einzelnen Seiten für ausführliche Details zu Projekten, Kenntnissen und Ausbildung.',
+      goToPage: 'Seite öffnen',
     },
     hero: {
       greeting: 'Hallo, ich bin',
@@ -722,6 +758,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
   },
   ru: {
     nav: {
+      home: 'Главная',
       about: 'Обо мне',
       skills: 'Навыки',
       projects: 'Проекты',
@@ -738,6 +775,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       brandSub: 'MCBU Анализ больших данных',
       navIndex: 'Навигация',
       mobileSub: 'MCBU Большие данные',
+    },
+    pageNav: {
+      backToHome: 'Назад на главную',
+      nextPage: 'Следующая страница',
+      prevPage: 'Предыдущая страница',
+      explorePages: 'Разделы и страницы',
+      explorePagesSub: 'Перейдите на отдельные страницы для подробного ознакомления с проектами, навыками и образованием.',
+      goToPage: 'Перейти',
     },
     hero: {
       greeting: 'Привет, я',

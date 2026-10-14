@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://ahmetcanbagli.dev/sitemap.xml',
+    sitemap: 'https://ahmetcanbagli-portfolio.vercel.app/sitemap.xml',
   };
 }
