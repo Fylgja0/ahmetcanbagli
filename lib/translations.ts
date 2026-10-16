@@ -85,6 +85,7 @@ export interface UiTranslations {
     subtitle: string;
     viewDeepDive: string;
     viewGithub: string;
+    viewLive: string;
     sourceCode: string;
     keyHighlights: string;
     architectureHeader: string;
@@ -273,9 +274,10 @@ export const translations: Record<LanguageId, UiTranslations> = {
     projects: {
       sectionTag: '// 03. PROJELER',
       title: 'Teknik Projeler & Detaylar',
-      subtitle: 'C#/.NET veritabanı uygulaması ve Python makine öğrenmesi veri analitiği çalışması.',
+      subtitle: 'C#/.NET veritabanı uygulamaları, veri hikâyeciliği/görselleştirme ve Python makine öğrenmesi çalışmaları.',
       viewDeepDive: 'Teknik Detayları Aç',
       viewGithub: 'GitHub Kaynak Kodu',
+      viewLive: 'Canlı Demo',
       sourceCode: 'Kaynak Kod',
       keyHighlights: 'Öne Çıkan Başlıklar',
       architectureHeader: 'Proje Bileşenleri & Durum',
@@ -466,9 +468,10 @@ export const translations: Record<LanguageId, UiTranslations> = {
     projects: {
       sectionTag: '// 03. PROJECTS',
       title: 'Projects & Technical Breakdown',
-      subtitle: 'A C#/.NET database-backed application and a Python machine learning data analysis study.',
+      subtitle: 'C#/.NET database-backed applications, interactive data storytelling, and Python machine learning pipelines.',
       viewDeepDive: 'Technical Deep Dive',
       viewGithub: 'GitHub Repository',
+      viewLive: 'Live Demo',
       sourceCode: 'Source Code',
       keyHighlights: 'Key Highlights',
       architectureHeader: 'Components & Project State',
@@ -659,9 +662,10 @@ export const translations: Record<LanguageId, UiTranslations> = {
     projects: {
       sectionTag: '// 03. PROJEKTE',
       title: 'Projekte & Technische Analyse',
-      subtitle: 'Eine datenbankgestützte C#/.NET-Anwendung und eine Data-Science-Studie in Python.',
+      subtitle: 'C#/.NET-Datenbankanwendungen, interaktives Data Storytelling und Data-Science-Pipelines in Python.',
       viewDeepDive: 'Technische Details ansehen',
       viewGithub: 'GitHub Repository',
+      viewLive: 'Live-Demo',
       sourceCode: 'Quellcode',
       keyHighlights: 'Wichtige Highlights',
       architectureHeader: 'Komponenten & Projektstand',
@@ -852,9 +856,10 @@ export const translations: Record<LanguageId, UiTranslations> = {
     projects: {
       sectionTag: '// 03. ПРОЕКТЫ',
       title: 'Проекты & Технический анализ',
-      subtitle: 'Приложение для работы с БД на C#/.NET и учебное исследование по машинному обучению на Python.',
+      subtitle: 'Приложения баз данных на C#/.NET, интерактивный дата-сторителлинг и пайплайны машинного обучения на Python.',
       viewDeepDive: 'Технические подробности',
       viewGithub: 'Репозиторий GitHub',
+      viewLive: 'Демо / Сайт',
       sourceCode: 'Исходный код',
       keyHighlights: 'Ключевые особенности',
       architectureHeader: 'Компоненты и статус проекта',

@@ -41,9 +41,9 @@ export function HomeFeaturedTeaser() {
           </Link>
         </div>
 
-        {/* 2 Featured Project Teaser Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 pt-6 border-t border-white/10">
-          {FEATURED_PROJECTS.slice(0, 2).map((proj) => (
+        {/* Featured Project Teaser Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/10">
+          {FEATURED_PROJECTS.map((proj) => (
             <div
               key={proj.id}
               className="p-4 rounded-xl border border-white/10 bg-[var(--theme-surface)] flex flex-col justify-between"
@@ -64,15 +64,28 @@ export function HomeFeaturedTeaser() {
               </div>
 
               <div className="flex items-center justify-between pt-3 border-t border-white/5 font-mono-code text-xs">
-                <a
-                  href={proj.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>GitHub</span>
-                </a>
+                <div className="flex items-center gap-3">
+                  <a
+                    href={proj.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-white/60 hover:text-white transition-colors"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>GitHub</span>
+                  </a>
+                  {proj.liveUrl && (
+                    <a
+                      href={proj.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-[var(--theme-accent)] hover:underline"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>{t.projects.viewLive}</span>
+                    </a>
+                  )}
+                </div>
 
                 <Link
                   href="/projects"

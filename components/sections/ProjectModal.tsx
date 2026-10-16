@@ -65,7 +65,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         {/* Modal Top Header */}
         <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs font-mono-code text-[var(--theme-accent)]">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono-code text-[var(--theme-accent)]">
               <span>
                 {project.category === 'backend'
                   ? t.projects.modalSpecBackend
@@ -73,6 +73,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               </span>
               <span className="text-white/20" aria-hidden="true">·</span>
               <span className="text-white/50">{project.slug}</span>
+              {project.liveUrl && (
+                <>
+                  <span className="text-white/20" aria-hidden="true">·</span>
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-emerald-400 hover:underline"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>{t.projects.viewLive}</span>
+                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  </a>
+                </>
+              )}
             </div>
             <h3 id="modal-title" className="text-2xl sm:text-3xl font-extrabold text-white">
               {project.title}
@@ -202,16 +217,31 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             {t.projects.modalClose}
           </button>
 
-          <a
-            href={project.githubUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded font-semibold bg-[var(--theme-accent)] text-black hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--theme-accent)]"
-          >
-            <Github className="w-4 h-4" aria-hidden="true" />
-            <span>{t.projects.modalRepoButton}</span>
-            <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-          </a>
+          <div className="flex flex-wrap items-center gap-2.5">
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded font-semibold bg-[var(--theme-accent)] text-black hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--theme-accent)]"
+              >
+                <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                <span>{t.projects.viewLive}</span>
+              </a>
+            )}
+            <a
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={project.liveUrl
+                ? "inline-flex items-center gap-2 px-4 py-2.5 rounded border border-[var(--theme-border)] text-white/90 hover:text-white hover:border-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]"
+                : "inline-flex items-center gap-2 px-5 py-2.5 rounded font-semibold bg-[var(--theme-accent)] text-black hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--theme-accent)]"}
+            >
+              <Github className="w-4 h-4" aria-hidden="true" />
+              <span>{t.projects.modalRepoButton}</span>
+              <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+          </div>
         </div>
       </div>
     </div>

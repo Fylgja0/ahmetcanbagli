@@ -591,6 +591,242 @@ export const FEATURED_PROJECTS: Project[] = [
       ],
     },
   },
+  {
+    id: 'turkiye-elektrik-donusumu',
+    slug: 'turkiye-elektrik-donusumu',
+    title: "Türkiye'nin Elektrik Dönüşümü",
+    category: 'datascience',
+    githubUrl: 'https://github.com/Fylgja0/turkiye-elektrik-donusumu',
+    liveUrl: 'https://turkiye-elektrik-donusumu.vercel.app/',
+    technologies: [
+      'Python',
+      'Pandas',
+      'NumPy',
+      'Matplotlib',
+      'Jupyter Notebook',
+      'JavaScript',
+      'HTML5',
+      'CSS3',
+      'SVG',
+      'Scrollytelling',
+      'Ember Data',
+      'Vercel',
+    ],
+    tagline: {
+      tr: "Ember 2000–2024 elektrik verileriyle Türkiye'nin enerji üretimini, kaynak bileşimini ve fosil yakıt payını inceleyen etkileşimli veri hikâyesi (scrollytelling).",
+      en: "Interactive scrollytelling data story analyzing Turkey's electricity generation, source mix, and fossil fuel share using Ember 2000–2024 energy data.",
+      de: "Interaktive Data Story (Scrollytelling) zur Untersuchung der Stromerzeugung, des Energiemixes und des Anteils fossiler Brennstoffe in der Türkei (Ember 2000–2024).",
+      ru: 'Интерактивный дата-сторителлинг (scrollytelling), исследующий динамику выработки электроэнергии, структуру источников и долю ископаемого топлива в Турции по данным Ember 2000–2024.',
+    },
+    overview: {
+      tr: "Ember'ın Avrupa yıllık elektrik verileri (Europe CSV) temel alınarak geliştirilen proje, Türkiye'nin 2000–2024 yılları arasındaki 25 yıllık elektrik dönüşümünü araştırmaktadır. Python ve Pandas ile veri yükleme, eksik ve tekrarlı kayıt denetimleri ile kaynak hiyerarşisi filtrelemeleri gerçekleştirilmiştir. Elde edilen bulgular; kaydırma adımlarına göre dinamik güncellenen SVG grafikleri, kullanıcı kontrollü etkileşimli filtreleme paneli ve modern scrollytelling mimarisi ile web üzerinde etkileşimli bir veri anlatısına dönüştürülmüştür. Analiz, toplam üretim 2,7 katına çıkarken yenilenebilir payının yükselişini ve fosil yakıtların miktar ile oran bazındaki tezat dinamiğini ortaya koymaktadır.",
+      en: "Built upon Ember's European Yearly Electricity Data (Europe CSV), this project investigates Turkey's 25-year power transformation between 2000 and 2024. Data ingestion, anomaly validation, and hierarchical source aggregation were conducted using Python and Pandas in Jupyter Notebook. The findings were translated into an interactive web data story featuring scrollytelling with dynamic SVG visualizations and a user-driven exploration panel. The analysis demonstrates how electricity production grew 2.7x while renewable generation expanded and fossil fuels exhibited divergent trends in absolute output versus percentage share.",
+      de: 'Auf Basis der jährlichen Stromdaten von Ember (Europe CSV) untersucht dieses Projekt den 25-jährigen Wandel der türkischen Stromerzeugung zwischen 2000 und 2024. Datenbereinigung, Konsistenzprüfungen und Aggregationen wurden mit Python und Pandas in Jupyter Notebooks durchgeführt. Die Ergebnisse wurden als interaktive Data Story mit Scrollytelling, dynamischen SVG-Grafiken und einem explorativen Analyse-Dashboard umgesetzt. Die Studie veranschaulicht das 2,7-fache Produktionswachstum und die gegenläufige Dynamik zwischen absoluter fossiler Erzeugung und prozentualem Anteil.',
+      ru: 'Проект на основе ежегодных данных Ember по электроэнергетике (Europe CSV) исследует 25-летнюю трансформацию энергетического сектора Турции с 2000 по 2024 год. Загрузка данных, фильтрация, проверка иерархии источников и обработка пропусков выполнены с помощью Python и Pandas в Jupyter Notebook. Результаты оформлены в виде интерактивного веб-сторителлинга со скроллинг-навигацией, динамическими векторными SVG-графиками и панелью самостоятельного исследования данных. Анализ показывает 2,7-кратный рост выработки и ключевое расхождение между абсолютным объемом генерации и долей ископаемого топлива.',
+    },
+    highlights: {
+      tr: [
+        { label: 'Veri Kaynağı', value: 'Ember 2000–2024 (CC BY 4.0)' },
+        { label: 'Veri Boru Hattı', value: 'Python & Pandas Notebook' },
+        { label: 'Arayüz Mimarisi', value: 'Etkileşimli SVG & Scrollytelling' },
+        { label: 'Canlı Dağıtım', value: 'Vercel Edge Platform' },
+      ],
+      en: [
+        { label: 'Data Source', value: 'Ember 2000–2024 (CC BY 4.0)' },
+        { label: 'Data Pipeline', value: 'Python & Pandas Notebook' },
+        { label: 'UI Architecture', value: 'Interactive SVG & Scrollytelling' },
+        { label: 'Deployment', value: 'Vercel Edge Platform' },
+      ],
+      de: [
+        { label: 'Datenquelle', value: 'Ember 2000–2024 (CC BY 4.0)' },
+        { label: 'Datenpipeline', value: 'Python & Pandas Notebook' },
+        { label: 'UI-Architektur', value: 'Interaktive SVGs & Scrollytelling' },
+        { label: 'Deployment', value: 'Vercel Edge Platform' },
+      ],
+      ru: [
+        { label: 'Источник данных', value: 'Ember 2000–2024 (CC BY 4.0)' },
+        { label: 'Пайплайн данных', value: 'Python & Pandas Notebook' },
+        { label: 'Архитектура UI', value: 'Векторные SVG и Scrollytelling' },
+        { label: 'Деплой', value: 'Платформа Vercel' },
+      ],
+    },
+    keyConcepts: {
+      tr: [
+        'Ember Yıllık Elektrik Veri Seti (Avrupa CSV) ile Zaman Serisi Analizi',
+        'Python ve Pandas ile Veri Doğrulama, Eksik/Yinelenen Veri Kontrolleri',
+        'Kaynak Hiyerarşisi Ayrıştırması (Fosil, Hidro, Rüzgâr, Güneş, Biyokütle)',
+        'Miktar (TWh) ile Oransal Pay (%) Arasındaki İstatistiksel Ayrım',
+        'Adım Adım Kaydırmalı Veri Hikâyeciliği (Scrollytelling & Intersection Observer)',
+        'Özel SVG Görselleştirmeleri ve Sıfır Harici Kütüphaneli Dinamik Çizim',
+        'Kullanıcı Tanımlı Etkileşimli Filtreleme ve Aralık Seçimi (Kendin Keşfet)',
+      ],
+      en: [
+        'Time Series Energy Data Analysis via Ember Yearly Electricity Dataset',
+        'Data Ingestion, Anomaly Verification & Cleansing with Python & Pandas',
+        'Energy Source Hierarchy Decomposition (Fossil, Hydro, Wind, Solar, Other)',
+        'Distinguishing Absolute Generation (TWh) from Proportional Share (%)',
+        'Step-by-Step Data Storytelling (Scrollytelling & Intersection Observer API)',
+        'Custom Responsive SVG Graphics with Zero-Dependency Dynamic Rendering',
+        'Interactive User Discovery Panel with Source Filtering and Year Slicing',
+      ],
+      de: [
+        'Zeitreihenanalyse mit dem Ember Yearly Electricity Datensatz für Europa',
+        'Datenvalidierung, Bereinigung und Konsistenzprüfung mit Python & Pandas',
+        'Dekonstruktion des Energiemixes (Fossil, Wasserkraft, Wind, Solar, Sonstige)',
+        'Statistische Differenzierung zwischen Absolutmenge (TWh) und Erzeugungsanteil (%)',
+        'Scrollytelling-Narrativ mit nativer Intersection Observer Steuerung',
+        'Responsiv gerenderte SVG-Visualisierungen ohne externe Chart-Bibliotheken',
+        'Interaktives Analyse-Panel für flexible Quellen- und Zeitbereichsfilter',
+      ],
+      ru: [
+        'Анализ временных рядов на основе датасета Ember Yearly Electricity',
+        'Очистка, валидация и агрегация данных с помощью Python и Pandas',
+        'Иерархическая декомпозиция структуры источников (ископаемые, ГЭС, СЭС, ВЭС)',
+        'Разделение абсолютной генерации (ТВт·ч) и процентной доли источников (%)',
+        'Пошаговый дата-сторителлинг (Scrollytelling на базе Intersection Observer)',
+        'Динамический рендеринг векторной SVG-графики без сторонних тяжелых библиотек',
+        'Интерактивная панель исследования с фильтрацией по источникам и годам',
+      ],
+    },
+    architecture: {
+      tr: [
+        {
+          layer: 'Veri Boru Hattı & Hazırlık',
+          role: 'Python, Pandas, Jupyter',
+          details: 'Ember Europe CSV dosyasının okunması, Türkiye filtresi, eksik kayıt kontrolleri, hiyerarşik kaynak toplamlarının ve metriklerinin hesaplanması.',
+        },
+        {
+          layer: 'Keşifsel Analiz & Prototipleme',
+          role: 'NumPy & Matplotlib',
+          details: '25 yıllık trendlerin, kaynak değişimlerinin ve anomalilerin grafiksel doğrulaması; hikâye adımlarının kurgulanması.',
+        },
+        {
+          layer: 'Etkileşimli Veri Hikâyesi (Web)',
+          role: 'HTML5, CSS3, JavaScript, SVG',
+          details: 'Scroll-driven scrollytelling adımları, mobil uyumlu duyarlı SVG çizimleri, filtreleme kontrolleri ve DOM manipülasyonu.',
+        },
+        {
+          layer: 'Yayın & Dağıtım',
+          role: 'Vercel & Git',
+          details: 'GitHub sürüm kontrolü, açık kaynak kod yönetimi, otomatik Vercel dağıtımı ve performans optimizasyonu.',
+        },
+      ],
+      en: [
+        {
+          layer: 'Data Pipeline & Processing',
+          role: 'Python, Pandas, Jupyter',
+          details: 'Parsing Ember Europe CSV, filtering Turkey records, validating anomalies, and calculating generation totals and source shares.',
+        },
+        {
+          layer: 'Exploratory Analysis & Prototyping',
+          role: 'NumPy & Matplotlib',
+          details: 'Visual validation of 25-year trends, shifts across energy sources, and narrative sequencing of story milestones.',
+        },
+        {
+          layer: 'Interactive Data Story (Web)',
+          role: 'HTML5, CSS3, JavaScript, SVG',
+          details: 'Scroll-triggered scrollytelling steps, responsive SVG charting, dynamic metric updates, and client-side filter controls.',
+        },
+        {
+          layer: 'Deployment & CI/CD',
+          role: 'Vercel & Git',
+          details: 'GitHub repository management, reproducible notebook workflow, and automated production hosting on Vercel.',
+        },
+      ],
+      de: [
+        {
+          layer: 'Datenpipeline & Vorbereitung',
+          role: 'Python, Pandas, Jupyter',
+          details: 'Einlesen der Ember-CSV-Daten, Türkei-Filterung, Konsistenzprüfungen und Berechnung relativer sowie absoluter Kennzahlen.',
+        },
+        {
+          layer: 'Explorative Analyse & Prototyping',
+          role: 'NumPy & Matplotlib',
+          details: 'Visuelle Überprüfung der 25-Jahres-Trends und Strukturierung der narrativen Meilensteine.',
+        },
+        {
+          layer: 'Interaktive Data Story (Web)',
+          role: 'HTML5, CSS3, JavaScript, SVG',
+          details: 'Scrollgesteuerte Erzählschritte, responsive SVG-Visualisierungen und dynamische Filterung ohne externe Abhängigkeiten.',
+        },
+        {
+          layer: 'Bereitstellung & Hosting',
+          role: 'Vercel & Git',
+          details: 'Git-Versionskontrolle, reproduzierbare Notebook-Pipeline und automatisiertes Deployment auf Vercel.',
+        },
+      ],
+      ru: [
+        {
+          layer: 'Пайплайн данных и предобработка',
+          role: 'Python, Pandas, Jupyter',
+          details: 'Парсинг европейского CSV Ember, фильтрация данных по Турции, вычисление абсолютных объемов и долей источников.',
+        },
+        {
+          layer: 'Разведочный анализ и прототипирование',
+          role: 'NumPy & Matplotlib',
+          details: 'Графическая верификация трендов за 25 лет и выстраивание структуры повествования.',
+        },
+        {
+          layer: 'Веб-сторителлинг и визуализация',
+          role: 'HTML5, CSS3, JavaScript, SVG',
+          details: 'Скроллинг-навигация, адаптивная векторная графика на SVG, панель интерактивного выбора параметров.',
+        },
+        {
+          layer: 'Деплой и хостинг',
+          role: 'Vercel & Git',
+          details: 'Контроль версий на GitHub, воспроизводимый Jupyter Notebook и автоматический деплой на Vercel.',
+        },
+      ],
+    },
+    engineeringInsights: {
+      tr: [
+        'Veri analizinde mutlak üretim miktarı (TWh) ile oransal pay (%) arasındaki fark netleştirildi; fosil yakıtların payı düşerken üretilen elektriğin arttığı tespiti somutlaştırıldı.',
+        'Dış grafik kütüphaneleri (Chart.js, D3 vb.) yerine hafif ve optimize saf SVG ve JavaScript kullanılarak sıfır harici paket yükü ve anlık sayfa performansı sağlandı.',
+        'Kaydırma adımları (scrollytelling) ile kullanıcı dikkatini dağıtmadan adım adım veri okuma akışı ve Intersection Observer tabanlı akıcı tetikleme kuruldu.',
+        'Kullanıcıların kendi hipotezlerini test edebilmesi için kaynak seçimi ve başlangıç yılı kaydırıcısı içeren etkileşimli bir "Kendin Keşfet" paneli entegre edildi.',
+      ],
+      en: [
+        'Disentangled absolute generation (TWh) from relative share (%), illustrating that fossil output increased in magnitude even as its share of total electricity declined.',
+        'Implemented lightweight custom SVG rendering with pure vanilla JavaScript, eliminating heavy chart library dependencies and ensuring near-instant load times.',
+        'Structured a scrollytelling workflow using the Intersection Observer API, guiding the user through analytical findings without cognitive overload.',
+        'Engineered an interactive "Explore Yourself" panel allowing readers to filter specific energy sources and adjust baseline years dynamically.',
+      ],
+      de: [
+        'Trennung von absoluter Erzeugung (TWh) und relativem Anteil (%), wodurch verdeutlicht wird, dass fossile Strommengen trotz sinkenden Anteils gestiegen sind.',
+        'Vollständiger Verzicht auf schwere Chart-Bibliotheken zugunsten von optimiertem Vanilla JavaScript und nativem SVG für maximale Ladegeschwindigkeit.',
+        'Umsetzung eines flüssigen Scrollytellings via Intersection Observer für eine verständliche narrative Vermittlung der statistischen Daten.',
+        'Integration eines interaktiven Analyse-Bereichs mit Filtern nach Energiequelle und Startjahr zur eigenständigen Datenexploration.',
+      ],
+      ru: [
+        'Четкое разделение абсолютной выработки (ТВт·ч) и процентной доли (%), наглядно доказывающее рост выработки на ископаемом топливе при снижении его общей доли.',
+        'Отказ от тяжелых сторонних библиотек графиков в пользу легковесного чистого JavaScript и SVG для мгновенной загрузки страницы.',
+        'Реализация интерактивного скроллинга через Intersection Observer API, направляющего внимание пользователя по ключевым выводам исследования.',
+        'Разработка пользовательской панели "Исследуй сам" с динамическим выбором источника энергии и начального года анализа.',
+      ],
+    },
+    futureRoadmap: {
+      tr: [
+        'Aylık ve mevsimsel üretim kırılımlarının veri boru hattına eklenmesi.',
+        'Kişi başına düşen elektrik tüketimi ve emisyon yoğunluğu (CO2/kWh) metriklerinin dahil edilmesi.',
+        'Tahminleme modelleri eklenerek 2030 ve 2035 ulusal enerji hedefleriyle karşılaştırmalı simülasyon sunulması.',
+      ],
+      en: [
+        'Integrating monthly and seasonal electricity breakdown into the data pipeline.',
+        'Incorporating per capita consumption and emission intensity metrics (CO2/kWh).',
+        'Developing predictive projections comparing future trajectories with 2030 and 2035 national energy targets.',
+      ],
+      de: [
+        'Erweiterung der Datenpipeline um monatliche und saisonale Erzeugungsdaten.',
+        'Integration von Pro-Kopf-Verbrauch und Emissionsintensitätsmetriken (CO2/kWh).',
+        'Entwicklung prognostischer Modellierungen im Vergleich zu den nationalen Energiezielen 2030 und 2035.',
+      ],
+      ru: [
+        'Добавление в пайплайн ежемесячных и сезонных срезов генерации электроэнергии.',
+        'Включение метрик потребления на душу населения и удельных выбросов (CO2/кВт·ч).',
+        'Построение прогнозных моделей и сравнение с целевыми показателями национальной энергостратегии 2030 и 2035 годов.',
+      ],
+    },
+  },
 ];
 
 export const SKILL_CATEGORIES: SkillCategory[] = [
@@ -762,6 +998,21 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
           ru: 'Балансировка классов через SMOTE (imbalanced-learn), оценка по F1-мере и метрикам классификации.',
         },
         tags: ['imbalanced-learn', 'SMOTE', 'Evaluation Metrics'],
+      },
+      {
+        name: {
+          tr: 'Veri Görselleştirme & Hikâyecilik',
+          en: 'Data Visualization & Storytelling',
+          de: 'Datenvisualisierung & Storytelling',
+          ru: 'Визуализация данных & Сторителлинг',
+        },
+        context: {
+          tr: 'Matplotlib ile analitik grafikler, web ortamında etkileşimli SVG çizimleri ve scrollytelling anlatıları.',
+          en: 'Analytical plots with Matplotlib, interactive web SVG charting, and scrollytelling narratives.',
+          de: 'Analytische Diagramme mit Matplotlib, interaktive Web-SVG-Visualisierungen und Scrollytelling-Narrative.',
+          ru: 'Аналитические графики на Matplotlib, интерактивная веб-графика SVG и формат scrollytelling.',
+        },
+        tags: ['Matplotlib', 'SVG', 'Scrollytelling', 'Data Story'],
       },
     ],
   },

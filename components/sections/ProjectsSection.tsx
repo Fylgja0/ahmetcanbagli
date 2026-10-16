@@ -78,9 +78,9 @@ export function ProjectsSection() {
         </div>
       </div>
 
-      {/* Projects Display: Desktop 2-column Grid; Mobile Swipeable Card Carousel */}
+      {/* Projects Display: Desktop Grid (adaptive up to 3 columns); Mobile Swipeable Card Carousel */}
       <div
-        className="block md:grid md:grid-cols-2 gap-8"
+        className="block md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -157,7 +157,7 @@ export function ProjectsSection() {
               </div>
 
               {/* Card Footer Actions */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-3 font-mono-code text-xs">
+              <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-2.5 font-mono-code text-xs">
                 <button
                   type="button"
                   onClick={() => setSelectedProject(project)}
@@ -167,16 +167,29 @@ export function ProjectsSection() {
                   <span>{t.projects.viewDeepDive}</span>
                 </button>
 
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-[var(--theme-border)] text-white/80 hover:text-white hover:border-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]"
-                >
-                  <Github className="w-3.5 h-3.5 text-[var(--theme-accent)]" aria-hidden="true" />
-                  <span>GitHub</span>
-                  <ExternalLink className="w-3 h-3 text-white/40" aria-hidden="true" />
-                </a>
+                <div className="flex items-center gap-2">
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] border border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>{t.projects.viewLive}</span>
+                    </a>
+                  )}
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-[var(--theme-border)] text-white/80 hover:text-white hover:border-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]"
+                  >
+                    <Github className="w-3.5 h-3.5 text-[var(--theme-accent)]" aria-hidden="true" />
+                    <span>GitHub</span>
+                    <ExternalLink className="w-3 h-3 text-white/40" aria-hidden="true" />
+                  </a>
+                </div>
               </div>
             </article>
           );

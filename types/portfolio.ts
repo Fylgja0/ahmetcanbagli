@@ -27,6 +27,7 @@ export interface Project {
   title: string;
   category: 'backend' | 'datascience';
   githubUrl: string;
+  liveUrl?: string;
   technologies: string[];
   tagline: Record<LanguageId, string>;
   overview: Record<LanguageId, string>;

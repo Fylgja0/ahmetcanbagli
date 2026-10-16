@@ -53,12 +53,12 @@ export function HomeSectionsNavigator() {
       href: '/projects',
       title: t.nav.projects,
       desc: {
-        tr: 'Car Management System ve Makine Öğrenmesi Tahmin projeleri derinlemesine mimari analizi.',
-        en: 'Car Management System and ML Predictor with in-depth architectural breakdown.',
-        de: 'Car Management System und ML-Vorhersage mit detaillierter Architekturanalyse.',
-        ru: 'Car Management System и ML-прогнозирование с глубоким архитектурным анализом.',
+        tr: 'C#/.NET veritabanı, interaktif veri hikâyeciliği ve makine öğrenmesi projelerinin mimari analizi.',
+        en: 'C#/.NET database, interactive data storytelling, and machine learning architectural breakdowns.',
+        de: 'Detaillierte Analyse von C#/.NET-Datenbanken, interaktivem Data Storytelling und ML-Projekten.',
+        ru: 'Архитектурный анализ проектов баз данных C#/.NET, интерактивного дата-сторителлинга и ML.',
       },
-      tags: ['Backend', 'Data Science', 'Open Source'],
+      tags: ['Backend', 'Data Science', 'Data Story'],
     },
     {
       id: 'education',

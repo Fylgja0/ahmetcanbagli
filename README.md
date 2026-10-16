@@ -81,7 +81,7 @@ This portfolio is engineered with modern frontend practices to represent a softw
 ### Core Development Domains Represented
 * **Backend:** C#, .NET 10, Entity Framework Core 10, LINQ, OOP, Code First
 * **Databases:** Microsoft SQL Server, Relational Modeling, T-SQL, DbContext Migrations
-* **Data Science & ML:** Python, Pandas, Scikit-learn, CatBoost, SMOTE, EDA, NumPy
+* **Data Science & ML:** Python, Pandas, Scikit-learn, CatBoost, SMOTE, EDA, NumPy, Data Storytelling, SVG Visualizations
 
 ---
 
@@ -98,6 +98,13 @@ This portfolio is engineered with modern frontend practices to represent a softw
 * **Stack:** Python, Pandas, Scikit-learn, CatBoost, imbalanced-learn (SMOTE), NumPy
 * **GitHub Repository:** [Fylgja0/ecommerce-return-prediction](https://github.com/Fylgja0/ecommerce-return-prediction)
 * **Highlights:** Academic machine learning pipeline predicting transaction return outcomes. Includes exploratory data analysis (EDA), SMOTE class balancing, and CatBoost/Scikit-learn classification evaluation (F1-score, Confusion Matrix).
+
+### 3. Türkiye'nin Elektrik Dönüşümü (Turkey's Electricity Transformation)
+* **Domain:** Interactive Data Storytelling & Energy Analytics
+* **Stack:** Python, Pandas, NumPy, Matplotlib, Jupyter Notebook, Vanilla JavaScript, HTML5, CSS3, SVG, Ember Data, Vercel
+* **Live Demo:** [turkiye-elektrik-donusumu.vercel.app](https://turkiye-elektrik-donusumu.vercel.app/)
+* **GitHub Repository:** [Fylgja0/turkiye-elektrik-donusumu](https://github.com/Fylgja0/turkiye-elektrik-donusumu)
+* **Highlights:** Scrollytelling data story exploring 25 years (2000–2024) of electricity generation data from Ember. Features dynamic SVG chart transitions, zero external charting libraries, and an interactive "explore yourself" filter panel.
 
 ---
 
