@@ -83,6 +83,11 @@ interface MouseState {
 export function AnimatedBackground() {
   const { theme, animationsEnabled } = usePortfolio();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationsEnabledRef = useRef(animationsEnabled);
+
+  useEffect(() => {
+    animationsEnabledRef.current = animationsEnabled;
+  }, [animationsEnabled]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -123,16 +128,6 @@ export function AnimatedBackground() {
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('mouseleave', handleMouseLeave);
-
-    // If animations are paused, clear canvas and exit early
-    if (!animationsEnabled) {
-      ctx.clearRect(0, 0, width, height);
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseleave', handleMouseLeave);
-      };
-    }
 
     const isMobile = width < 768;
 
@@ -419,6 +414,9 @@ export function AnimatedBackground() {
     const render = (currentTime: number) => {
       animationFrameId = requestAnimationFrame(render);
 
+      // Akış durdurulduğunda yeni kare hesaplamayı durdur: mevcut çizim ekranda sabit kalsın (freeze)
+      if (!animationsEnabledRef.current) return;
+
       const elapsed = currentTime - lastDrawTime;
       if (elapsed < frameInterval) return;
       lastDrawTime = currentTime - (elapsed % frameInterval);
@@ -436,6 +434,15 @@ export function AnimatedBackground() {
       }
     };
 
+    // İlk statik kareyi hemen çiz
+    if (theme === 'matrix') {
+      renderMatrixCyber();
+    } else if (theme === 'quantum') {
+      renderQuantum(performance.now());
+    } else if (theme === 'gothic') {
+      renderGothic(performance.now());
+    }
+
     animationFrameId = requestAnimationFrame(render);
 
     return () => {
@@ -444,7 +451,7 @@ export function AnimatedBackground() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [theme, animationsEnabled]);
+  }, [theme]);
 
   const canvasOpacity =
     theme === 'matrix' ? 'opacity-40 sm:opacity-50' : 'opacity-60 sm:opacity-70';

@@ -12,6 +12,7 @@ import {
   Mail,
   ArrowRight,
   Sparkles,
+  Trophy,
 } from 'lucide-react';
 
 export function HomeSectionsNavigator() {
@@ -89,18 +90,32 @@ export function HomeSectionsNavigator() {
       tags: ['EF Core 10', 'CatBoost', 'EDA'],
     },
     {
+      id: 'oduller',
+      badge: '06_AWARDS',
+      icon: Trophy,
+      href: '/oduller',
+      title: 'Ödüller & Başarılar',
+      desc: {
+        tr: 'Yarışmalar, burslar, hackathon dereceleri ve PostgreSQL veritabanından dinamik gelen başarılar.',
+        en: 'Awards, scholarships, hackathons, and dynamic achievements served live from PostgreSQL.',
+        de: 'Auszeichnungen, Stipendien und Erfolge, live bereitgestellt über PostgreSQL.',
+        ru: 'Награды, стипендии и достижения, динамически загружаемые из базы данных PostgreSQL.',
+      },
+      tags: ['PostgreSQL', 'Neon', 'Hackathon', 'SQL'],
+    },
+    {
       id: 'contact',
-      badge: '06_CONTACT',
+      badge: '07_CONTACT',
       icon: Mail,
       href: '/contact',
       title: t.nav.contact,
       desc: {
-        tr: 'Doğrudan e-posta taslağı oluşturucu, profesyonel kanallar ve staj olanakları için iletişim.',
-        en: 'Interactive email draft builder, professional social profiles, and internship outreach.',
-        de: 'Interaktiver E-Mail-Entwurf-Generator, berufliche Profile und Kontakt für Praktika.',
-        ru: 'Интерактивный генератор писем, профессиональные контакты и открытость к стажировкам.',
+        tr: 'Doğrudan veritabanına kayıt formlu iletişim, KVKK onayı ve profesyonel kanallar.',
+        en: 'Database-backed contact form with GDPR/KVKK consent and professional outreach.',
+        de: 'Datenbankbasiertes Kontaktformular mit KVKK-Zustimmung und beruflichen Kanälen.',
+        ru: 'Форма обратной связи с сохранением в БД, согласием на обработку данных и контактами.',
       },
-      tags: ['Email', 'GitHub', 'LinkedIn'],
+      tags: ['Email', 'KVKK', 'PostgreSQL'],
     },
   ];
 

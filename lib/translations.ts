@@ -9,6 +9,8 @@ export interface UiTranslations {
     education: string;
     currentFocus: string;
     contact: string;
+    awards?: string;
+    admin?: string;
     toggleTheme: string;
     toggleLang: string;
     animations: string;
@@ -187,6 +189,8 @@ export const translations: Record<LanguageId, UiTranslations> = {
       education: 'Eğitim',
       currentFocus: 'Odak Alanları',
       contact: 'İletişim',
+      awards: 'Ödüller',
+      admin: 'Yönetim Paneli',
       toggleTheme: 'Tema Değiştir',
       toggleLang: 'Dil Seçin',
       animations: 'Animasyon',
@@ -381,6 +385,8 @@ export const translations: Record<LanguageId, UiTranslations> = {
       education: 'Education',
       currentFocus: 'Current Focus',
       contact: 'Contact',
+      awards: 'Awards',
+      admin: 'Admin Panel',
       toggleTheme: 'Switch Theme',
       toggleLang: 'Select Language',
       animations: 'Animations',
@@ -575,6 +581,8 @@ export const translations: Record<LanguageId, UiTranslations> = {
       education: 'Ausbildung',
       currentFocus: 'Fokus',
       contact: 'Kontakt',
+      awards: 'Auszeichnungen',
+      admin: 'Admin-Bereich',
       toggleTheme: 'Design wechseln',
       toggleLang: 'Sprache wählen',
       animations: 'Animation',
@@ -769,6 +777,8 @@ export const translations: Record<LanguageId, UiTranslations> = {
       education: 'Образование',
       currentFocus: 'Текущий фокус',
       contact: 'Контакты',
+      awards: 'Награды',
+      admin: 'Панель управления',
       toggleTheme: 'Сменить тему',
       toggleLang: 'Выбрать язык',
       animations: 'Анимация',

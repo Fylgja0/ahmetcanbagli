@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePortfolio } from '@/context/portfolio-context';
 import { FEATURED_PROJECTS } from '@/lib/data';
+import { Project } from '@/types/portfolio';
+import { getLiveProjects } from '@/app/actions/projects';
 import {
   FolderGit2,
   Mail,
@@ -13,6 +15,15 @@ import {
 
 export function HomeFeaturedTeaser() {
   const { language, t } = usePortfolio();
+  const [projects, setProjects] = useState<Project[]>(FEATURED_PROJECTS);
+
+  useEffect(() => {
+    getLiveProjects().then((data) => {
+      if (Array.isArray(data)) {
+        setProjects(data);
+      }
+    });
+  }, []);
 
   return (
     <div className="space-y-16 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -43,7 +54,7 @@ export function HomeFeaturedTeaser() {
 
         {/* Featured Project Teaser Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/10">
-          {FEATURED_PROJECTS.map((proj) => (
+          {projects.slice(0, 3).map((proj) => (
             <div
               key={proj.id}
               className="p-4 rounded-xl border border-white/10 bg-[var(--theme-surface)] flex flex-col justify-between"
@@ -59,7 +70,7 @@ export function HomeFeaturedTeaser() {
                   {proj.title}
                 </h4>
                 <p className="text-xs text-white/70 leading-relaxed mb-4">
-                  {proj.tagline[language]}
+                  {proj.tagline?.[language] || proj.tagline?.tr || proj.tagline?.en || ''}
                 </p>
               </div>
 

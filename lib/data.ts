@@ -127,6 +127,15 @@ export const NAV_ITEMS: NavItem[] = [
   },
   {
     label: {
+      tr: 'Ödüller',
+      en: 'Awards',
+      de: 'Auszeichnungen',
+      ru: 'Награды',
+    },
+    href: '/oduller',
+  },
+  {
+    label: {
       tr: 'İletişim',
       en: 'Contact',
       de: 'Kontakt',

@@ -93,7 +93,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               {project.title}
             </h3>
             <p className="text-xs sm:text-sm text-white/70 font-mono-code">
-              {project.tagline[language]}
+              {project.tagline?.[language] || project.tagline?.tr || project.tagline?.en || ''}
             </p>
           </div>
 
@@ -109,19 +109,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         </div>
 
         {/* Highlights Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono-code">
-          {project.highlights[language].map((hl) => (
-            <div
-              key={hl.label}
-              className="p-3 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] text-center"
-            >
-              <div className="text-[10.5px] text-white/50 mb-0.5">{hl.label}</div>
-              <div className="text-xs sm:text-sm font-bold text-[var(--theme-accent)]">
-                {hl.value}
+        {((project.highlights?.[language] || project.highlights?.tr || []).length > 0) && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono-code">
+            {(project.highlights?.[language] || project.highlights?.tr || []).map((hl) => (
+              <div
+                key={hl.label}
+                className="p-3 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] text-center"
+              >
+                <div className="text-[10.5px] text-white/50 mb-0.5">{hl.label}</div>
+                <div className="text-xs sm:text-sm font-bold text-[var(--theme-accent)]">
+                  {hl.value}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Detailed Overview */}
         <div className="space-y-3">
@@ -130,35 +132,37 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             <span>{t.projects.modalOverviewTitle}</span>
           </div>
           <p className="text-sm text-white/80 leading-relaxed font-sans">
-            {project.overview[language]}
+            {project.overview?.[language] || project.overview?.tr || project.overview?.en || ''}
           </p>
         </div>
 
         {/* Architecture & Engineering Stack Breakdown */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 text-xs font-mono-code text-white/60 uppercase">
-            <Layers className="w-4 h-4 text-[var(--theme-accent)]" aria-hidden="true" />
-            <span>{t.projects.architectureHeader}</span>
-          </div>
-          <div className="rounded-lg border border-[var(--theme-border)] overflow-hidden font-mono-code text-xs">
-            <div className="grid grid-cols-12 bg-black/40 border-b border-white/10 p-2.5 font-bold text-white/60 text-[11px]">
-              <div className="col-span-3">Katman / Layer</div>
-              <div className="col-span-4">Rol / Role</div>
-              <div className="col-span-5">Teknolojik Detay / Spec</div>
+        {((project.architecture?.[language] || project.architecture?.tr || []).length > 0) && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-xs font-mono-code text-white/60 uppercase">
+              <Layers className="w-4 h-4 text-[var(--theme-accent)]" aria-hidden="true" />
+              <span>{t.projects.architectureHeader}</span>
             </div>
-            <div className="divide-y divide-white/5">
-              {project.architecture[language].map((arch) => (
-                <div key={arch.layer} className="grid grid-cols-12 p-3 items-center hover:bg-white/5 transition-colors">
-                  <div className="col-span-3 font-semibold text-[var(--theme-accent)]">
-                    {arch.layer}
+            <div className="rounded-lg border border-[var(--theme-border)] overflow-hidden font-mono-code text-xs">
+              <div className="grid grid-cols-12 bg-black/40 border-b border-white/10 p-2.5 font-bold text-white/60 text-[11px]">
+                <div className="col-span-3">Katman / Layer</div>
+                <div className="col-span-4">Rol / Role</div>
+                <div className="col-span-5">Teknolojik Detay / Spec</div>
+              </div>
+              <div className="divide-y divide-white/5">
+                {(project.architecture?.[language] || project.architecture?.tr || []).map((arch) => (
+                  <div key={arch.layer} className="grid grid-cols-12 p-3 items-center hover:bg-white/5 transition-colors">
+                    <div className="col-span-3 font-semibold text-[var(--theme-accent)]">
+                      {arch.layer}
+                    </div>
+                    <div className="col-span-4 text-white/80 text-[11.5px]">{arch.role}</div>
+                    <div className="col-span-5 text-white/60 text-[11px] font-sans">{arch.details}</div>
                   </div>
-                  <div className="col-span-4 text-white/80 text-[11.5px]">{arch.role}</div>
-                  <div className="col-span-5 text-white/60 text-[11px] font-sans">{arch.details}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Key Concepts / Engineering Insights (2 cols) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
@@ -169,7 +173,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               <span>{t.projects.engineeringHeader}</span>
             </div>
             <ul className="space-y-2 text-xs text-white/75 font-sans">
-              {project.engineeringInsights[language].map((insight) => (
+              {(project.engineeringInsights?.[language] || project.engineeringInsights?.tr || []).map((insight) => (
                 <li key={insight} className="flex items-start gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
                   <span>{insight}</span>
@@ -185,7 +189,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               <span>{t.projects.roadmapHeader}</span>
             </div>
             <ul className="space-y-2 text-xs text-white/75 font-sans">
-              {project.futureRoadmap[language].map((item) => (
+              {(project.futureRoadmap?.[language] || project.futureRoadmap?.tr || []).map((item) => (
                 <li key={item} className="flex items-start gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[var(--theme-accent)] mt-1.5 shrink-0" aria-hidden="true" />
                   <span>{item}</span>

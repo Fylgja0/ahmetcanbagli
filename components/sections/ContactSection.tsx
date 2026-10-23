@@ -13,8 +13,11 @@ import {
   CheckCircle2,
   XCircle,
   Laptop,
+  Send,
+  Loader2,
   Zap,
 } from 'lucide-react';
+import { sendMessageAction, ContactActionResult } from '@/app/actions/contact';
 
 interface ContactFormData {
   name: string;
@@ -39,7 +42,11 @@ export function ContactSection() {
     message: '',
   });
 
-  const [formErrors, setFormErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
+  const [kvkkOnay, setKvkkOnay] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [serverStatus, setServerStatus] = useState<ContactActionResult | null>(null);
+
+  const [formErrors, setFormErrors] = useState<Partial<Record<keyof ContactFormData | 'kvkk', string>>>({});
   const [activeDraftMethod, setActiveDraftMethod] = useState<'gmail' | 'outlook' | 'mailapp' | null>(null);
 
   const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -88,7 +95,7 @@ export function ContactSection() {
   };
 
   const validate = (): boolean => {
-    const errors: Partial<Record<keyof ContactFormData, string>> = {};
+    const errors: Partial<Record<keyof ContactFormData | 'kvkk', string>> = {};
     if (!formData.name.trim()) {
       errors.name = t.contact.validationNameRequired;
     }
@@ -100,6 +107,9 @@ export function ContactSection() {
     if (!formData.message.trim() || formData.message.trim().length < 5) {
       errors.message = t.contact.validationMessageRequired;
     }
+    if (!kvkkOnay) {
+      errors.kvkk = 'Lütfen KVKK Aydınlatma Metnini onaylayınız.';
+    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -108,6 +118,41 @@ export function ContactSection() {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (formErrors[field]) {
       setFormErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
+
+  // Doğrudan Veritabanına Kaydet (Görev 5 kuralı)
+  const handleDirectSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setServerStatus(null);
+    if (!validate()) return;
+
+    setIsSubmitting(true);
+    try {
+      const data = new FormData();
+      data.append('ad_soyad', formData.name.trim());
+      data.append('eposta', formData.email.trim());
+      const fullMessage = formData.subject.trim() 
+        ? `[Konu: ${formData.subject.trim()}]\n\n${formData.message.trim()}`
+        : formData.message.trim();
+      data.append('mesaj', fullMessage);
+      data.append('kvkk_onay', kvkkOnay ? 'true' : 'false');
+
+      const res = await sendMessageAction(null, data);
+      setServerStatus(res);
+
+      if (res.success) {
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setKvkkOnay(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setServerStatus({
+        success: false,
+        error: 'Mesaj iletilirken bir hata meydana geldi.',
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -425,6 +470,74 @@ export function ContactSection() {
                 )}
               </div>
 
+              {/* KVKK Onay Kutusu (Görev 5 ve Bilişim Hukuku) */}
+              <div className="pt-2">
+                <label className="flex items-start gap-2.5 cursor-pointer select-none group">
+                  <input
+                    type="checkbox"
+                    id="contact-kvkk"
+                    checked={kvkkOnay}
+                    onChange={(e) => {
+                      setKvkkOnay(e.target.checked);
+                      if (formErrors.kvkk) {
+                        setFormErrors((prev) => ({ ...prev, kvkk: undefined }));
+                      }
+                    }}
+                    className="mt-0.5 h-4 w-4 rounded border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-accent)] focus:ring-[var(--theme-accent)] cursor-pointer shrink-0"
+                  />
+                  <span className="text-[11px] text-white/80 leading-relaxed font-sans">
+                    <strong className="text-white">KVKK Açık Rıza ve Onayı:</strong> İletişim formunda paylaştığım kişisel verilerimin yönetim paneli süreçlerinde işlenmesini, 1 yıl saklama süresi sonunda anonimleştirilmesini onaylıyorum. *
+                  </span>
+                </label>
+                {formErrors.kvkk && (
+                  <div className="flex items-center gap-1 text-[11px] text-red-400 mt-1.5">
+                    <AlertCircle className="w-3 h-3 shrink-0" aria-hidden="true" />
+                    <span>{formErrors.kvkk}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Sunucu Yanıt Bildirimi (Veritabanı Sonucu) */}
+              {serverStatus && (
+                <div
+                  role="status"
+                  className={`p-3.5 rounded-lg border text-xs font-mono flex items-center gap-2.5 ${
+                    serverStatus.success
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                      : 'bg-red-500/10 border-red-500/30 text-red-400'
+                  }`}
+                >
+                  {serverStatus.success ? (
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                  ) : (
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+                  )}
+                  <span>{serverStatus.success ? serverStatus.message : serverStatus.error}</span>
+                </div>
+              )}
+
+              {/* Doğrudan Gönder (Veritabanına Kaydet) Ana Buton */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={handleDirectSubmit}
+                  className="w-full flex items-center justify-center gap-2 px-5 py-3.5 rounded-lg font-bold font-mono text-xs text-black bg-[var(--theme-accent)] hover:brightness-110 active:scale-[0.99] transition-all shadow-lg shadow-[var(--theme-accent)]/20 cursor-pointer disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-black" />
+                      <span>Veritabanına İletiliyor...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 text-black" />
+                      <span>Mesajı Gönder (Veritabanına İlet)</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
               {/* Success Notification Box when draft is triggered */}
               {activeDraftMethod && (
                 <div
@@ -443,9 +556,9 @@ export function ContactSection() {
               )}
 
               {/* Direct Mail Action Buttons */}
-              <div className="space-y-3 pt-2">
+              <div className="space-y-3 pt-3 border-t border-[var(--theme-border)]">
                 <div className="text-[11px] font-mono-code text-white/50 tracking-wider uppercase">
-                  {t.contact.formSendOptions}
+                  Alternatif: Doğrudan E-Posta İstemcisiyle Gönder
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">

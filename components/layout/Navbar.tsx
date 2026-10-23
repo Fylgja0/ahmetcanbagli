@@ -146,9 +146,9 @@ export function Navbar() {
             } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]`}
           >
             {animationsEnabled ? (
-              <Play className="w-3.5 h-3.5" aria-hidden="true" />
-            ) : (
               <Pause className="w-3.5 h-3.5" aria-hidden="true" />
+            ) : (
+              <Play className="w-3.5 h-3.5" aria-hidden="true" />
             )}
           </button>
 
