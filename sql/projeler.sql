@@ -1,11 +1,3 @@
--- ==========================================================
--- ÖĞRENCİ BİLGİLERİ
--- Ad Soyad : Ahmetcan Bağlı
--- Numara   : 2516016010
--- Ders     : BVA 2205 Siber Güvenlik ve Bilişim Hukuku
--- Modül    : Portfolyo Projeler Tablosu ve Yönetim Sorguları (CRUD)
--- ==========================================================
-
 -- 1. Projeler Tablosu Şeması (DDL)
 CREATE TABLE IF NOT EXISTS projeler (
   id SERIAL PRIMARY KEY,
