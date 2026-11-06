@@ -69,7 +69,7 @@ export function HomeAwardsTeaserClient({ awards }: HomeAwardsTeaserClientProps) 
                     </div>
 
                     <Link
-                        href="/oduller"
+                        href="/awards"
                         className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[var(--theme-accent,#00ff66)] hover:underline"
                     >
                         <span>{text.viewAll} ({awards.length}+)</span>

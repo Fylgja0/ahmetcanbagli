@@ -73,7 +73,7 @@ export function AwardsContent({ oduller, oneCikanlar, isVisible }: AwardsContent
                         </div>
                     </div>
                     <Link
-                        href="/admin/oduller"
+                        href="/admin/awards"
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 font-bold transition-colors whitespace-nowrap self-start sm:self-auto"
                     >
                         <span>{t.awardsPage.previewAdminButton}</span>

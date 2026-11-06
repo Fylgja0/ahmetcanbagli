@@ -42,7 +42,7 @@ export function Navbar() {
 
   // Filter out Awards if hidden by admin
   const navItems = NAV_ITEMS.filter((item) => {
-    if (item.href === '/oduller' && !awardsVisible) {
+    if ((item.href === '/awards' || item.href === '/oduller') && !awardsVisible) {
       return false;
     }
     return true;
@@ -316,10 +316,10 @@ export function Navbar() {
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
-                  href="/admin/oduller"
+                  href="/admin/awards"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
-                    pathname === '/admin/oduller'
+                    pathname === '/admin/awards'
                       ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
@@ -328,10 +328,10 @@ export function Navbar() {
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
-                  href="/admin/projeler"
+                  href="/admin/projects"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
-                    pathname === '/admin/projeler'
+                    pathname === '/admin/projects'
                       ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
@@ -340,10 +340,10 @@ export function Navbar() {
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
-                  href="/admin/mesajlar"
+                  href="/admin/messages"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
-                    pathname === '/admin/mesajlar'
+                    pathname === '/admin/messages'
                       ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
@@ -352,10 +352,10 @@ export function Navbar() {
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
-                  href="/admin/oturumlar"
+                  href="/admin/sessions"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
-                    pathname === '/admin/oturumlar'
+                    pathname === '/admin/sessions'
                       ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}

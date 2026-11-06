@@ -26,7 +26,7 @@ async function cikisYapAction() {
         cookieStore.delete('admin_token');
     }
 
-    redirect('/giris');
+    redirect('/login');
 }
 
 export default async function AdminLayout({
@@ -36,7 +36,7 @@ export default async function AdminLayout({
 }) {
     const admin = await getAdmin();
     if (!admin) {
-        redirect('/giris');
+        redirect('/login');
     }
 
     return (
@@ -90,7 +90,7 @@ export default async function AdminLayout({
                 </Link>
 
                 <Link
-                    href="/admin/oduller"
+                    href="/admin/awards"
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold text-white/80 hover:text-white bg-[var(--theme-surface)] hover:bg-[var(--theme-card)] border border-[var(--theme-border)] transition-all shrink-0"
                 >
                     <Award className="w-4 h-4 text-amber-400" />
@@ -98,7 +98,7 @@ export default async function AdminLayout({
                 </Link>
 
                 <Link
-                    href="/admin/projeler"
+                    href="/admin/projects"
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold text-white/80 hover:text-white bg-[var(--theme-surface)] hover:bg-[var(--theme-card)] border border-[var(--theme-border)] transition-all shrink-0"
                 >
                     <FolderGit2 className="w-4 h-4 text-emerald-400" />
@@ -106,7 +106,7 @@ export default async function AdminLayout({
                 </Link>
 
                 <Link
-                    href="/admin/mesajlar"
+                    href="/admin/messages"
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold text-white/80 hover:text-white bg-[var(--theme-surface)] hover:bg-[var(--theme-card)] border border-[var(--theme-border)] transition-all shrink-0"
                 >
                     <Mail className="w-4 h-4 text-sky-400" />
@@ -114,7 +114,7 @@ export default async function AdminLayout({
                 </Link>
 
                 <Link
-                    href="/admin/oturumlar"
+                    href="/admin/sessions"
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold text-white/80 hover:text-white bg-[var(--theme-surface)] hover:bg-[var(--theme-card)] border border-[var(--theme-border)] transition-all shrink-0"
                 >
                     <Shield className="w-4 h-4 text-indigo-400" />
@@ -122,7 +122,7 @@ export default async function AdminLayout({
                 </Link>
 
                 <Link
-                    href="/oduller"
+                    href="/awards"
                     target="_blank"
                     className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono text-white/50 hover:text-[var(--theme-accent)] transition-colors ml-auto shrink-0"
                 >

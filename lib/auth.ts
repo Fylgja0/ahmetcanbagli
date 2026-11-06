@@ -42,7 +42,7 @@ export async function getClientDevice(): Promise<string> {
 export async function requireAdmin(): Promise<AdminUser> {
     const admin = await getAdmin();
     if (!admin) {
-        redirect('/giris');
+        redirect('/login');
     }
     return admin;
 }

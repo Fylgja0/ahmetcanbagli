@@ -65,6 +65,7 @@ export async function sendMessageAction(
         `;
 
         // 5. Admin paneli önbelleğini tazele
+        revalidatePath('/admin/messages');
         revalidatePath('/admin/mesajlar');
         revalidatePath('/admin');
 

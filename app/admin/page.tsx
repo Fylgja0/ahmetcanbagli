@@ -97,7 +97,7 @@ export default async function AdminHomePage() {
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
                         <span className="text-white/40">oduller table</span>
                         <Link
-                            href="/admin/oduller"
+                            href="/admin/awards"
                             className="inline-flex items-center gap-1 text-amber-400 hover:underline font-semibold"
                         >
                             <span>Manage & Add</span>
@@ -122,7 +122,7 @@ export default async function AdminHomePage() {
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
                         <span className="text-white/40">projeler table</span>
                         <Link
-                            href="/admin/projeler"
+                            href="/admin/projects"
                             className="inline-flex items-center gap-1 text-emerald-400 hover:underline font-semibold"
                         >
                             <span>Manage Projects</span>
@@ -154,7 +154,7 @@ export default async function AdminHomePage() {
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
                         <span className="text-white/40">iletisim_mesajlari</span>
                         <Link
-                            href="/admin/mesajlar"
+                            href="/admin/messages"
                             className="inline-flex items-center gap-1 text-sky-400 hover:underline font-semibold"
                         >
                             <span>Open Inbox</span>
@@ -179,7 +179,7 @@ export default async function AdminHomePage() {
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
                         <span className="text-white/40">30 min timeout</span>
                         <Link
-                            href="/admin/oturumlar"
+                            href="/admin/sessions"
                             className="inline-flex items-center gap-1 text-[var(--theme-accent)] hover:underline font-semibold"
                         >
                             <span>Inspect</span>

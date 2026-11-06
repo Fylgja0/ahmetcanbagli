@@ -93,7 +93,7 @@ export function HomeSectionsNavigator() {
       id: 'oduller',
       badge: '06_AWARDS',
       icon: Trophy,
-      href: '/oduller',
+      href: '/awards',
       title: 'Ödüller & Başarılar',
       desc: {
         tr: 'Yarışmalar, burslar, hackathon dereceleri ve PostgreSQL veritabanından dinamik gelen başarılar.',

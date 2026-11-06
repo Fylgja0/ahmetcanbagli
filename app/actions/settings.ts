@@ -15,8 +15,10 @@ export async function toggleAwardsVisibilityAction(): Promise<void> {
   await setAwardsVisibility(next);
 
   revalidatePath('/');
+  revalidatePath('/awards');
   revalidatePath('/oduller');
   revalidatePath('/admin');
+  revalidatePath('/admin/awards');
   revalidatePath('/admin/oduller');
 }
 
@@ -29,8 +31,10 @@ export async function setAwardsVisibilityAction(visible: boolean): Promise<void>
   await setAwardsVisibility(visible);
 
   revalidatePath('/');
+  revalidatePath('/awards');
   revalidatePath('/oduller');
   revalidatePath('/admin');
+  revalidatePath('/admin/awards');
   revalidatePath('/admin/oduller');
 }
 

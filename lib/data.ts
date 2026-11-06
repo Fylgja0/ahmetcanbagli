@@ -132,7 +132,7 @@ export const NAV_ITEMS: NavItem[] = [
       de: 'Auszeichnungen',
       ru: 'Награды',
     },
-    href: '/oduller',
+    href: '/awards',
   },
   {
     label: {
