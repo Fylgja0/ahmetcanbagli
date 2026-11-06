@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { usePortfolio } from '@/context/portfolio-context';
-import { Project } from '@/types/portfolio';
+import { Project, ProjectCategory } from '@/types/portfolio';
 import { useKeydown } from '@/hooks/use-click-outside';
 import { TechBadge } from '@/components/ui/TechBadge';
 import {
@@ -48,6 +48,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
   if (!project) return null;
 
+  const getModalSpecLabel = (category: ProjectCategory) => {
+    switch (category) {
+      case 'backend':
+        return t.projects.modalSpecBackend;
+      case 'datascience':
+        return t.projects.modalSpecDataScience;
+      case 'fullstack':
+        return t.projects.modalSpecFullStack;
+      case 'mobile':
+        return t.projects.modalSpecMobile;
+      default:
+        return t.projects.modalSpecBackend;
+    }
+  };
+
   return (
     <div
       role="dialog"
@@ -66,16 +81,16 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono-code text-[var(--theme-accent)]">
-              <span>
-                {project.category === 'backend'
-                  ? t.projects.modalSpecBackend
-                  : t.projects.modalSpecDataScience}
+              <span>{getModalSpecLabel(project.category)}</span>
+              <span className="text-white/20" aria-hidden="true">
+                ·
               </span>
-              <span className="text-white/20" aria-hidden="true">·</span>
               <span className="text-white/50">{project.slug}</span>
               {project.liveUrl && (
                 <>
-                  <span className="text-white/20" aria-hidden="true">·</span>
+                  <span className="text-white/20" aria-hidden="true">
+                    ·
+                  </span>
                   <a
                     href={project.liveUrl}
                     target="_blank"
@@ -89,11 +104,17 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 </>
               )}
             </div>
-            <h3 id="modal-title" className="text-2xl sm:text-3xl font-extrabold text-white">
+            <h3
+              id="modal-title"
+              className="text-2xl sm:text-3xl font-extrabold text-white"
+            >
               {project.title}
             </h3>
             <p className="text-xs sm:text-sm text-white/70 font-mono-code">
-              {project.tagline?.[language] || project.tagline?.tr || project.tagline?.en || ''}
+              {project.tagline?.[language] ||
+                project.tagline?.tr ||
+                project.tagline?.en ||
+                ''}
             </p>
           </div>
 
@@ -109,14 +130,21 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
         </div>
 
         {/* Highlights Strip */}
-        {((project.highlights?.[language] || project.highlights?.tr || []).length > 0) && (
+        {(project.highlights?.[language] || project.highlights?.tr || [])
+          .length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono-code">
-            {(project.highlights?.[language] || project.highlights?.tr || []).map((hl) => (
+            {(
+              project.highlights?.[language] ||
+              project.highlights?.tr ||
+              []
+            ).map((hl) => (
               <div
                 key={hl.label}
                 className="p-3 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)] text-center"
               >
-                <div className="text-[10.5px] text-white/50 mb-0.5">{hl.label}</div>
+                <div className="text-[10.5px] text-white/50 mb-0.5">
+                  {hl.label}
+                </div>
                 <div className="text-xs sm:text-sm font-bold text-[var(--theme-accent)]">
                   {hl.value}
                 </div>
@@ -132,31 +160,49 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             <span>{t.projects.modalOverviewTitle}</span>
           </div>
           <p className="text-sm text-white/80 leading-relaxed font-sans">
-            {project.overview?.[language] || project.overview?.tr || project.overview?.en || ''}
+            {project.overview?.[language] ||
+              project.overview?.tr ||
+              project.overview?.en ||
+              ''}
           </p>
         </div>
 
         {/* Architecture & Engineering Stack Breakdown */}
-        {((project.architecture?.[language] || project.architecture?.tr || []).length > 0) && (
+        {(project.architecture?.[language] || project.architecture?.tr || [])
+          .length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-xs font-mono-code text-white/60 uppercase">
-              <Layers className="w-4 h-4 text-[var(--theme-accent)]" aria-hidden="true" />
+              <Layers
+                className="w-4 h-4 text-[var(--theme-accent)]"
+                aria-hidden="true"
+              />
               <span>{t.projects.architectureHeader}</span>
             </div>
             <div className="rounded-lg border border-[var(--theme-border)] overflow-hidden font-mono-code text-xs">
               <div className="grid grid-cols-12 bg-black/40 border-b border-white/10 p-2.5 font-bold text-white/60 text-[11px]">
-                <div className="col-span-3">Katman / Layer</div>
-                <div className="col-span-4">Rol / Role</div>
-                <div className="col-span-5">Teknolojik Detay / Spec</div>
+                <div className="col-span-3">{t.projects.archColLayer}</div>
+                <div className="col-span-4">{t.projects.archColRole}</div>
+                <div className="col-span-5">{t.projects.archColSpec}</div>
               </div>
               <div className="divide-y divide-white/5">
-                {(project.architecture?.[language] || project.architecture?.tr || []).map((arch) => (
-                  <div key={arch.layer} className="grid grid-cols-12 p-3 items-center hover:bg-white/5 transition-colors">
+                {(
+                  project.architecture?.[language] ||
+                  project.architecture?.tr ||
+                  []
+                ).map((arch) => (
+                  <div
+                    key={arch.layer}
+                    className="grid grid-cols-12 p-3 items-center hover:bg-white/5 transition-colors"
+                  >
                     <div className="col-span-3 font-semibold text-[var(--theme-accent)]">
                       {arch.layer}
                     </div>
-                    <div className="col-span-4 text-white/80 text-[11.5px]">{arch.role}</div>
-                    <div className="col-span-5 text-white/60 text-[11px] font-sans">{arch.details}</div>
+                    <div className="col-span-4 text-white/80 text-[11.5px]">
+                      {arch.role}
+                    </div>
+                    <div className="col-span-5 text-white/60 text-[11px] font-sans">
+                      {arch.details}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -173,9 +219,16 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               <span>{t.projects.engineeringHeader}</span>
             </div>
             <ul className="space-y-2 text-xs text-white/75 font-sans">
-              {(project.engineeringInsights?.[language] || project.engineeringInsights?.tr || []).map((insight) => (
+              {(
+                project.engineeringInsights?.[language] ||
+                project.engineeringInsights?.tr ||
+                []
+              ).map((insight) => (
                 <li key={insight} className="flex items-start gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" aria-hidden="true" />
+                  <CheckCircle2
+                    className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>{insight}</span>
                 </li>
               ))}
@@ -189,9 +242,16 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               <span>{t.projects.roadmapHeader}</span>
             </div>
             <ul className="space-y-2 text-xs text-white/75 font-sans">
-              {(project.futureRoadmap?.[language] || project.futureRoadmap?.tr || []).map((item) => (
+              {(
+                project.futureRoadmap?.[language] ||
+                project.futureRoadmap?.tr ||
+                []
+              ).map((item) => (
                 <li key={item} className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--theme-accent)] mt-1.5 shrink-0" aria-hidden="true" />
+                  <span
+                    className="w-1.5 h-1.5 rounded-full bg-[var(--theme-accent)] mt-1.5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>{item}</span>
                 </li>
               ))}
@@ -237,9 +297,11 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={project.liveUrl
-                ? "inline-flex items-center gap-2 px-4 py-2.5 rounded border border-[var(--theme-border)] text-white/90 hover:text-white hover:border-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]"
-                : "inline-flex items-center gap-2 px-5 py-2.5 rounded font-semibold bg-[var(--theme-accent)] text-black hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--theme-accent)]"}
+              className={
+                project.liveUrl
+                  ? 'inline-flex items-center gap-2 px-4 py-2.5 rounded border border-[var(--theme-border)] text-white/90 hover:text-white hover:border-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)]'
+                  : 'inline-flex items-center gap-2 px-5 py-2.5 rounded font-semibold bg-[var(--theme-accent)] text-black hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--theme-accent)]'
+              }
             >
               <Github className="w-4 h-4" aria-hidden="true" />
               <span>{t.projects.modalRepoButton}</span>
@@ -251,3 +313,4 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
     </div>
   );
 }
+export default ProjectModal;

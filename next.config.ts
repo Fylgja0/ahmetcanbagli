@@ -6,6 +6,40 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  async redirects() {
+    return [
+      {
+        source: '/giris',
+        destination: '/login',
+        permanent: true,
+      },
+      {
+        source: '/oduller',
+        destination: '/awards',
+        permanent: true,
+      },
+      {
+        source: '/admin/oduller',
+        destination: '/admin/awards',
+        permanent: true,
+      },
+      {
+        source: '/admin/projeler',
+        destination: '/admin/projects',
+        permanent: true,
+      },
+      {
+        source: '/admin/mesajlar',
+        destination: '/admin/messages',
+        permanent: true,
+      },
+      {
+        source: '/admin/oturumlar',
+        destination: '/admin/sessions',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

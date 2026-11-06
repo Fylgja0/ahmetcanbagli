@@ -1,7 +1,8 @@
+import { cache } from 'react';
 import { sql } from '@/lib/db';
 
 /**
- * Site ayarları tablosunun varlığını garanti eder.
+ * Ensures the site settings table exists in PostgreSQL.
  */
 export async function ensureSettingsTable(): Promise<void> {
   try {
@@ -13,16 +14,15 @@ export async function ensureSettingsTable(): Promise<void> {
       )
     `;
   } catch (err) {
-    console.error('ensureSettingsTable hatası:', err);
+    console.error('Failed to ensure site_ayarlari table:', err);
   }
 }
 
 /**
- * Belirtilen anahtar için ayar değerini okur.
+ * Reads a configuration value by key, falling back to defaultValue if absent or if the database is unreachable.
  */
 export async function getSetting(key: string, defaultValue = ''): Promise<string> {
   try {
-    await ensureSettingsTable();
     const rows = await sql`
       SELECT deger FROM site_ayarlari WHERE anahtar = ${key} LIMIT 1
     `;
@@ -30,14 +30,13 @@ export async function getSetting(key: string, defaultValue = ''): Promise<string
       return (rows[0] as { deger: string }).deger;
     }
     return defaultValue;
-  } catch (err) {
-    console.error(`getSetting(${key}) hatası:`, err);
+  } catch {
     return defaultValue;
   }
 }
 
 /**
- * Belirtilen anahtara ait değeri kaydeder / günceller.
+ * Upserts a configuration key-value pair in the database.
  */
 export async function setSetting(key: string, value: string): Promise<void> {
   await ensureSettingsTable();
@@ -50,18 +49,17 @@ export async function setSetting(key: string, value: string): Promise<void> {
 }
 
 /**
- * Awards (Ödüller) sayfasının ana sitede görünür olup olmadığını döner.
- * Varsayılan: true (görünür)
+ * Returns whether the Awards section is publicly visible on the main site.
+ * Deduplicated per server request via React cache().
  */
-export async function getAwardsVisibility(): Promise<boolean> {
+export const getAwardsVisibility = cache(async (): Promise<boolean> => {
   const val = await getSetting('awards_gorunur', 'true');
   return val !== 'false';
-}
+});
 
 /**
- * Awards (Ödüller) sayfasının ana sitedeki görünürlüğünü günceller.
+ * Updates the public visibility state of the Awards section.
  */
 export async function setAwardsVisibility(visible: boolean): Promise<void> {
   await setSetting('awards_gorunur', visible ? 'true' : 'false');
 }
-

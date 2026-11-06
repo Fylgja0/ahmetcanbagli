@@ -1,83 +1,94 @@
 'use server';
 
-import { sql } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { sql } from '@/lib/db';
 
 export interface ContactActionResult {
-    success: boolean;
-    message?: string;
-    error?: string;
+  success: boolean;
+  message?: string;
+  error?: string;
 }
 
 export async function sendMessageAction(
-    prevState: ContactActionResult | null,
-    formData: FormData
+  prevState: ContactActionResult | null,
+  formData: FormData
 ): Promise<ContactActionResult> {
-    try {
-        const ad_soyad = formData.get('ad_soyad')?.toString().trim();
-        const eposta = formData.get('eposta')?.toString().trim().toLowerCase();
-        const mesaj = formData.get('mesaj')?.toString().trim();
-        const kvkk_onay = formData.get('kvkk_onay') === 'true' || formData.get('kvkk_onay') === 'on';
+  try {
+    const fullName = (formData.get('name') || formData.get('ad_soyad'))
+      ?.toString()
+      .trim();
+    const email = (formData.get('email') || formData.get('eposta'))
+      ?.toString()
+      .trim()
+      .toLowerCase();
+    const message = (formData.get('message') || formData.get('mesaj'))
+      ?.toString()
+      .trim();
+    const consentGiven =
+      formData.get('consent') === 'true' ||
+      formData.get('consent') === 'on' ||
+      formData.get('kvkk_onay') === 'true' ||
+      formData.get('kvkk_onay') === 'on';
 
-        // 1. Sunucu tarafı zorunlu alan kontrolü
-        if (!ad_soyad || !eposta || !mesaj) {
-            return {
-                success: false,
-                error: 'Lütfen ad-soyad, e-posta ve mesaj alanlarının tümünü doldurunuz.'
-            };
-        }
-
-        // 2. Alan uzunluk doğrulamaları (Görev 5 kuralı: Boş veya çok uzun alanları sunucuda reddedin)
-        if (ad_soyad.length < 2 || ad_soyad.length > 100) {
-            return {
-                success: false,
-                error: 'Ad Soyad 2 ile 100 karakter arasında olmalıdır.'
-            };
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(eposta) || eposta.length > 254) {
-            return {
-                success: false,
-                error: 'Lütfen geçerli bir e-posta adresi giriniz (en fazla 254 karakter).'
-            };
-        }
-
-        if (mesaj.length < 5 || mesaj.length > 5000) {
-            return {
-                success: false,
-                error: 'Mesaj metni 5 ile 5000 karakter arasında olmalıdır.'
-            };
-        }
-
-        // 3. KVKK Onay kontrolü (Görev 5 & Bilişim Hukuku kuralı)
-        if (!kvkk_onay) {
-            return {
-                success: false,
-                error: 'Mesaj gönderebilmek için KVKK Aydınlatma Metnini onaylamanız gerekmektedir.'
-            };
-        }
-
-        // 4. Veritabanına güvenli ekleme (SQL Injection koruması: tagged template)
-        await sql`
-            INSERT INTO iletisim_mesajlari (ad_soyad, eposta, mesaj, kvkk_onay, okundu)
-            VALUES (${ad_soyad}, ${eposta}, ${mesaj}, ${kvkk_onay}, false)
-        `;
-
-        // 5. Admin paneli önbelleğini tazele
-        revalidatePath('/admin/messages');
-        revalidatePath('/admin/mesajlar');
-        revalidatePath('/admin');
-
-        return {
-            success: true,
-            message: 'Mesajınız başarıyla veritabanına kaydedildi. En kısa sürede geri dönüş yapılacaktır.'
-        };
-    } catch (error) {
-        console.error('Mesaj gönderme hatası:', error);
-        return {
-            success: false,
-            error: 'Mesaj iletilirken bir sunucu hatası oluştu. Lütfen daha sonra tekrar deneyiniz.'
-        };
+    // 1. Validate required fields on the server
+    if (!fullName || !email || !message) {
+      return {
+        success: false,
+        error: 'Please fill in your full name, email address, and message.',
+      };
     }
+
+    // 2. Validate field length constraints
+    if (fullName.length < 2 || fullName.length > 100) {
+      return {
+        success: false,
+        error: 'Full name must be between 2 and 100 characters.',
+      };
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email) || email.length > 254) {
+      return {
+        success: false,
+        error: 'Please enter a valid email address (maximum 254 characters).',
+      };
+    }
+
+    if (message.length < 5 || message.length > 5000) {
+      return {
+        success: false,
+        error: 'Message must be between 5 and 5000 characters.',
+      };
+    }
+
+    // 3. Verify explicit data privacy (GDPR / KVKK) consent
+    if (!consentGiven) {
+      return {
+        success: false,
+        error: 'Please accept the Data Privacy Notice before sending your message.',
+      };
+    }
+
+    // 4. Parameterized insert to prevent SQL injection
+    await sql`
+      INSERT INTO iletisim_mesajlari (ad_soyad, eposta, mesaj, kvkk_onay, okundu)
+      VALUES (${fullName}, ${email}, ${message}, ${consentGiven}, false)
+    `;
+
+    // 5. Revalidate admin routes
+    revalidatePath('/admin/messages');
+    revalidatePath('/admin');
+
+    return {
+      success: true,
+      message:
+        'Your message has been saved to the database. We will get back to you shortly.',
+    };
+  } catch (error) {
+    console.error('Contact message submission error:', error);
+    return {
+      success: false,
+      error: 'A server error occurred while sending your message. Please try again later.',
+    };
+  }
 }

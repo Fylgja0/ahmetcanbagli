@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePortfolio } from '@/context/portfolio-context';
 import { FEATURED_PROJECTS } from '@/lib/data';
-import { Project } from '@/types/portfolio';
+import { Project, ProjectCategory } from '@/types/portfolio';
 import { getLiveProjects } from '@/app/actions/projects';
 import {
   FolderGit2,
@@ -13,17 +13,39 @@ import {
   ExternalLink,
 } from 'lucide-react';
 
-export function HomeFeaturedTeaser() {
+interface HomeFeaturedTeaserProps {
+  initialProjects?: Project[];
+}
+
+export function HomeFeaturedTeaser({ initialProjects }: HomeFeaturedTeaserProps) {
   const { language, t } = usePortfolio();
-  const [projects, setProjects] = useState<Project[]>(FEATURED_PROJECTS);
+  const [projects, setProjects] = useState<Project[]>(
+    initialProjects ?? FEATURED_PROJECTS
+  );
 
   useEffect(() => {
+    if (initialProjects) return;
     getLiveProjects().then((data) => {
       if (Array.isArray(data)) {
         setProjects(data);
       }
     });
-  }, []);
+  }, [initialProjects]);
+
+  const getCategoryLabel = (category: ProjectCategory) => {
+    switch (category) {
+      case 'backend':
+        return t.projects.categoryBackend;
+      case 'datascience':
+        return t.projects.categoryDataScience;
+      case 'fullstack':
+        return t.projects.categoryFullStack;
+      case 'mobile':
+        return t.projects.categoryMobile;
+      default:
+        return t.projects.categoryBackend;
+    }
+  };
 
   return (
     <div className="space-y-16 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -62,7 +84,7 @@ export function HomeFeaturedTeaser() {
               <div>
                 <div className="flex items-center justify-between text-xs font-mono-code text-white/50 mb-2">
                   <span className="text-[var(--theme-accent)] font-semibold uppercase">
-                    {proj.category === 'backend' ? t.projects.categoryBackend : t.projects.categoryDataScience}
+                    {getCategoryLabel(proj.category)}
                   </span>
                   <span>{proj.technologies.slice(0, 3).join(' · ')}</span>
                 </div>
@@ -70,7 +92,10 @@ export function HomeFeaturedTeaser() {
                   {proj.title}
                 </h4>
                 <p className="text-xs text-white/70 leading-relaxed mb-4">
-                  {proj.tagline?.[language] || proj.tagline?.tr || proj.tagline?.en || ''}
+                  {proj.tagline?.[language] ||
+                    proj.tagline?.tr ||
+                    proj.tagline?.en ||
+                    ''}
                 </p>
               </div>
 
@@ -119,9 +144,7 @@ export function HomeFeaturedTeaser() {
         <h3 className="text-2xl sm:text-3xl font-extrabold text-white">
           {t.contact.title}
         </h3>
-        <p className="text-sm text-white/70 max-w-lg">
-          {t.contact.subtitle}
-        </p>
+        <p className="text-sm text-white/70 max-w-lg">{t.contact.subtitle}</p>
         <div className="pt-2">
           <Link
             href="/contact"
@@ -135,3 +158,4 @@ export function HomeFeaturedTeaser() {
     </div>
   );
 }
+export default HomeFeaturedTeaser;

@@ -42,12 +42,18 @@ export function ContactSection() {
     message: '',
   });
 
-  const [kvkkOnay, setKvkkOnay] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [serverStatus, setServerStatus] = useState<ContactActionResult | null>(null);
+  const [serverStatus, setServerStatus] = useState<ContactActionResult | null>(
+    null
+  );
 
-  const [formErrors, setFormErrors] = useState<Partial<Record<keyof ContactFormData | 'kvkk', string>>>({});
-  const [activeDraftMethod, setActiveDraftMethod] = useState<'gmail' | 'outlook' | 'mailapp' | null>(null);
+  const [formErrors, setFormErrors] = useState<
+    Partial<Record<keyof ContactFormData | 'consent', string>>
+  >({});
+  const [activeDraftMethod, setActiveDraftMethod] = useState<
+    'gmail' | 'outlook' | 'mailapp' | null
+  >(null);
 
   const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
   const copyFullTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -77,7 +83,8 @@ export function ContactSection() {
     }
   };
 
-  const getActiveSubject = () => formData.subject.trim() || t.contact.defaultSubject;
+  const getActiveSubject = () =>
+    formData.subject.trim() || t.contact.defaultSubject;
 
   const getFormattedMessageBody = () => {
     return [
@@ -95,7 +102,8 @@ export function ContactSection() {
   };
 
   const validate = (): boolean => {
-    const errors: Partial<Record<keyof ContactFormData | 'kvkk', string>> = {};
+    const errors: Partial<Record<keyof ContactFormData | 'consent', string>> =
+      {};
     if (!formData.name.trim()) {
       errors.name = t.contact.validationNameRequired;
     }
@@ -107,8 +115,8 @@ export function ContactSection() {
     if (!formData.message.trim() || formData.message.trim().length < 5) {
       errors.message = t.contact.validationMessageRequired;
     }
-    if (!kvkkOnay) {
-      errors.kvkk = t.contact.kvkkRequired;
+    if (!consentGiven) {
+      errors.consent = t.contact.kvkkRequired;
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -121,7 +129,7 @@ export function ContactSection() {
     }
   };
 
-  // Doğrudan Veritabanına Kaydet (Görev 5 kuralı)
+  // Submit directly to the PostgreSQL database via Server Action
   const handleDirectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setServerStatus(null);
@@ -130,33 +138,33 @@ export function ContactSection() {
     setIsSubmitting(true);
     try {
       const data = new FormData();
-      data.append('ad_soyad', formData.name.trim());
-      data.append('eposta', formData.email.trim());
-      const fullMessage = formData.subject.trim() 
-        ? `[Konu: ${formData.subject.trim()}]\n\n${formData.message.trim()}`
+      data.append('name', formData.name.trim());
+      data.append('email', formData.email.trim());
+      const fullMessage = formData.subject.trim()
+        ? `[${t.contact.copyPrefixSubject}: ${formData.subject.trim()}]\n\n${formData.message.trim()}`
         : formData.message.trim();
-      data.append('mesaj', fullMessage);
-      data.append('kvkk_onay', kvkkOnay ? 'true' : 'false');
+      data.append('message', fullMessage);
+      data.append('consent', consentGiven ? 'true' : 'false');
 
       const res = await sendMessageAction(null, data);
       setServerStatus(res);
 
       if (res.success) {
         setFormData({ name: '', email: '', subject: '', message: '' });
-        setKvkkOnay(false);
+        setConsentGiven(false);
       }
     } catch (err) {
       console.error(err);
       setServerStatus({
         success: false,
-        error: 'Mesaj iletilirken bir hata meydana geldi.',
+        error: t.contact.submitError,
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // 1. Form ile Gmail'e Aktar
+  // 1. Open pre-filled draft in Gmail
   const handleSendGmail = () => {
     if (!validate()) return;
     const subject = getActiveSubject();
@@ -168,7 +176,7 @@ export function ContactSection() {
     setActiveDraftMethod('gmail');
   };
 
-  // 2. Form ile Outlook'a Aktar
+  // 2. Open pre-filled draft in Outlook Web
   const handleSendOutlook = () => {
     if (!validate()) return;
     const subject = getActiveSubject();
@@ -180,7 +188,7 @@ export function ContactSection() {
     setActiveDraftMethod('outlook');
   };
 
-  // 3. Form ile Cihazdaki Mail Uygulamasına Aktar
+  // 3. Open pre-filled draft in the device's default mail client
   const handleSendMailApp = () => {
     if (!validate()) return;
     const subject = getActiveSubject();
@@ -192,7 +200,7 @@ export function ContactSection() {
     setActiveDraftMethod('mailapp');
   };
 
-  // Mesaj Detaylarını Panoya Kopyala
+  // Copy formatted message details to clipboard
   const handleCopyFullMessage = async () => {
     try {
       const subject = getActiveSubject();
@@ -208,12 +216,18 @@ export function ContactSection() {
       setCopiedFull(false);
       setCopyFullError(true);
       if (copyFullTimerRef.current) clearTimeout(copyFullTimerRef.current);
-      copyFullTimerRef.current = setTimeout(() => setCopyFullError(false), 3000);
+      copyFullTimerRef.current = setTimeout(
+        () => setCopyFullError(false),
+        3000
+      );
     }
   };
 
   return (
-    <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20">
+    <section
+      id="contact"
+      className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto scroll-mt-20"
+    >
       {/* Header */}
       <SectionHeader
         tag={t.contact.sectionTag}
@@ -227,7 +241,10 @@ export function ContactSection() {
           {/* Direct Email Card */}
           <div className="p-6 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] space-y-4">
             <div className="flex items-center gap-2 text-xs font-mono-code text-white/50 uppercase">
-              <Mail className="w-4 h-4 text-[var(--theme-accent)]" aria-hidden="true" />
+              <Mail
+                className="w-4 h-4 text-[var(--theme-accent)]"
+                aria-hidden="true"
+              />
               <span>{t.contact.directEmailLabel}</span>
             </div>
 
@@ -242,17 +259,28 @@ export function ContactSection() {
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
-                  <span className="text-emerald-400">{t.contact.emailCopied}</span>
+                  <Check
+                    className="w-4 h-4 text-emerald-400"
+                    aria-hidden="true"
+                  />
+                  <span className="text-emerald-400">
+                    {t.contact.emailCopied}
+                  </span>
                 </>
               ) : copyError ? (
                 <>
-                  <XCircle className="w-4 h-4 text-red-400" aria-hidden="true" />
+                  <XCircle
+                    className="w-4 h-4 text-red-400"
+                    aria-hidden="true"
+                  />
                   <span className="text-red-400">{t.contact.copyFailed}</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4 text-[var(--theme-accent)]" aria-hidden="true" />
+                  <Copy
+                    className="w-4 h-4 text-[var(--theme-accent)]"
+                    aria-hidden="true"
+                  />
                   <span>{t.contact.copyEmail}</span>
                 </>
               )}
@@ -269,7 +297,10 @@ export function ContactSection() {
             >
               <div className="flex items-center justify-between text-white/50 mb-2">
                 <span>GitHub</span>
-                <ExternalLink className="w-3.5 h-3.5 group-hover:text-[var(--theme-accent)]" aria-hidden="true" />
+                <ExternalLink
+                  className="w-3.5 h-3.5 group-hover:text-[var(--theme-accent)]"
+                  aria-hidden="true"
+                />
               </div>
               <span className="font-semibold text-white">/Fylgja0</span>
             </a>
@@ -282,7 +313,10 @@ export function ContactSection() {
             >
               <div className="flex items-center justify-between text-white/50 mb-2">
                 <span>LinkedIn</span>
-                <ExternalLink className="w-3.5 h-3.5 group-hover:text-[var(--theme-accent)]" aria-hidden="true" />
+                <ExternalLink
+                  className="w-3.5 h-3.5 group-hover:text-[var(--theme-accent)]"
+                  aria-hidden="true"
+                />
               </div>
               <span className="font-semibold text-white">/ahmetcanbagli</span>
             </a>
@@ -291,7 +325,10 @@ export function ContactSection() {
           {/* Functional 1-Click Mail Launchers (No Form Needed) */}
           <div className="p-5 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card)] space-y-3.5 shadow-lg">
             <div className="flex items-center gap-2 text-xs font-mono-code text-[var(--theme-accent)] uppercase font-semibold">
-              <Zap className="w-4 h-4 text-[var(--theme-accent)]" aria-hidden="true" />
+              <Zap
+                className="w-4 h-4 text-[var(--theme-accent)]"
+                aria-hidden="true"
+              />
               <span>{t.contact.oneClickMail}</span>
             </div>
 
@@ -317,9 +354,14 @@ export function ContactSection() {
                   >
                     <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.545l8.073-6.052C21.69 2.28 24 3.434 24 5.457z" />
                   </svg>
-                  <span className="font-semibold">{t.contact.sendViaGmail}</span>
+                  <span className="font-semibold">
+                    {t.contact.sendViaGmail}
+                  </span>
                 </div>
-                <ExternalLink className="w-3.5 h-3.5 text-red-400/70 group-hover:text-red-300" aria-hidden="true" />
+                <ExternalLink
+                  className="w-3.5 h-3.5 text-red-400/70 group-hover:text-red-300"
+                  aria-hidden="true"
+                />
               </a>
 
               {/* Direct Outlook Web Link */}
@@ -339,21 +381,36 @@ export function ContactSection() {
                   >
                     <path d="M1 5.5A2.5 2.5 0 0 1 3.5 3h17A2.5 2.5 0 0 1 23 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-17A2.5 2.5 0 0 1 1 18.5v-13zm2.2-.5a.5.5 0 0 0-.2.4v.3l9 5.6 9-5.6v-.3a.5.5 0 0 0-.5-.4h-17.3zm17.8 2.6-8.5 5.3a1 1 0 0 1-1 0L3 7.6v10.9a.5.5 0 0 0 .5.5h17a.5.5 0 0 0 .5-.5V7.6z" />
                   </svg>
-                  <span className="font-semibold">{t.contact.sendViaOutlook}</span>
+                  <span className="font-semibold">
+                    {t.contact.sendViaOutlook}
+                  </span>
                 </div>
-                <ExternalLink className="w-3.5 h-3.5 text-sky-400/70 group-hover:text-sky-300" aria-hidden="true" />
+                <ExternalLink
+                  className="w-3.5 h-3.5 text-sky-400/70 group-hover:text-sky-300"
+                  aria-hidden="true"
+                />
               </a>
 
               {/* Direct Device Mail App Link */}
               <a
-                href={`mailto:${PRIMARY_EMAIL}?subject=${encodeURIComponent(t.contact.defaultSubject)}`}
+                href={`mailto:${PRIMARY_EMAIL}?subject=${encodeURIComponent(
+                  t.contact.defaultSubject
+                )}`}
                 className="flex items-center justify-between px-3.5 py-2.5 rounded border border-[var(--theme-accent)]/40 bg-[var(--theme-accent)]/10 hover:bg-[var(--theme-accent)]/20 text-[var(--theme-accent)] transition-all group"
               >
                 <div className="flex items-center gap-2.5">
-                  <Laptop className="w-4 h-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
-                  <span className="font-semibold">{t.contact.sendViaMailApp}</span>
+                  <Laptop
+                    className="w-4 h-4 group-hover:scale-110 transition-transform"
+                    aria-hidden="true"
+                  />
+                  <span className="font-semibold">
+                    {t.contact.sendViaMailApp}
+                  </span>
                 </div>
-                <ExternalLink className="w-3.5 h-3.5 text-[var(--theme-accent)]/70 group-hover:text-[var(--theme-accent)]" aria-hidden="true" />
+                <ExternalLink
+                  className="w-3.5 h-3.5 text-[var(--theme-accent)]/70 group-hover:text-[var(--theme-accent)]"
+                  aria-hidden="true"
+                />
               </a>
             </div>
           </div>
@@ -375,7 +432,10 @@ export function ContactSection() {
               {/* Name & Email Row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label htmlFor="contact-name" className="text-white/80 font-medium block">
+                  <label
+                    htmlFor="contact-name"
+                    className="text-white/80 font-medium block"
+                  >
                     {t.contact.nameLabel} *
                   </label>
                   <input
@@ -394,14 +454,20 @@ export function ContactSection() {
                   />
                   {formErrors.name && (
                     <div className="flex items-center gap-1 text-[11px] text-red-400">
-                      <AlertCircle className="w-3 h-3 shrink-0" aria-hidden="true" />
+                      <AlertCircle
+                        className="w-3 h-3 shrink-0"
+                        aria-hidden="true"
+                      />
                       <span>{formErrors.name}</span>
                     </div>
                   )}
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="contact-email" className="text-white/80 font-medium block">
+                  <label
+                    htmlFor="contact-email"
+                    className="text-white/80 font-medium block"
+                  >
                     {t.contact.emailLabel} *
                   </label>
                   <input
@@ -420,7 +486,10 @@ export function ContactSection() {
                   />
                   {formErrors.email && (
                     <div className="flex items-center gap-1 text-[11px] text-red-400">
-                      <AlertCircle className="w-3 h-3 shrink-0" aria-hidden="true" />
+                      <AlertCircle
+                        className="w-3 h-3 shrink-0"
+                        aria-hidden="true"
+                      />
                       <span>{formErrors.email}</span>
                     </div>
                   )}
@@ -429,7 +498,10 @@ export function ContactSection() {
 
               {/* Subject */}
               <div className="space-y-1.5">
-                <label htmlFor="contact-subject" className="text-white/80 font-medium block">
+                <label
+                  htmlFor="contact-subject"
+                  className="text-white/80 font-medium block"
+                >
                   {t.contact.subjectLabel}
                 </label>
                 <input
@@ -445,7 +517,10 @@ export function ContactSection() {
 
               {/* Message */}
               <div className="space-y-1.5">
-                <label htmlFor="contact-message" className="text-white/80 font-medium block">
+                <label
+                  htmlFor="contact-message"
+                  className="text-white/80 font-medium block"
+                >
                   {t.contact.messageLabel} *
                 </label>
                 <textarea
@@ -464,23 +539,29 @@ export function ContactSection() {
                 />
                 {formErrors.message && (
                   <div className="flex items-center gap-1 text-[11px] text-red-400">
-                    <AlertCircle className="w-3 h-3 shrink-0" aria-hidden="true" />
+                    <AlertCircle
+                      className="w-3 h-3 shrink-0"
+                      aria-hidden="true"
+                    />
                     <span>{formErrors.message}</span>
                   </div>
                 )}
               </div>
 
-              {/* KVKK Onay Kutusu (Görev 5 ve Bilişim Hukuku) */}
+              {/* Data Privacy (GDPR / KVKK) Consent Checkbox */}
               <div className="pt-2">
                 <label className="flex items-start gap-2.5 cursor-pointer select-none group">
                   <input
                     type="checkbox"
-                    id="contact-kvkk"
-                    checked={kvkkOnay}
+                    id="contact-consent"
+                    checked={consentGiven}
                     onChange={(e) => {
-                      setKvkkOnay(e.target.checked);
-                      if (formErrors.kvkk) {
-                        setFormErrors((prev) => ({ ...prev, kvkk: undefined }));
+                      setConsentGiven(e.target.checked);
+                      if (formErrors.consent) {
+                        setFormErrors((prev) => ({
+                          ...prev,
+                          consent: undefined,
+                        }));
                       }
                     }}
                     className="mt-0.5 h-4 w-4 rounded border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-accent)] focus:ring-[var(--theme-accent)] cursor-pointer shrink-0"
@@ -489,15 +570,18 @@ export function ContactSection() {
                     {t.contact.kvkkConsent}
                   </span>
                 </label>
-                {formErrors.kvkk && (
+                {formErrors.consent && (
                   <div className="flex items-center gap-1 text-[11px] text-red-400 mt-1.5">
-                    <AlertCircle className="w-3 h-3 shrink-0" aria-hidden="true" />
-                    <span>{formErrors.kvkk}</span>
+                    <AlertCircle
+                      className="w-3 h-3 shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span>{formErrors.consent}</span>
                   </div>
                 )}
               </div>
 
-              {/* Sunucu Yanıt Bildirimi (Veritabanı Sonucu) */}
+              {/* Server Action Status Banner */}
               {serverStatus && (
                 <div
                   role="status"
@@ -512,11 +596,15 @@ export function ContactSection() {
                   ) : (
                     <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
                   )}
-                  <span>{serverStatus.success ? t.contact.submitSuccess : (serverStatus.error || t.contact.submitError)}</span>
+                  <span>
+                    {serverStatus.success
+                      ? t.contact.submitSuccess
+                      : serverStatus.error || t.contact.submitError}
+                  </span>
                 </div>
               )}
 
-              {/* Doğrudan Gönder (Veritabanına Kaydet) Ana Buton */}
+              {/* Primary Direct Submit (Save to Database) Button */}
               <div className="pt-2">
                 <button
                   type="button"
@@ -538,7 +626,7 @@ export function ContactSection() {
                 </button>
               </div>
 
-              {/* Success Notification Box when draft is triggered */}
+              {/* Notification Box when email client draft is triggered */}
               {activeDraftMethod && (
                 <div
                   role="status"
@@ -546,7 +634,10 @@ export function ContactSection() {
                   className="p-3.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 space-y-1.5 animate-in fade-in duration-200"
                 >
                   <div className="flex items-center gap-2 font-semibold">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" aria-hidden="true" />
+                    <CheckCircle2
+                      className="w-4 h-4 shrink-0 text-emerald-400"
+                      aria-hidden="true"
+                    />
                     <span>{t.contact.successTitle}</span>
                   </div>
                   <p className="text-[11px] text-emerald-400/90 leading-relaxed font-sans">
@@ -555,14 +646,14 @@ export function ContactSection() {
                 </div>
               )}
 
-              {/* Direct Mail Action Buttons */}
+              {/* Alternative Email Client Action Buttons */}
               <div className="space-y-3 pt-3 border-t border-[var(--theme-border)]">
                 <div className="text-[11px] font-mono-code text-white/50 tracking-wider uppercase">
-                  Alternatif: Doğrudan E-Posta İstemcisiyle Gönder
+                  {t.contact.alternativeMailClient}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                  {/* 1. Gmail ile Gönder */}
+                  {/* 1. Send via Gmail */}
                   <button
                     type="button"
                     onClick={handleSendGmail}
@@ -576,10 +667,13 @@ export function ContactSection() {
                       <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.545l8.073-6.052C21.69 2.28 24 3.434 24 5.457z" />
                     </svg>
                     <span>{t.contact.sendViaGmail}</span>
-                    <ExternalLink className="w-3 h-3 text-red-400/70" aria-hidden="true" />
+                    <ExternalLink
+                      className="w-3 h-3 text-red-400/70"
+                      aria-hidden="true"
+                    />
                   </button>
 
-                  {/* 2. Outlook ile Gönder */}
+                  {/* 2. Send via Outlook */}
                   <button
                     type="button"
                     onClick={handleSendOutlook}
@@ -593,16 +687,22 @@ export function ContactSection() {
                       <path d="M1 5.5A2.5 2.5 0 0 1 3.5 3h17A2.5 2.5 0 0 1 23 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-17A2.5 2.5 0 0 1 1 18.5v-13zm2.2-.5a.5.5 0 0 0-.2.4v.3l9 5.6 9-5.6v-.3a.5.5 0 0 0-.5-.4h-17.3zm17.8 2.6-8.5 5.3a1 1 0 0 1-1 0L3 7.6v10.9a.5.5 0 0 0 .5.5h17a.5.5 0 0 0 .5-.5V7.6z" />
                     </svg>
                     <span>{t.contact.sendViaOutlook}</span>
-                    <ExternalLink className="w-3 h-3 text-sky-400/70" aria-hidden="true" />
+                    <ExternalLink
+                      className="w-3 h-3 text-sky-400/70"
+                      aria-hidden="true"
+                    />
                   </button>
 
-                  {/* 3. Cihazdaki Mail Uygulaması ile Gönder */}
+                  {/* 3. Send via Device Mail App */}
                   <button
                     type="button"
                     onClick={handleSendMailApp}
                     className="flex items-center justify-center gap-2 px-3.5 py-3 rounded font-semibold text-xs border border-[var(--theme-accent)]/50 bg-[var(--theme-accent)]/15 text-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/25 hover:border-[var(--theme-accent)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-accent)] shadow-sm group"
                   >
-                    <Laptop className="w-4 h-4 shrink-0 group-hover:scale-105 transition-transform" aria-hidden="true" />
+                    <Laptop
+                      className="w-4 h-4 shrink-0 group-hover:scale-105 transition-transform"
+                      aria-hidden="true"
+                    />
                     <span>{t.contact.sendViaMailApp}</span>
                   </button>
                 </div>
@@ -616,17 +716,30 @@ export function ContactSection() {
                   >
                     {copiedFull ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
-                        <span className="text-emerald-400">{t.contact.copied}</span>
+                        <Check
+                          className="w-3.5 h-3.5 text-emerald-400"
+                          aria-hidden="true"
+                        />
+                        <span className="text-emerald-400">
+                          {t.contact.copied}
+                        </span>
                       </>
                     ) : copyFullError ? (
                       <>
-                        <XCircle className="w-3.5 h-3.5 text-red-400" aria-hidden="true" />
-                        <span className="text-red-400">{t.contact.copyFailed}</span>
+                        <XCircle
+                          className="w-3.5 h-3.5 text-red-400"
+                          aria-hidden="true"
+                        />
+                        <span className="text-red-400">
+                          {t.contact.copyFailed}
+                        </span>
                       </>
                     ) : (
                       <>
-                        <Copy className="w-3.5 h-3.5 text-[var(--theme-accent)]" aria-hidden="true" />
+                        <Copy
+                          className="w-3.5 h-3.5 text-[var(--theme-accent)]"
+                          aria-hidden="true"
+                        />
                         <span>{t.contact.copyFullMessage}</span>
                       </>
                     )}
@@ -640,3 +753,4 @@ export function ContactSection() {
     </section>
   );
 }
+export default ContactSection;

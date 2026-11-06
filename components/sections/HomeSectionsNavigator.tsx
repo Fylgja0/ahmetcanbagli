@@ -90,11 +90,11 @@ export function HomeSectionsNavigator() {
       tags: ['EF Core 10', 'CatBoost', 'EDA'],
     },
     {
-      id: 'oduller',
+      id: 'awards',
       badge: '06_AWARDS',
       icon: Trophy,
       href: '/awards',
-      title: 'Ödüller & Başarılar',
+      title: t.nav.awards || t.awardsPage.title,
       desc: {
         tr: 'Yarışmalar, burslar, hackathon dereceleri ve PostgreSQL veritabanından dinamik gelen başarılar.',
         en: 'Awards, scholarships, hackathons, and dynamic achievements served live from PostgreSQL.',
@@ -139,7 +139,7 @@ export function HomeSectionsNavigator() {
 
       {/* Grid of Page Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {PAGES.filter((p) => p.id !== 'oduller' || awardsVisible).map((page) => {
+        {PAGES.filter((p) => p.id !== 'awards' || awardsVisible).map((page) => {
           const Icon = page.icon;
           return (
             <Link
@@ -194,3 +194,4 @@ export function HomeSectionsNavigator() {
     </section>
   );
 }
+export default HomeSectionsNavigator;

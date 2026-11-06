@@ -1,48 +1,64 @@
 import { sql } from './db';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { AdminUser } from '@/types/admin';
 
-export interface AdminUser {
-    id: number;
-    eposta: string;
+export type { AdminUser };
+
+interface DbAdminJoinRow {
+  id: number;
+  eposta: string;
 }
 
-// Aktif yöneticiyi ve oturum geçerliliğini kontrol eder (Görev 6.2 kuralı)
+/**
+ * Retrieves the currently authenticated administrator and validates session expiration (30-min inactivity limit).
+ */
 export async function getAdmin(): Promise<AdminUser | null> {
+  try {
     const cookieStore = await cookies();
     const token = cookieStore.get('admin_token')?.value;
 
     if (!token) return null;
 
-    // 30 dakika işlem yapılmayan ya da bitiş süresi dolan oturum düşer
+    // Sessions expire after their hard limit or after 30 minutes of inactivity
     const rows = await sql`
-        SELECT y.id, y.eposta FROM oturumlar o
-        JOIN yoneticiler y ON y.id = o.yonetici_id
-        WHERE o.token = ${token} 
-          AND o.bitis > now()
-          AND o.son_aktivite > now() - interval '30 minutes'
+      SELECT y.id, y.eposta FROM oturumlar o
+      JOIN yoneticiler y ON y.id = o.yonetici_id
+      WHERE o.token = ${token}
+        AND o.bitis > now()
+        AND o.son_aktivite > now() - interval '30 minutes'
     `;
 
     if (rows && rows.length > 0) {
-        // Son aktivite zamanını güncelle
-        await sql`UPDATE oturumlar SET son_aktivite = now() WHERE token = ${token}`;
-        return rows[0] as unknown as AdminUser;
+      const row = rows[0] as unknown as DbAdminJoinRow;
+      await sql`UPDATE oturumlar SET son_aktivite = now() WHERE token = ${token}`;
+      return {
+        id: row.id,
+        email: row.eposta,
+      };
     }
 
     return null;
+  } catch {
+    return null;
+  }
 }
 
-// İstemcinin tarayıcı/cihaz bilgisini alır (Görev 6.3 kuralı)
+/**
+ * Extracts the client User-Agent header for session auditing.
+ */
 export async function getClientDevice(): Promise<string> {
-    const headersList = await headers();
-    return headersList.get('user-agent') || 'Bilinmeyen Cihaz';
+  const headersList = await headers();
+  return headersList.get('user-agent') || 'Unknown Device';
 }
 
-// Server Action veya korumalı sayfalar için yetki doğrulaması
+/**
+ * Enforces administrator authentication for protected pages and Server Actions.
+ */
 export async function requireAdmin(): Promise<AdminUser> {
-    const admin = await getAdmin();
-    if (!admin) {
-        redirect('/login');
-    }
-    return admin;
+  const admin = await getAdmin();
+  if (!admin) {
+    redirect('/login');
+  }
+  return admin;
 }

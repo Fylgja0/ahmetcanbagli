@@ -1,28 +1,35 @@
-'use client';
-
 import React from 'react';
-import { usePortfolio } from '@/context/portfolio-context';
+import { Metadata } from 'next';
 import { PageBreadcrumb } from '@/components/ui/PageBreadcrumb';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
 import { PageFooterNavigation } from '@/components/ui/PageFooterNavigation';
+import { getLiveProjects } from '@/app/actions/projects';
 
-export default function ProjectsPage() {
-  const { t } = usePortfolio();
+export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Projects & Technical Breakdown',
+  description:
+    'C#/.NET 10 database applications, interactive data storytelling platforms, and Python machine learning pipelines.',
+};
+
+export default async function ProjectsPage() {
+  const projects = await getLiveProjects();
 
   return (
     <div className="py-4 min-h-[80vh] flex flex-col justify-between">
       <div>
         <PageBreadcrumb
-          currentPage={t.nav.projects}
+          currentPageKey="projects"
           badge="03_PROJECTS"
-          prevPage={{ href: '/skills', label: t.nav.skills }}
-          nextPage={{ href: '/education', label: t.nav.education }}
+          prevPage={{ href: '/skills', labelKey: 'skills' }}
+          nextPage={{ href: '/education', labelKey: 'education' }}
         />
-        <ProjectsSection />
+        <ProjectsSection initialProjects={projects} />
       </div>
       <PageFooterNavigation
-        prevPage={{ href: '/skills', label: t.nav.skills, badge: '02_SKILLS' }}
-        nextPage={{ href: '/education', label: t.nav.education, badge: '04_EDUCATION' }}
+        prevPage={{ href: '/skills', labelKey: 'skills', badge: '02_SKILLS' }}
+        nextPage={{ href: '/education', labelKey: 'education', badge: '04_EDUCATION' }}
       />
     </div>
   );

@@ -100,17 +100,26 @@ export interface UiTranslations {
     swipeHint: string;
     categoryBackend: string;
     categoryDataScience: string;
+    categoryFullStack: string;
+    categoryMobile: string;
     openSourceBadge: string;
     stackLabel: string;
     more: string;
     modalSpecBackend: string;
     modalSpecDataScience: string;
+    modalSpecFullStack: string;
+    modalSpecMobile: string;
     modalSourceLabel: string;
     modalOverviewTitle: string;
     modalTechTitle: string;
     modalConceptsTitle: string;
     modalDismissHint: string;
     modalRepoButton: string;
+    emptyTitle: string;
+    emptyDesc: string;
+    archColLayer: string;
+    archColRole: string;
+    archColSpec: string;
   };
   education: {
     sectionTag: string;
@@ -174,6 +183,14 @@ export interface UiTranslations {
     kvkkRequired: string;
     submitSuccess: string;
     submitError: string;
+    alternativeMailClient: string;
+  };
+  awardsTeaser: {
+    badge: string;
+    title: string;
+    desc: string;
+    viewAll: string;
+    defaultCategory: string;
   };
   awardsPage: {
     badge: string;
@@ -318,17 +335,26 @@ export const translations: Record<LanguageId, UiTranslations> = {
       swipeHint: 'Mobilde kaydırarak projeler arasında geçiş yapabilirsiniz',
       categoryBackend: 'C# / .NET VERİTABANI PROJESİ',
       categoryDataScience: 'PYTHON VERİ BİLİMİ PROJESİ',
+      categoryFullStack: 'FULL-STACK WEB UYGULAMASI',
+      categoryMobile: 'MOBİL UYGULAMA PROJESİ',
       openSourceBadge: 'GitHub Açık Kaynak',
       stackLabel: 'Teknolojiler:',
       more: 'daha fazla',
       modalSpecBackend: '// ARKA UÇ SPESİFİKASYONU',
       modalSpecDataScience: '// VERİ BİLİMİ SPESİFİKASYONU',
+      modalSpecFullStack: '// FULL-STACK SPESİFİKASYONU',
+      modalSpecMobile: '// MOBİL UYGULAMA SPESİFİKASYONU',
       modalSourceLabel: 'İncelenebilir Kaynak Kod:',
       modalOverviewTitle: '[01] Proje Özeti & Kapsam',
       modalTechTitle: '[02] Teknolojiler & Kütüphaneler',
       modalConceptsTitle: '[03] Temel Kavramlar & Yaklaşımlar',
       modalDismissHint: 'Kapatmak için Esc tuşuna basın veya dışarı tıklayın',
       modalRepoButton: 'GitHub Deposu',
+      emptyTitle: 'Henüz yayında bir proje bulunmuyor',
+      emptyDesc: 'Yönetim panelinden yeni projeler eklendiğinde veya yayına alındığında bu alanda otomatik olarak listelenecektir.',
+      archColLayer: 'Katman',
+      archColRole: 'Rol',
+      archColSpec: 'Teknolojik Detay',
     },
     education: {
       sectionTag: '// 04. AKADEMİK BİLGİ',
@@ -392,6 +418,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Lütfen KVKK Aydınlatma Metnini onaylayınız.',
       submitSuccess: 'Mesajınız başarıyla veritabanına kaydedildi. En kısa sürede geri dönüş yapılacaktır.',
       submitError: 'Mesaj iletilirken bir hata meydana geldi.',
+      alternativeMailClient: 'Alternatif: Doğrudan E-Posta İstemcisiyle Gönder',
+    },
+    awardsTeaser: {
+      badge: 'CANLI VERİTABANI ÖNE ÇIKANLAR',
+      title: 'Ödüller & Başarılar',
+      desc: 'Yarışmalar, hackathonlar ve akademik başarılar. PostgreSQL veritabanından canlı olarak çekilen en yeni ödüller.',
+      viewAll: 'Tüm Ödülleri İncele',
+      defaultCategory: 'Ödül',
     },
     awardsPage: {
       badge: '06_AWARDS & HONORS',
@@ -538,17 +572,26 @@ export const translations: Record<LanguageId, UiTranslations> = {
       swipeHint: 'Swipe horizontally on mobile to navigate between projects',
       categoryBackend: 'C# / .NET DATABASE PROJECT',
       categoryDataScience: 'PYTHON DATA SCIENCE PROJECT',
+      categoryFullStack: 'FULL-STACK WEB APPLICATION',
+      categoryMobile: 'MOBILE APPLICATION PROJECT',
       openSourceBadge: 'GitHub Open Source',
       stackLabel: 'Stack:',
       more: 'more',
       modalSpecBackend: '// BACKEND SPECIFICATION',
       modalSpecDataScience: '// DATA SCIENCE SPECIFICATION',
+      modalSpecFullStack: '// FULL-STACK SPECIFICATION',
+      modalSpecMobile: '// MOBILE SPECIFICATION',
       modalSourceLabel: 'Auditable Source Code:',
       modalOverviewTitle: '[01] Project Overview & Scope',
       modalTechTitle: '[02] Technologies & Libraries',
       modalConceptsTitle: '[03] Key Concepts & Applied Methods',
       modalDismissHint: 'Press Esc or click outside to dismiss',
       modalRepoButton: 'GitHub Repo',
+      emptyTitle: 'No published projects available yet',
+      emptyDesc: 'Projects will appear here automatically once created and published in the admin panel.',
+      archColLayer: 'Layer',
+      archColRole: 'Role',
+      archColSpec: 'Technical Specification',
     },
     education: {
       sectionTag: '// 04. ACADEMIC BACKGROUND',
@@ -612,6 +655,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Please accept the Data Privacy notice.',
       submitSuccess: 'Your message has been successfully saved to the database. We will get back to you shortly.',
       submitError: 'An error occurred while transmitting your message.',
+      alternativeMailClient: 'Alternative: Send Directly via Email Client',
+    },
+    awardsTeaser: {
+      badge: 'LIVE DATABASE HIGHLIGHTS',
+      title: 'Awards & Achievements',
+      desc: 'Competitions, hackathons, and academic honors served dynamically from our PostgreSQL database.',
+      viewAll: 'View All Awards',
+      defaultCategory: 'Award',
     },
     awardsPage: {
       badge: '06_AWARDS & HONORS',
@@ -758,17 +809,26 @@ export const translations: Record<LanguageId, UiTranslations> = {
       swipeHint: 'Auf Mobilgeräten horizontal wischen zum Wechseln',
       categoryBackend: 'C# / .NET DATENBANKPROJEKT',
       categoryDataScience: 'PYTHON DATA-SCIENCE-PROJEKT',
+      categoryFullStack: 'FULL-STACK WEBANWENDUNG',
+      categoryMobile: 'MOBILE ANWENDUNG',
       openSourceBadge: 'GitHub Open Source',
       stackLabel: 'Technologien:',
       more: 'weitere',
       modalSpecBackend: '// BACKEND-SPEZIFIKATION',
       modalSpecDataScience: '// DATA-SCIENCE-SPEZIFIKATION',
+      modalSpecFullStack: '// FULL-STACK-SPEZIFIKATION',
+      modalSpecMobile: '// MOBILE-SPEZIFIKATION',
       modalSourceLabel: 'Einsehbarer Quellcode:',
       modalOverviewTitle: '[01] Projektübersicht & Umfang',
       modalTechTitle: '[02] Technologien & Bibliotheken',
       modalConceptsTitle: '[03] Kernkonzepte & Angewandte Methoden',
       modalDismissHint: 'Drücken Sie Esc oder klicken Sie nach außen zum Schließen',
       modalRepoButton: 'GitHub-Repo',
+      emptyTitle: 'Noch keine veröffentlichten Projekte vorhanden',
+      emptyDesc: 'Neue Projekte werden hier automatisch aufgelistet, sobald sie im Admin-Bereich veröffentlicht werden.',
+      archColLayer: 'Schicht',
+      archColRole: 'Rolle',
+      archColSpec: 'Technische Spezifikation',
     },
     education: {
       sectionTag: '// 04. AKADEMISCHER WERDEGANG',
@@ -832,6 +892,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Bitte stimmen Sie den Datenschutzbestimmungen zu.',
       submitSuccess: 'Ihre Nachricht wurde erfolgreich in der Datenbank gespeichert. Wir melden uns in Kürze.',
       submitError: 'Beim Übermitteln Ihrer Nachricht ist ein Fehler aufgetreten.',
+      alternativeMailClient: 'Alternative: Direkt über E-Mail-Client senden',
+    },
+    awardsTeaser: {
+      badge: 'LIVE-DATENBANK HIGHLIGHTS',
+      title: 'Auszeichnungen & Erfolge',
+      desc: 'Wettbewerbe, Hackathons und akademische Auszeichnungen, dynamisch aus der PostgreSQL-Datenbank geladen.',
+      viewAll: 'Alle Auszeichnungen ansehen',
+      defaultCategory: 'Auszeichnung',
     },
     awardsPage: {
       badge: '06_AWARDS & HONORS',
@@ -978,17 +1046,26 @@ export const translations: Record<LanguageId, UiTranslations> = {
       swipeHint: 'Свайпайте влево/вправо на мобильном устройстве для переключения',
       categoryBackend: 'ПРОЕКТ БАЗЫ ДАННЫХ C# / .NET',
       categoryDataScience: 'ПРОЕКТ ПО ДАННЫМ НА PYTHON',
+      categoryFullStack: 'FULL-STACK ВЕБ-ПРИЛОЖЕНИЕ',
+      categoryMobile: 'МОБИЛЬНОЕ ПРИЛОЖЕНИЕ',
       openSourceBadge: 'Открытый код на GitHub',
       stackLabel: 'Стек:',
       more: 'еще',
       modalSpecBackend: '// СПЕЦИФИКАЦИЯ: БЭКЕНД',
       modalSpecDataScience: '// СПЕЦИФИКАЦИЯ: DATA SCIENCE',
+      modalSpecFullStack: '// СПЕЦИФИКАЦИЯ: FULL-STACK',
+      modalSpecMobile: '// СПЕЦИФИКАЦИЯ: МОБИЛЬНОЕ ПРИЛОЖЕНИЕ',
       modalSourceLabel: 'Открытый исходный код:',
       modalOverviewTitle: '[01] Обзор и назначение проекта',
       modalTechTitle: '[02] Технологии и библиотеки',
       modalConceptsTitle: '[03] Ключевые концепции и методы',
       modalDismissHint: 'Нажмите Esc или кликните вне окна для закрытия',
       modalRepoButton: 'Репозиторий GitHub',
+      emptyTitle: 'Опубликованных проектов пока нет',
+      emptyDesc: 'Проекты появятся здесь автоматически после публикации в панели управления.',
+      archColLayer: 'Слой',
+      archColRole: 'Роль',
+      archColSpec: 'Техническая спецификация',
     },
     education: {
       sectionTag: '// 04. ОБРАЗОВАНИЕ',
@@ -1052,6 +1129,14 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Пожалуйста, подтвердите согласие на обработку персональных данных.',
       submitSuccess: 'Ваше сообщение успешно сохранено в базе данных. Мы свяжемся с вами в ближайшее время.',
       submitError: 'Произошла ошибка при отправке сообщения.',
+      alternativeMailClient: 'Альтернатива: Отправить напрямую через почтовый клиент',
+    },
+    awardsTeaser: {
+      badge: 'АКТУАЛЬНЫЕ ДАННЫЕ ИЗ БД',
+      title: 'Награды и достижения',
+      desc: 'Конкурсы, хакатоны и академические достижения, загружаемые из базы данных PostgreSQL.',
+      viewAll: 'Смотреть все награды',
+      defaultCategory: 'Награда',
     },
     awardsPage: {
       badge: '06_AWARDS & HONORS',

@@ -2,6 +2,8 @@ export type ThemeId = 'matrix' | 'quantum' | 'gothic';
 
 export type LanguageId = 'tr' | 'en' | 'de' | 'ru';
 
+export type ProjectCategory = 'backend' | 'datascience' | 'fullstack' | 'mobile';
+
 export interface ThemeConfig {
   id: ThemeId;
   name: Record<LanguageId, string>;
@@ -25,7 +27,7 @@ export interface Project {
   id: string;
   slug: string;
   title: string;
-  category: 'backend' | 'datascience';
+  category: ProjectCategory;
   githubUrl: string;
   liveUrl?: string;
   technologies: string[];
@@ -36,6 +38,24 @@ export interface Project {
   engineeringInsights: Record<LanguageId, string[]>;
   futureRoadmap: Record<LanguageId, string[]>;
   highlights: Record<LanguageId, ProjectHighlight[]>;
+}
+
+export interface AwardRecord {
+  id: number;
+  title: string;
+  organization: string | null;
+  date: string | null;
+  rank: number | null;
+  description: string | null;
+  categoryId: number | null;
+  categoryName: string | null;
+  isPublished: boolean;
+  createdAt?: string;
+}
+
+export interface AwardCategory {
+  id: number;
+  name: string;
 }
 
 export interface SkillItem {

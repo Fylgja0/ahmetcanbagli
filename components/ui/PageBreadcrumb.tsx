@@ -3,23 +3,43 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePortfolio } from '@/context/portfolio-context';
+import { UiTranslations } from '@/lib/translations';
 import { ArrowLeft, ArrowRight, Home, Terminal } from 'lucide-react';
 
-interface PageBreadcrumbProps {
-  currentPage: string;
-  badge: string;
-  prevPage?: {
-    href: string;
-    label: string;
-  };
-  nextPage?: {
-    href: string;
-    label: string;
-  };
+interface PageLink {
+  href: string;
+  label?: string;
+  labelKey?: keyof UiTranslations['nav'];
 }
 
-export function PageBreadcrumb({ currentPage, badge, prevPage, nextPage }: PageBreadcrumbProps) {
+interface PageBreadcrumbProps {
+  currentPage?: string;
+  currentPageKey?: keyof UiTranslations['nav'];
+  badge: string;
+  prevPage?: PageLink;
+  nextPage?: PageLink;
+}
+
+export function PageBreadcrumb({
+  currentPage,
+  currentPageKey,
+  badge,
+  prevPage,
+  nextPage,
+}: PageBreadcrumbProps) {
   const { t } = usePortfolio();
+
+  const resolvedCurrentPage = currentPageKey ? t.nav[currentPageKey] : currentPage;
+  const resolvedPrevLabel = prevPage
+    ? prevPage.labelKey
+      ? t.nav[prevPage.labelKey]
+      : prevPage.label
+    : undefined;
+  const resolvedNextLabel = nextPage
+    ? nextPage.labelKey
+      ? t.nav[nextPage.labelKey]
+      : nextPage.label
+    : undefined;
 
   return (
     <div className="pt-6 pb-2 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,7 +55,7 @@ export function PageBreadcrumb({ currentPage, badge, prevPage, nextPage }: PageB
           <span className="text-white/30">/</span>
           <span className="text-[var(--theme-accent)] font-semibold flex items-center gap-1">
             <Terminal className="w-3 h-3" />
-            <span>{currentPage}</span>
+            <span>{resolvedCurrentPage}</span>
           </span>
           <span className="text-white/30 hidden sm:inline">·</span>
           <span className="text-[10px] text-white/40 hidden sm:inline">{badge}</span>
@@ -48,7 +68,7 @@ export function PageBreadcrumb({ currentPage, badge, prevPage, nextPage }: PageB
               className="hidden sm:inline-flex items-center gap-1.5 text-white/70 hover:text-white px-2.5 py-1 rounded border border-white/10 hover:border-[var(--theme-accent)] transition-colors bg-[var(--theme-card)]"
             >
               <ArrowLeft className="w-3 h-3 text-[var(--theme-accent)]" />
-              <span>{prevPage.label}</span>
+              <span>{resolvedPrevLabel}</span>
             </Link>
           )}
           <Link
@@ -63,7 +83,7 @@ export function PageBreadcrumb({ currentPage, badge, prevPage, nextPage }: PageB
               href={nextPage.href}
               className="inline-flex items-center gap-1.5 text-[var(--theme-accent)] hover:text-white px-2.5 py-1 rounded border border-[var(--theme-border)] bg-[var(--theme-surface)] hover:bg-[var(--theme-badge-bg)] transition-colors"
             >
-              <span>{nextPage.label}</span>
+              <span>{resolvedNextLabel}</span>
               <ArrowRight className="w-3 h-3" />
             </Link>
           )}

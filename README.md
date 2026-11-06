@@ -1,6 +1,6 @@
 # Ahmetcan Bağlı — Personal Developer Portfolio & Dynamic Management Platform
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.5.27-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon_Serverless-4169e1?style=for-the-badge&logo=postgresql)](https://neon.tech/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
@@ -8,7 +8,7 @@
 
 > Production-grade personal developer portfolio and content management platform of **Ahmetcan Bağlı**, software developer focusing on **C#**, **.NET 10**, **Entity Framework Core 10**, **Microsoft SQL Server**, **PostgreSQL**, and **Python Data Science / ML**.
 >
-> In addition to showcasing real-world software engineering projects through a retro-modern terminal aesthetic and interactive canvas particle systems, this application includes a full-featured, secure **Admin Management System (`/admin`)** backed by **Neon Serverless PostgreSQL**, **bcrypt** session security, and full dynamic project and message management.
+> In addition to showcasing real-world software engineering projects through a retro-modern terminal aesthetic and interactive canvas particle systems, this application includes a full-featured, secure **Admin Management System (`/admin`)** backed by **Neon Serverless PostgreSQL**, **bcrypt** session security, and dynamic project, award, and message management.
 
 * **Live Website:** [https://ahmetcanbagli-portfolio.vercel.app](https://ahmetcanbagli-portfolio.vercel.app)
 * **GitHub Profile:** [@Fylgja0](https://github.com/Fylgja0)
@@ -23,11 +23,11 @@
 - [Architecture & Core Highlights](#architecture--core-highlights)
 - [Database Architecture & SQL Scripts](#database-architecture--sql-scripts)
 - [Admin Management System (`/admin`)](#admin-management-system-admin)
-  - [1. Authentication & Session Security](#1-authentication--session-security)
-  - [2. Dynamic Projects CRUD (`/admin/projeler`)](#2-dynamic-projects-crud-adminprojeler)
-  - [3. Awards & Achievements Showcase (`/admin/oduller` & `/oduller`)](#3-awards--achievements-showcase-adminoduller--oduller)
-  - [4. Messages & Privacy Compliance (`/admin/mesajlar`)](#4-messages--privacy-compliance-adminmesajlar)
-  - [5. Active Session Tracking & Remote Revocation (`/admin/oturumlar`)](#5-active-session-tracking--remote-revocation-adminoturumlar)
+  - [1. Authentication & Session Security (`/login`)](#1-authentication--session-security-login)
+  - [2. Dynamic Projects CRUD (`/admin/projects`)](#2-dynamic-projects-crud-adminprojects)
+  - [3. Awards & Achievements Showcase (`/admin/awards` & `/awards`)](#3-awards--achievements-showcase-adminawards--awards)
+  - [4. Messages & Privacy Compliance (`/admin/messages`)](#4-messages--privacy-compliance-adminmessages)
+  - [5. Active Session Tracking & Remote Revocation (`/admin/sessions`)](#5-active-session-tracking--remote-revocation-adminsessions)
 - [Tech Stack](#tech-stack)
 - [Projects Featured](#projects-featured)
 - [Project Structure](#project-structure)
@@ -40,7 +40,7 @@
 
 ## Overview
 
-This application bridges the gap between a sleek front-facing developer showcase and a real-world, production-ready backend administration tool. 
+This application bridges the gap between a sleek front-facing developer showcase and a real-world, production-ready backend administration tool.
 
 It rejects static web templates in favor of a bespoke retro-modern cyber-terminal interface, driven by high-performance HTML5 Canvas physics simulations and 4-language internationalization. Behind an authenticated admin layer, it provides dynamic CRUD operations over a cloud PostgreSQL database, allowing real-time publishing, project sorting, telemetry tracking, and privacy compliance without requiring manual redeployments.
 
@@ -49,16 +49,16 @@ It rejects static web templates in favor of a bespoke retro-modern cyber-termina
 ## Architecture & Core Highlights
 
 1. **Next.js 15 (App Router) & React 19**
-   - Built on Next.js `15.5.27` utilizing React 19 Server and Client Components.
-   - Form operations, project mutations, and message handling execute securely via type-safe Next.js **Server Actions**.
+   - Built on Next.js 15 utilizing React 19 Server and Client Components.
+   - Form operations, project/award mutations, and message handling execute securely via type-safe Next.js **Server Actions** (`app/actions/`).
 
 2. **Serverless PostgreSQL Database (`@neondatabase/serverless`)**
-   - Direct connection pooling with SSL encryption.
-   - Resilient database lifecycle: includes automatic table creation/migrations on first connection, as well as an in-memory graceful fallback mode if no database URL is supplied.
+   - Lazy-initialized Neon Serverless PostgreSQL client (`lib/db.ts`) that allows static builds to succeed cleanly even when `DATABASE_URL` is absent.
+   - Graceful fallback to curated local project data (`lib/data.ts`) if the database is unreachable.
 
 3. **Multilingual Architecture (4 Languages)**
    - Complete localized UI across **English (`en`)**, **Türkçe (`tr`)**, **Deutsch (`de`)**, and **Русский (`ru`)**.
-   - Automatic browser language detection with `localStorage` persistence and dynamic `document.documentElement.lang` synchronisation for screen readers and search engines.
+   - Automatic browser language detection with `localStorage` persistence and dynamic `document.documentElement.lang` synchronization for screen readers and search engines.
 
 4. **Interactive Ambient Canvas Engines (Triple Theme)**
    - **01_MTX (Matrix Cyber):** Live falling green code streams rendering authentic C#, Python, SQL, and LINQ syntax tokens.
@@ -78,14 +78,15 @@ It rejects static web templates in favor of a bespoke retro-modern cyber-termina
 
 ## Database Architecture & SQL Scripts
 
-The project manages relational persistence with PostgreSQL. Database definitions, seeds, and analytical queries are organized under the [`sql/`](sql/) directory:
+The project manages relational persistence with PostgreSQL. Database definitions, seeds, and analytical queries are organized cleanly under the [`sql/`](sql/) directory:
 
-### 1. `sql/projeler.sql` — Projects Schema & Management CRUD
-* **DDL Definition:** Defines the `projeler` table (`id`, `slug`, `baslik`, `kategori`, `github_url`, `canli_url`, `teknolojiler`, `aciklama`, `detay`, `one_cikan`, `sira`, `yayinda`, `ek_bilgiler`, `olusturma`).
-* **Initial Seed Data:** Seed records for the 3 flagship projects (*Car Management System*, *E-Commerce Return Prediction*, *Turkey's Electricity Transformation*).
-* **Admin Queries:** Comprehensive CRUD queries for inserting new projects with auto-generated slugs, updating project metadata, toggling published (`yayinda`) and featured (`one_cikan`) statuses, reordering, and deleting.
+### 1. [`sql/schema.sql`](sql/schema.sql) — Consolidated Database DDL
+* Defines all 8 core tables (`yoneticiler`, `oturumlar`, `site_ayarlari`, `projeler`, `odul_turleri`, `oduller`, `iletisim_mesajlari`, `imha_kayitlari`), constraints, foreign keys (`ON DELETE SET NULL` / `ON DELETE CASCADE`), and performance indexes.
 
-### 2. `sql/sorgular.sql` — Relational & Security Queries
+### 2. [`sql/seed.sql`](sql/seed.sql) — Idempotent Seed Data
+* Provides idempotent (`ON CONFLICT DO NOTHING` / `ON CONFLICT DO UPDATE`) seed data for default site settings, award categories, sample awards, and the 3 flagship engineering projects.
+
+### 3. [`sql/queries.sql`](sql/queries.sql) — Relational, Analytics & Compliance Queries
 * **Relational Filtering:** Queries filtering awards by rank, recency, category relationships (`LEFT JOIN` + `GROUP BY`), and aggregate calculations (`AVG`, `COUNT(*) FILTER`).
 * **Security Maintenance:** Automated cleanup query deleting expired or 30-minute inactive sessions:
   ```sql
@@ -94,31 +95,34 @@ The project manages relational persistence with PostgreSQL. Database definitions
   ```
 * **Privacy & Data Anonymization:** Atomic data redaction using `WITH ... RETURNING` to anonymize personal data older than 1 year and record the audit count into an archive log in a single transaction:
   ```sql
-  WITH anonimlestirilenler AS (
+  WITH anonymized_rows AS (
     UPDATE iletisim_mesajlari
     SET ad_soyad = 'Anonim',
         eposta = 'anonim@example.invalid',
         mesaj = '[anonimleştirildi]'
     WHERE gonderim_zamani < now() - interval '1 year'
+      AND eposta <> 'anonim@example.invalid'
     RETURNING id
   )
   INSERT INTO imha_kayitlari (adet, zaman)
-  SELECT COUNT(*), now() FROM anonimlestirilenler;
+  SELECT COUNT(*), now()
+  FROM anonymized_rows
+   HAVING COUNT(*) > 0;
   ```
 
 ---
 
 ## Admin Management System (`/admin`)
 
-The protected administration panel provides complete governance over the platform:
+The protected administration portal provides complete governance over the platform:
 
-### 1. Authentication & Session Security
-* **Gatekeeper (`/giris`):** Authenticates administrators using passwords salted and verified via `bcryptjs` (`ADMIN_HASH`).
-* **Secure Cookie Jar:** Session tokens are stored in `HTTPOnly`, `SameSite=Lax`, `Secure` cookies, mitigating cross-site scripting (XSS) extraction.
-* **Inactivity Timeout:** Sessions automatically invalidate after **30 minutes** of inactivity.
-* **Persistent Session Ledger:** Sessions are tracked in the database with client IP, user-agent, token hash, and last active timestamp.
+### 1. Authentication & Session Security (`/login`)
+* **Gatekeeper (`/login`):** Authenticates administrators against the `yoneticiler` table using `bcryptjs` password verification.
+* **Secure Cookie Jar:** Session tokens are stored in `HTTPOnly`, `SameSite=Lax`, `Secure` cookies (`admin_token`), mitigating cross-site scripting (XSS) extraction.
+* **Inactivity Timeout:** Sessions automatically expire after **30 minutes** of inactivity or 2 hours total lifetime.
+* **Persistent Session Ledger:** Sessions are tracked in the database with client IP, user-agent, and last active timestamp.
 
-### 2. Dynamic Projects CRUD (`/admin/projeler`)
+### 2. Dynamic Projects CRUD (`/admin/projects`)
 * Manage the portfolio's project catalogue in real time:
   * **Create:** Auto-generates URL-safe slugs from titles, accepts tech stacks, summaries, deep dive descriptions, and repository/live URLs.
   * **Read & Filter:** View all projects with status badges (Published, Hidden, Featured, Sort Order).
@@ -127,16 +131,17 @@ The protected administration panel provides complete governance over the platfor
   * **Delete:** Modal-guarded deletion.
 * The public `/projects` page and the home page featured showcase fetch dynamically from this database.
 
-### 3. Awards & Achievements Showcase (`/admin/oduller` & `/oduller`)
-* Manage technical recognitions, degrees, and milestones.
-* Complete CRUD interface for administrators and a filtered, categorized view for public visitors at `/oduller`.
+### 3. Awards & Achievements Showcase (`/admin/awards` & `/awards`)
+* Manage technical recognitions, scholarships, competitions, and milestones.
+* Global visibility toggle (`site_ayarlari`) allowing administrators to show or hide the Awards section site-wide in real time.
+* Complete CRUD interface for administrators at `/admin/awards` and a categorized showcase for public visitors at `/awards`.
 
-### 4. Messages & Privacy Compliance (`/admin/mesajlar`)
+### 4. Messages & Privacy Compliance (`/admin/messages`)
 * Inbox for inquiries submitted through the contact form, alongside explicit GDPR/KVKK consent verification.
 * Status tracking (read/unread toggling) and safe deletion.
 * **One-Click Data Anonymization:** Executes the atomic SQL anonymization workflow to redact personal data older than 1 year while preserving aggregate metrics.
 
-### 5. Active Session Tracking & Remote Revocation (`/admin/oturumlar`)
+### 5. Active Session Tracking & Remote Revocation (`/admin/sessions`)
 * Inspect all currently active sessions across devices.
 * Visual indicator highlighting the current device session.
 * **Remote Session Revocation:** Terminate sessions on other devices with one click.
@@ -147,7 +152,7 @@ The protected administration panel provides complete governance over the platfor
 ## Tech Stack
 
 ### Core Framework & Backend
-* **Framework:** Next.js 15.5.27 (App Router, Server Actions)
+* **Framework:** Next.js 15 (App Router, Server Actions)
 * **Language:** TypeScript 5.x (Strict Type Checking)
 * **Database:** PostgreSQL (Neon Serverless)
 * **Database Driver:** `@neondatabase/serverless`
@@ -190,49 +195,65 @@ The protected administration panel provides complete governance over the platfor
 
 ```
 ├── app/
-│   ├── actions/               # Server Actions (projects CRUD & contact handler)
-│   │   ├── contact.ts         # Contact submission with consent verification
-│   │   └── projects.ts        # Admin project mutations (create, update, delete, toggle)
+│   ├── actions/               # Centralized Server Actions & Data Access
+│   │   ├── auth.ts            # Admin authentication & logout actions
+│   │   ├── awards.ts          # Awards CRUD & public/admin queries
+│   │   ├── contact.ts         # Public contact form submission with GDPR/KVKK validation
+│   │   ├── messages.ts        # Admin inbox CRUD & atomic 1-year data anonymization
+│   │   ├── projects.ts        # Projects CRUD & public/admin queries
+│   │   ├── sessions.ts        # Session telemetry, remote revocation & cleanup
+│   │   └── settings.ts        # Global site settings & dashboard metrics loader
 │   ├── admin/                 # Protected administration portal
 │   │   ├── layout.tsx         # Admin wrapper, auth gatekeeper & navigation
 │   │   ├── page.tsx           # Dashboard metrics & system telemetry overview
-│   │   ├── mesajlar/page.tsx  # Inquiries inbox & privacy anonymization tool
-│   │   ├── oduller/page.tsx   # Awards & credentials management
-│   │   ├── oturumlar/page.tsx # Active session monitor & remote session termination
-│   │   └── projeler/page.tsx  # Dynamic project management workspace
-│   ├── giris/page.tsx         # Secure admin authentication interface
-│   ├── oduller/page.tsx       # Public awards & credentials showcase
+│   │   ├── awards/page.tsx    # Awards & credentials management
+│   │   ├── messages/page.tsx  # Inquiries inbox & privacy anonymization tool
+│   │   ├── projects/page.tsx  # Dynamic project management workspace
+│   │   └── sessions/page.tsx  # Active session monitor & remote session termination
+│   ├── about/page.tsx         # Identity, engineering philosophy & approach
+│   ├── awards/page.tsx        # Public awards & credentials showcase
+│   ├── contact/page.tsx       # Direct database contact form & 1-click email launchers
+│   ├── education/page.tsx     # Academic background & coursework breakdown
+│   ├── focus/page.tsx         # Current engineering R&D initiatives
+│   ├── login/page.tsx         # Secure admin authentication interface
 │   ├── projects/page.tsx      # Dynamic project portfolio page
+│   ├── skills/page.tsx        # Categorized technical skills matrix
 │   ├── globals.css            # Tailwind CSS & global theme design tokens
 │   ├── icon.tsx               # Dynamic retro terminal 32x32 favicon
 │   ├── layout.tsx             # Root layout, metadata, SEO & Schema.org JSON-LD
 │   ├── not-found.tsx          # Branded terminal 404 handler
 │   ├── opengraph-image.tsx    # Dynamic OpenGraph 1200x630 social preview
-│   ├── page.tsx               # Single-page terminal experience & featured projects
+│   ├── page.tsx               # Home terminal experience & featured highlights
 │   ├── robots.ts              # Search crawler directives
 │   ├── sitemap.ts             # Auto-generated XML sitemap
 │   └── twitter-image.tsx      # Dynamic Twitter Card 1200x630 social preview
 ├── components/
-│   ├── admin/                 # Admin navigation buttons and action controls
+│   ├── admin/                 # Typed admin client views, header & navigation controls
 │   ├── background/            # Ambient Canvas engines (Matrix, Quantum, Gothic)
-│   ├── layout/                # Navbar, Footer, and responsive wrappers
-│   ├── sections/              # Modular sections (Hero, About, Projects, Skills, etc.)
-│   └── ui/                    # Atomic UI components (SectionHeader, TechBadge, etc.)
+│   ├── layout/                # AppShell, Navbar, and Footer
+│   ├── sections/              # Modular portfolio sections (Hero, About, Projects, etc.)
+│   └── ui/                    # Atomic UI components (SectionHeader, TechBadge)
 ├── context/
-│   └── portfolio-context.tsx  # Theme, language, and interaction state management
+│   └── portfolio-context.tsx  # Theme, language, animation & visibility state management
+├── hooks/
+│   └── use-click-outside.ts   # Reusable click-outside & keyboard event hooks
 ├── lib/
-│   ├── auth.ts                # Bcrypt verification, session persistence & cookie utils
-│   ├── db.ts                  # Neon PostgreSQL pool with auto-migration & fallbacks
-│   ├── projects.ts            # Project data access layer & database seeds
-│   ├── data.ts                # Curriculum, skills, and base data structures
-│   ├── translations.ts        # Quad-language dictionary (EN, TR, DE, RU)
-│   └── utils.ts               # Tailwind class merger (clsx + twMerge)
+│   ├── admin-translations.ts  # 4-language dictionary for the Admin Portal & Login
+│   ├── auth.ts                # Session validation, sliding expiration & cookie utils
+│   ├── data.ts                # Curriculum, skills, and fallback project structures
+│   ├── db.ts                  # Lazy-initialized Neon PostgreSQL client
+│   ├── projects.ts            # Project row mappers & localized dynamic project builder
+│   ├── settings.ts            # Cached site settings accessors (React cache)
+│   ├── translations.ts        # 4-language dictionary for the public portfolio
+│   └── utils.ts               # Class merger, slug generator & locale/ordinal formatters
 ├── sql/
-│   ├── projeler.sql           # Projeler table DDL, seed data & CRUD operations
-│   └── sorgular.sql           # Relational queries, session cleanup & data anonymization
+│   ├── schema.sql             # Consolidated PostgreSQL schema (8 tables & indexes)
+│   ├── seed.sql               # Idempotent initial seed data
+│   └── queries.sql            # Relational queries, session cleanup & data anonymization
 ├── types/
-│   └── portfolio.ts           # Strict TypeScript interfaces & database record types
-├── next.config.ts             # Next.js configuration & HTTP security headers
+│   ├── admin.ts               # English domain types for admin entities & metrics
+│   └── portfolio.ts           # Strict TypeScript interfaces for portfolio & i18n
+├── next.config.ts             # Next.js configuration, HTTP headers & legacy redirects
 ├── tsconfig.json              # Strict TypeScript configuration
 └── package.json               # NPM scripts & dependencies
 ```
@@ -258,25 +279,23 @@ The protected administration panel provides complete governance over the platfor
    npm install
    ```
 
-3. **Start the local development server:**
+3. **Configure environment variables:**
+   Copy `.env.example` to `.env.local` and provide your Neon PostgreSQL `DATABASE_URL`.
+
+4. **Start the local development server:**
    ```bash
    npm run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-4. **Lint and typecheck:**
+5. **Lint and typecheck:**
    ```bash
    npm run lint
    ```
 
-5. **Build for production:**
+6. **Build for production:**
    ```bash
    npm run build
-   ```
-
-6. **Run production server locally:**
-   ```bash
-   npm run start
    ```
 
 ---
@@ -287,32 +306,25 @@ This application is optimized for zero-configuration, continuous deployment on [
 
 ### Environment Variables
 
-To connect a live database and configure administrative access, set the following environment variables in your deployment dashboard:
-
 | Variable Name | Description | Example Value |
 | :--- | :--- | :--- |
 | `DATABASE_URL` | Neon Serverless PostgreSQL connection string (SSL required) | `postgresql://user:pass@ep-xyz.neon.tech/neondb?sslmode=require` |
-| `ADMIN_PASSWORD` | Plaintext administrator login password (default fallback: `admin123`) | `your_secure_password` |
-| `ADMIN_HASH` | Optional pre-computed bcrypt hash of your admin password | `$2a$10$...` |
-| `SESSION_SECRET` | Secret key used for signing session identifiers | `your_cryptographic_secret_key` |
-
-> **Graceful Fallback Mode:** If `DATABASE_URL` is omitted (e.g., during static analysis or in isolated preview environments), the platform automatically operates in an in-memory fallback state with zero crashes or build failures.
+| `NEXT_PUBLIC_SITE_URL` | Canonical public URL used for SEO, OpenGraph, and sitemap generation | `https://ahmetcanbagli-portfolio.vercel.app` |
 
 ---
 
 ## Security & Performance Audit
 
-* **Strict TypeScript:** 100% strict type safety with no `any` escapes.
-* **Safe Input Sanitization:** Form arguments and URL parameters are protected against injection and safely encoded via `encodeURIComponent`.
-* **Cryptographic Standards:** Bcrypt password hashing with high work factors and timing-attack resistant comparisons.
+* **Strict TypeScript:** 100% strict type safety with clean English domain models (`types/portfolio.ts`, `types/admin.ts`).
+* **Parameterized SQL Queries:** All database operations use tagged-template parameterized queries via `@neondatabase/serverless`.
+* **Cryptographic Standards:** Bcrypt password hashing and `crypto.randomBytes(32)` session tokens stored in `HttpOnly` cookies.
 * **Hardened HTTP Headers:** Enforced via `next.config.ts`:
   * `X-Content-Type-Options: nosniff`
   * `X-Frame-Options: SAMEORIGIN`
-  * `Referrer-Policy: strict-origin-when-cross-origin`
+  * `Referrer-Policy: strict-origin-cross-origin`
   * `Permissions-Policy: camera=(), microphone=(), geolocation=()`
   * `poweredByHeader: false` (suppresses `X-Powered-By`)
-* **Optimized Canvas Rendering:** Frame interval throttling (`frameInterval`) and physics edge-case guards prevent CPU runaway. Animations automatically suspend when the browser tab is hidden.
-* **Clean Package Footprint:** Pure `package-lock.json` dependency tree without package manager collision.
+* **Permanent Legacy Route Redirects:** Former Turkish URLs (`/giris`, `/oduller`, `/admin/oduller`, `/admin/projeler`, `/admin/mesajlar`, `/admin/oturumlar`) redirect via HTTP 308 in `next.config.ts` to their canonical English equivalents.
 
 ---
 

@@ -414,7 +414,7 @@ export function AnimatedBackground() {
     const render = (currentTime: number) => {
       animationFrameId = requestAnimationFrame(render);
 
-      // Akış durdurulduğunda yeni kare hesaplamayı durdur: mevcut çizim ekranda sabit kalsın (freeze)
+      // Freeze current frame in place when animations are paused
       if (!animationsEnabledRef.current) return;
 
       const elapsed = currentTime - lastDrawTime;
@@ -434,7 +434,7 @@ export function AnimatedBackground() {
       }
     };
 
-    // İlk statik kareyi hemen çiz
+    // Draw initial static frame immediately
     if (theme === 'matrix') {
       renderMatrixCyber();
     } else if (theme === 'quantum') {

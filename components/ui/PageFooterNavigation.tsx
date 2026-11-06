@@ -3,23 +3,34 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePortfolio } from '@/context/portfolio-context';
+import { UiTranslations } from '@/lib/translations';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 
+interface FooterPageLink {
+  href: string;
+  label?: string;
+  labelKey?: keyof UiTranslations['nav'];
+  badge: string;
+}
+
 interface PageFooterNavigationProps {
-  prevPage?: {
-    href: string;
-    label: string;
-    badge: string;
-  };
-  nextPage?: {
-    href: string;
-    label: string;
-    badge: string;
-  };
+  prevPage?: FooterPageLink;
+  nextPage?: FooterPageLink;
 }
 
 export function PageFooterNavigation({ prevPage, nextPage }: PageFooterNavigationProps) {
   const { t } = usePortfolio();
+
+  const resolvedPrevLabel = prevPage
+    ? prevPage.labelKey
+      ? t.nav[prevPage.labelKey]
+      : prevPage.label
+    : undefined;
+  const resolvedNextLabel = nextPage
+    ? nextPage.labelKey
+      ? t.nav[nextPage.labelKey]
+      : nextPage.label
+    : undefined;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 pt-8 border-t border-white/10">
@@ -35,7 +46,7 @@ export function PageFooterNavigation({ prevPage, nextPage }: PageFooterNavigatio
             <div className="text-left">
               <div className="text-[10px] text-white/40 uppercase">{t.pageNav.prevPage}</div>
               <div className="text-white font-semibold group-hover:text-[var(--theme-accent)] transition-colors">
-                {prevPage.label}
+                {resolvedPrevLabel}
               </div>
             </div>
           </Link>
@@ -65,7 +76,7 @@ export function PageFooterNavigation({ prevPage, nextPage }: PageFooterNavigatio
             <div className="text-right">
               <div className="text-[10px] text-white/40 uppercase">{t.pageNav.nextPage}</div>
               <div className="text-white font-semibold text-[var(--theme-accent)]">
-                {nextPage.label}
+                {resolvedNextLabel}
               </div>
             </div>
             <div className="p-2 rounded bg-[var(--theme-card)] text-[var(--theme-accent)] group-hover:translate-x-1 transition-transform">

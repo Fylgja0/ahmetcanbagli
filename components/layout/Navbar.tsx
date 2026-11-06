@@ -44,7 +44,7 @@ export function Navbar() {
 
   // Filter out Awards if hidden by admin
   const navItems = NAV_ITEMS.filter((item) => {
-    if ((item.href === '/awards' || item.href === '/oduller') && !awardsVisible) {
+    if (item.href === '/awards' && !awardsVisible) {
       return false;
     }
     return true;
@@ -117,7 +117,7 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links (Admin sayfasında gizlenir, sadece sitede gösterilir) */}
+        {/* Desktop Navigation Links (Hidden on admin routes, visible on public portfolio) */}
         {isAdmin ? (
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)]/70 text-xs font-mono-code shadow-sm">
             <span className="w-2 h-2 rounded-full bg-[var(--theme-accent)] animate-pulse" />

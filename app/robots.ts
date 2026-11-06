@@ -1,11 +1,15 @@
 import type { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://ahmetcanbagli-portfolio.vercel.app';
+
   return {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: ['/admin', '/login'],
     },
-    sitemap: 'https://ahmetcanbagli-portfolio.vercel.app/sitemap.xml',
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }
