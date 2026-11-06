@@ -108,7 +108,7 @@ export function ContactSection() {
       errors.message = t.contact.validationMessageRequired;
     }
     if (!kvkkOnay) {
-      errors.kvkk = 'Lütfen KVKK Aydınlatma Metnini onaylayınız.';
+      errors.kvkk = t.contact.kvkkRequired;
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
@@ -486,7 +486,7 @@ export function ContactSection() {
                     className="mt-0.5 h-4 w-4 rounded border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-accent)] focus:ring-[var(--theme-accent)] cursor-pointer shrink-0"
                   />
                   <span className="text-[11px] text-white/80 leading-relaxed font-sans">
-                    <strong className="text-white">KVKK Açık Rıza ve Onayı:</strong> İletişim formunda paylaştığım kişisel verilerimin yönetim paneli süreçlerinde işlenmesini, 1 yıl saklama süresi sonunda anonimleştirilmesini onaylıyorum. *
+                    {t.contact.kvkkConsent}
                   </span>
                 </label>
                 {formErrors.kvkk && (
@@ -512,7 +512,7 @@ export function ContactSection() {
                   ) : (
                     <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
                   )}
-                  <span>{serverStatus.success ? serverStatus.message : serverStatus.error}</span>
+                  <span>{serverStatus.success ? t.contact.submitSuccess : (serverStatus.error || t.contact.submitError)}</span>
                 </div>
               )}
 
@@ -527,12 +527,12 @@ export function ContactSection() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin text-black" />
-                      <span>Veritabanına İletiliyor...</span>
+                      <span>{t.contact.submittingDirect}</span>
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4 text-black" />
-                      <span>Mesajı Gönder (Veritabanına İlet)</span>
+                      <span>{t.contact.submitDirect}</span>
                     </>
                   )}
                 </button>

@@ -32,29 +32,29 @@ export default async function AdminHomePage() {
         aktifOturum = oturumCountRes[0]?.aktif_oturum || 1;
         awardsVisible = visibility;
     } catch (e) {
-        console.error('İstatistikler çekilemedi:', e);
+        console.error('Failed to load dashboard metrics:', e);
     }
 
     return (
         <div className="space-y-8">
-            {/* Karşılama Başlığı */}
+            {/* Welcome Header */}
             <div>
                 <h1 className="text-2xl sm:text-3xl font-bold font-mono tracking-tight text-white flex items-center gap-3">
                     <Database className="w-7 h-7 text-[var(--theme-accent)]" />
-                    <span>Sistem Özeti & Kontrol Paneli</span>
+                    <span>System Overview & Control Panel</span>
                 </h1>
                 <p className="text-xs sm:text-sm font-mono text-white/60 mt-1">
-                    PostgreSQL veritabanı aktif. Ödüller, mesajlar ve oturum durumları anlık senkronizedir.
+                    PostgreSQL database connected. Awards, projects, messages, and security sessions synced in real time.
                 </p>
             </div>
 
-            {/* İstatistik Kartları Grid */}
+            {/* Metric Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {/* 1. Ödüller ve Başarılar Kartı (Ödev COUNT kuralı) */}
+                {/* 1. Awards & Honors Card */}
                 <div className="bg-[var(--theme-card)]/90 border border-[var(--theme-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-amber-400/60 transition-all shadow-xl">
                     <div className="flex items-center justify-between mb-4">
                         <span className="text-xs font-mono font-medium text-white/60 uppercase tracking-wider">
-                            Ödüller & Başarılar
+                            Awards & Honors
                         </span>
                         <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
                             <Award className="w-5 h-5" />
@@ -71,46 +71,46 @@ export default async function AdminHomePage() {
                                 : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                         }`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${awardsVisible ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
-                            <span>{awardsVisible ? 'Sitede Görünür' : 'Sitede Gizli'}</span>
+                            <span>{awardsVisible ? 'Publicly Visible' : 'Hidden from Site'}</span>
                         </span>
 
                         <form action={toggleAwardsVisibilityAction}>
                             <button
                                 type="submit"
-                                title={awardsVisible ? 'Ana Siteden Gizle' : 'Ana Sitede Göster'}
+                                title={awardsVisible ? 'Hide from Main Site' : 'Show on Main Site'}
                                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-[10px] font-mono border border-white/10 transition-colors cursor-pointer"
                             >
                                 {awardsVisible ? (
                                     <>
                                         <EyeOff className="w-3 h-3 text-amber-400" />
-                                        <span>Gizle</span>
+                                        <span>Hide</span>
                                     </>
                                 ) : (
                                     <>
                                         <Eye className="w-3 h-3 text-emerald-400" />
-                                        <span>Göster</span>
+                                        <span>Show</span>
                                     </>
                                 )}
                             </button>
                         </form>
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
-                        <span className="text-white/40">oduller tablosu</span>
+                        <span className="text-white/40">oduller table</span>
                         <Link
                             href="/admin/oduller"
                             className="inline-flex items-center gap-1 text-amber-400 hover:underline font-semibold"
                         >
-                            <span>Yönet & Ekle</span>
+                            <span>Manage & Add</span>
                             <ArrowUpRight className="w-3.5 h-3.5" />
                         </Link>
                     </div>
                 </div>
 
-                {/* 2. Projeler Kartı */}
+                {/* 2. Projects Card */}
                 <div className="bg-[var(--theme-card)]/90 border border-[var(--theme-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-emerald-400/60 transition-all shadow-xl">
                     <div className="flex items-center justify-between mb-4">
                         <span className="text-xs font-mono font-medium text-white/60 uppercase tracking-wider">
-                            Projeler
+                            Projects
                         </span>
                         <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                             <FolderGit2 className="w-5 h-5" />
@@ -120,22 +120,22 @@ export default async function AdminHomePage() {
                         {toplamProje}
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
-                        <span className="text-white/40">projeler tablosu</span>
+                        <span className="text-white/40">projeler table</span>
                         <Link
                             href="/admin/projeler"
                             className="inline-flex items-center gap-1 text-emerald-400 hover:underline font-semibold"
                         >
-                            <span>Projeleri Yönet</span>
+                            <span>Manage Projects</span>
                             <ArrowUpRight className="w-3.5 h-3.5" />
                         </Link>
                     </div>
                 </div>
 
-                {/* 2. Okunmamış Mesajlar Kartı (Ödev COUNT kuralı) */}
+                {/* 3. Unread Messages Card */}
                 <div className="bg-[var(--theme-card)]/90 border border-[var(--theme-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-sky-400/60 transition-all shadow-xl">
                     <div className="flex items-center justify-between mb-4">
                         <span className="text-xs font-mono font-medium text-white/60 uppercase tracking-wider">
-                            Okunmamış Mesajlar
+                            Unread Messages
                         </span>
                         <div className={`p-2.5 rounded-xl border ${
                             okunmamisMesaj > 0
@@ -149,7 +149,7 @@ export default async function AdminHomePage() {
                         okunmamisMesaj > 0 ? 'text-red-400' : 'text-white'
                     }`}>
                         {okunmamisMesaj}
-                        <span className="text-sm font-normal text-white/40 ml-2">/ {toplamMesaj} toplam</span>
+                        <span className="text-sm font-normal text-white/40 ml-2">/ {toplamMesaj} total</span>
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
                         <span className="text-white/40">iletisim_mesajlari</span>
@@ -157,17 +157,17 @@ export default async function AdminHomePage() {
                             href="/admin/mesajlar"
                             className="inline-flex items-center gap-1 text-sky-400 hover:underline font-semibold"
                         >
-                            <span>Mesajları Aç</span>
+                            <span>Open Inbox</span>
                             <ArrowUpRight className="w-3.5 h-3.5" />
                         </Link>
                     </div>
                 </div>
 
-                {/* 3. Aktif Oturumlar Kartı (Görev 6 Güvenlik) */}
+                {/* 4. Active Sessions Card */}
                 <div className="bg-[var(--theme-card)]/90 border border-[var(--theme-border)] rounded-2xl p-6 relative overflow-hidden group hover:border-[var(--theme-accent)] transition-all shadow-xl">
                     <div className="flex items-center justify-between mb-4">
                         <span className="text-xs font-mono font-medium text-white/60 uppercase tracking-wider">
-                            Aktif Oturumlar
+                            Active Sessions
                         </span>
                         <div className="p-2.5 rounded-xl bg-[var(--theme-badge-bg)] border border-[var(--theme-border)] text-[var(--theme-accent)]">
                             <Shield className="w-5 h-5" />
@@ -177,41 +177,41 @@ export default async function AdminHomePage() {
                         {aktifOturum}
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
-                        <span className="text-white/40">30 dk zaman aşımı</span>
+                        <span className="text-white/40">30 min timeout</span>
                         <Link
                             href="/admin/oturumlar"
                             className="inline-flex items-center gap-1 text-[var(--theme-accent)] hover:underline font-semibold"
                         >
-                            <span>İncele</span>
+                            <span>Inspect</span>
                             <ArrowUpRight className="w-3.5 h-3.5" />
                         </Link>
                     </div>
                 </div>
             </div>
 
-            {/* Hızlı Bilgilendirme ve Güvenlik/Hukuk Notları */}
+            {/* Quick Architecture & Compliance Status */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="bg-[var(--theme-card)]/60 border border-[var(--theme-border)] rounded-2xl p-5 space-y-2">
                     <div className="flex items-center gap-2 text-sm font-mono font-bold text-[var(--theme-accent)] mb-2">
                         <CheckCircle2 className="w-4 h-4" />
-                        <span>Görev 6 Güvenlik Durumu</span>
+                        <span>Security & Session Architecture</span>
                     </div>
                     <ul className="text-xs font-mono text-white/70 space-y-2">
-                        <li>• Oturum çerezleri <strong>httpOnly</strong>, <strong>secure</strong> ve <strong>sameSite: lax</strong> korumalıdır.</li>
-                        <li>• 30 dakika hareketsiz kalan oturumlar otomatik olarak sonlandırılır.</li>
-                        <li>• Tüm SQL sorguları tagged template literal ile parameterized çalışır; SQL injection korumalıdır.</li>
+                        <li>• Session cookies protected with <strong>httpOnly</strong>, <strong>secure</strong>, and <strong>sameSite: lax</strong> flags.</li>
+                        <li>• Sessions inactive for more than 30 minutes are invalidated automatically.</li>
+                        <li>• Database operations utilize tagged template literals for guaranteed SQL injection protection.</li>
                     </ul>
                 </div>
 
                 <div className="bg-[var(--theme-card)]/60 border border-[var(--theme-border)] rounded-2xl p-5 space-y-2">
                     <div className="flex items-center gap-2 text-sm font-mono font-bold text-amber-400 mb-2">
                         <AlertTriangle className="w-4 h-4" />
-                        <span>Görev 7 Hukuk & KVKK Durumu</span>
+                        <span>Data Privacy & GDPR/KVKK Compliance</span>
                     </div>
                     <ul className="text-xs font-mono text-white/70 space-y-2">
-                        <li>• İletişim mesajlarında 1 yıllık saklama süresi uygulanmaktadır.</li>
-                        <li>• Mesajlar sekmesinden tek tıkla 1 yılı aşan mesajlar anonimleştirilebilir.</li>
-                        <li>• Anonimleştirilen adet bilgisi <strong>imha_kayitlari</strong> tablosuna yazılır.</li>
+                        <li>• 1-year data retention schedule applied to contact form submissions.</li>
+                        <li>• 1-click batch anonymization tool available in the Messages section.</li>
+                        <li>• Purge audit trail automatically recorded into the <strong>imha_kayitlari</strong> table.</li>
                     </ul>
                 </div>
             </div>

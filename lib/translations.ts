@@ -168,6 +168,30 @@ export interface UiTranslations {
     copyFullMessage: string;
     copied: string;
     copyFailed: string;
+    submitDirect: string;
+    submittingDirect: string;
+    kvkkConsent: string;
+    kvkkRequired: string;
+    submitSuccess: string;
+    submitError: string;
+  };
+  awardsPage: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    backToHome: string;
+    liveDatabaseBadge: string;
+    featuredTitle: string;
+    allTitle: string;
+    allCount: string;
+    emptyNotice: string;
+    firstPlace: string;
+    rankBadge: string;
+    institution: string;
+    date: string;
+    category: string;
+    previewWarning: string;
+    previewAdminButton: string;
   };
   footer: {
     builtWith: string;
@@ -362,6 +386,30 @@ export const translations: Record<LanguageId, UiTranslations> = {
       copyFullMessage: 'Mesaj Detaylarını Kopyala',
       copied: 'Kopyalandı!',
       copyFailed: 'Kopyalanamadı',
+      submitDirect: 'Mesajı Gönder (Veritabanına İlet)',
+      submittingDirect: 'Veritabanına İletiliyor...',
+      kvkkConsent: 'KVKK Açık Rıza ve Onayı: İletişim formunda paylaştığım kişisel verilerimin yönetim paneli süreçlerinde işlenmesini, 1 yıl saklama süresi sonunda anonimleştirilmesini onaylıyorum. *',
+      kvkkRequired: 'Lütfen KVKK Aydınlatma Metnini onaylayınız.',
+      submitSuccess: 'Mesajınız başarıyla veritabanına kaydedildi. En kısa sürede geri dönüş yapılacaktır.',
+      submitError: 'Mesaj iletilirken bir hata meydana geldi.',
+    },
+    awardsPage: {
+      badge: '06_AWARDS & HONORS',
+      title: 'Ödüller ve Başarılar',
+      subtitle: 'Yarışmalar, hackathonlar, akademik başarılar ve burslar. Yönetim panelinden eklenen yeni ödüller bu sayfada anında canlı yayınlanır.',
+      backToHome: 'Ana Sayfaya Dön',
+      liveDatabaseBadge: 'Veritabanından Canlı Veri (PostgreSQL/Neon)',
+      featuredTitle: 'Öne Çıkan Başarılar (En Yeni 4 Ödül)',
+      allTitle: 'Tüm Başarı Listesi',
+      allCount: 'kayıt listeleniyor',
+      emptyNotice: 'Henüz yayında bir ödül kaydı bulunmamaktadır.',
+      firstPlace: '🥇 1.lik',
+      rankBadge: '. Derece',
+      institution: 'Kurum',
+      date: 'Tarih',
+      category: 'Kategori',
+      previewWarning: 'ÖNİZLEME MODU: Bu sayfa şu anda ana sitede ziyaretçilere GİZLİDİR. Yalnızca yönetici olduğunuz için görüntüleyebiliyorsunuz.',
+      previewAdminButton: 'Admin Panelinde Yönet →',
     },
     footer: {
       builtWith: 'Next.js (App Router), TypeScript & Tailwind CSS ile hazırlanmıştır.',
@@ -558,6 +606,30 @@ export const translations: Record<LanguageId, UiTranslations> = {
       copyFullMessage: 'Copy Message Details',
       copied: 'Copied!',
       copyFailed: 'Copy failed',
+      submitDirect: 'Send Message (Save to Database)',
+      submittingDirect: 'Saving to Database...',
+      kvkkConsent: 'Data Privacy Consent: I consent to the processing of personal data submitted in this contact form for administrative communication and anonymization after 1 year retention. *',
+      kvkkRequired: 'Please accept the Data Privacy notice.',
+      submitSuccess: 'Your message has been successfully saved to the database. We will get back to you shortly.',
+      submitError: 'An error occurred while transmitting your message.',
+    },
+    awardsPage: {
+      badge: '06_AWARDS & HONORS',
+      title: 'Awards & Achievements',
+      subtitle: 'Competitions, scholarships, hackathons, and dynamic achievements served live from PostgreSQL database.',
+      backToHome: 'Back to Home',
+      liveDatabaseBadge: 'Live Database Feed (PostgreSQL/Neon)',
+      featuredTitle: 'Featured Achievements (Latest 4 Awards)',
+      allTitle: 'All Achievements List',
+      allCount: 'records listed',
+      emptyNotice: 'No published awards found at the moment.',
+      firstPlace: '🥇 1st Place',
+      rankBadge: 'th Place',
+      institution: 'Organization',
+      date: 'Date',
+      category: 'Category',
+      previewWarning: 'PREVIEW MODE: This page is currently HIDDEN from public visitors. You are seeing it because you are logged in as administrator.',
+      previewAdminButton: 'Manage in Admin Panel →',
     },
     footer: {
       builtWith: 'Engineered with Next.js (App Router), TypeScript & Tailwind CSS.',
@@ -754,6 +826,30 @@ export const translations: Record<LanguageId, UiTranslations> = {
       copyFullMessage: 'Nachrichtendetails kopieren',
       copied: 'Kopiert!',
       copyFailed: 'Kopieren fehlgeschlagen',
+      submitDirect: 'Nachricht senden (In Datenbank speichern)',
+      submittingDirect: 'Wird in Datenbank gespeichert...',
+      kvkkConsent: 'Datenschutzeinwilligung: Ich stimme der Verarbeitung meiner im Kontaktformular angegebenen personenbezogenen Daten im Verwaltungspanel und der Anonymisierung nach 1 Jahr Aufbewahrungsfrist zu. *',
+      kvkkRequired: 'Bitte stimmen Sie den Datenschutzbestimmungen zu.',
+      submitSuccess: 'Ihre Nachricht wurde erfolgreich in der Datenbank gespeichert. Wir melden uns in Kürze.',
+      submitError: 'Beim Übermitteln Ihrer Nachricht ist ein Fehler aufgetreten.',
+    },
+    awardsPage: {
+      badge: '06_AWARDS & HONORS',
+      title: 'Auszeichnungen & Erfolge',
+      subtitle: 'Wettbewerbe, Stipendien, Hackathons und akademische Erfolge, live bereitgestellt über PostgreSQL.',
+      backToHome: 'Zurück zur Startseite',
+      liveDatabaseBadge: 'Live-Datenbankfeed (PostgreSQL/Neon)',
+      featuredTitle: 'Hervorgehobene Erfolge (Neueste 4)',
+      allTitle: 'Gesamte Erfolgsliste',
+      allCount: 'Einträge aufgeführt',
+      emptyNotice: 'Derzeit sind keine veröffentlichten Auszeichnungen vorhanden.',
+      firstPlace: '🥇 1. Platz',
+      rankBadge: '. Platz',
+      institution: 'Institution',
+      date: 'Datum',
+      category: 'Kategorie',
+      previewWarning: 'VORSCHAU-MODUS: Diese Seite ist derzeit für Besucher VERBORGEN. Sie sehen diese Ansicht als Administrator.',
+      previewAdminButton: 'Im Admin-Panel verwalten →',
     },
     footer: {
       builtWith: 'Erstellt mit Next.js (App Router), TypeScript & Tailwind CSS.',
@@ -950,6 +1046,30 @@ export const translations: Record<LanguageId, UiTranslations> = {
       copyFullMessage: 'Скопировать текст обращения',
       copied: 'Скопировано!',
       copyFailed: 'Не удалось скопировать',
+      submitDirect: 'Отправить сообщение (Сохранить в базу данных)',
+      submittingDirect: 'Сохранение в базу данных...',
+      kvkkConsent: 'Согласие на обработку данных: Я даю согласие на обработку моих персональных данных из формы связи в административной панели и их анонимизацию по истечении 1 года хранения. *',
+      kvkkRequired: 'Пожалуйста, подтвердите согласие на обработку персональных данных.',
+      submitSuccess: 'Ваше сообщение успешно сохранено в базе данных. Мы свяжемся с вами в ближайшее время.',
+      submitError: 'Произошла ошибка при отправке сообщения.',
+    },
+    awardsPage: {
+      badge: '06_AWARDS & HONORS',
+      title: 'Награды и достижения',
+      subtitle: 'Конкурсы, стипендии, хакатоны и достижения, динамически загружаемые из базы данных PostgreSQL.',
+      backToHome: 'Вернуться на главную',
+      liveDatabaseBadge: 'Прямые данные из БД (PostgreSQL/Neon)',
+      featuredTitle: 'Избранные достижения (Последние 4 награды)',
+      allTitle: 'Полный список достижений',
+      allCount: 'записей отображено',
+      emptyNotice: 'В настоящее время опубликованных наград нет.',
+      firstPlace: '🥇 1-е место',
+      rankBadge: '-е место',
+      institution: 'Организация',
+      date: 'Дата',
+      category: 'Категория',
+      previewWarning: 'РЕЖИМ ПРЕДПРОСМОТРА: Эта страница в настоящее время СКРЫТА от посетителей сайта. Вы видите её как администратор.',
+      previewAdminButton: 'Управление в админ-панели →',
     },
     footer: {
       builtWith: 'Создано на Next.js (App Router), TypeScript & Tailwind CSS.',

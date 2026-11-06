@@ -119,9 +119,9 @@ export function Navbar() {
         {isAdmin ? (
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)]/70 text-xs font-mono-code shadow-sm">
             <span className="w-2 h-2 rounded-full bg-[var(--theme-accent)] animate-pulse" />
-            <span className="font-semibold text-white tracking-wide">YÖNETİM PANELİ</span>
+            <span className="font-semibold text-white tracking-wide">ADMIN PORTAL</span>
             <span className="text-white/20">|</span>
-            <span className="text-white/50 text-[11px]">Admin Oturumu Aktif</span>
+            <span className="text-white/50 text-[11px]">Active Session</span>
           </div>
         ) : (
           <nav
@@ -300,7 +300,7 @@ export function Navbar() {
           {isAdmin ? (
             <div className="space-y-2">
               <div className="text-[10px] uppercase text-[var(--theme-accent)] font-bold tracking-wider px-2">
-                Admin Menüsü
+                Admin Menu
               </div>
               <nav aria-label="Mobile Admin Navigation" className="flex flex-col space-y-1">
                 <Link
@@ -312,7 +312,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Özet & Dashboard</span>
+                  <span>Dashboard & Overview</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -324,7 +324,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Ödüller & Başarılar</span>
+                  <span>Awards & Honors</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -336,7 +336,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Projeler</span>
+                  <span>Projects</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -348,7 +348,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Gelen Mesajlar</span>
+                  <span>Inbox Messages</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -360,7 +360,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Aktif Oturumlar</span>
+                  <span>Active Sessions</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -368,7 +368,7 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded text-xs text-[var(--theme-accent)] hover:bg-white/5 font-semibold flex items-center justify-between mt-2 pt-2 border-t border-white/10"
                 >
-                  <span>← Portfolyoya Dön</span>
+                  <span>← Back to Portfolio</span>
                   <span className="text-[10px] text-[var(--theme-accent)]">&gt;</span>
                 </Link>
               </nav>

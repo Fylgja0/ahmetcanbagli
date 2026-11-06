@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 /**
  * Ödüller sayfasının ana sitedeki görünürlük durumunu tersine çevirir (Aktif/Pasif).
  */
-export async function toggleAwardsVisibilityAction(_formData?: FormData): Promise<void> {
+export async function toggleAwardsVisibilityAction(): Promise<void> {
   await requireAdmin();
 
   const current = await getAwardsVisibility();
