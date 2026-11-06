@@ -1,7 +1,9 @@
 import React from 'react';
 import { sql } from '@/lib/db';
 import Link from 'next/link';
-import { Award, Mail, Shield, ArrowUpRight, CheckCircle2, AlertTriangle, Database, FolderGit2 } from 'lucide-react';
+import { getAwardsVisibility } from '@/lib/settings';
+import { toggleAwardsVisibilityAction } from '@/app/actions/settings';
+import { Award, Mail, Shield, ArrowUpRight, CheckCircle2, AlertTriangle, Database, FolderGit2, Eye, EyeOff } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,14 +13,16 @@ export default async function AdminHomePage() {
     let toplamMesaj = 0;
     let okunmamisMesaj = 0;
     let aktifOturum = 1;
+    let awardsVisible = true;
 
     try {
-        const [odulCountRes, projeCountRes, mesajCountRes, okunmamisCountRes, oturumCountRes] = await Promise.all([
+        const [odulCountRes, projeCountRes, mesajCountRes, okunmamisCountRes, oturumCountRes, visibility] = await Promise.all([
             sql`SELECT COUNT(*)::int AS toplam FROM oduller`,
             sql`SELECT COUNT(*)::int AS toplam FROM projeler`.catch(() => [{ toplam: 0 }]),
             sql`SELECT COUNT(*)::int AS toplam FROM iletisim_mesajlari`,
             sql`SELECT COUNT(*)::int AS okunmamis FROM iletisim_mesajlari WHERE okundu = false`,
-            sql`SELECT COUNT(*)::int AS aktif_oturum FROM oturumlar WHERE bitis > now() AND son_aktivite > now() - interval '30 minutes'`
+            sql`SELECT COUNT(*)::int AS aktif_oturum FROM oturumlar WHERE bitis > now() AND son_aktivite > now() - interval '30 minutes'`,
+            getAwardsVisibility()
         ]);
 
         toplamOdul = odulCountRes[0]?.toplam || 0;
@@ -26,6 +30,7 @@ export default async function AdminHomePage() {
         toplamMesaj = mesajCountRes[0]?.toplam || 0;
         okunmamisMesaj = okunmamisCountRes[0]?.okunmamis || 0;
         aktifOturum = oturumCountRes[0]?.aktif_oturum || 1;
+        awardsVisible = visibility;
     } catch (e) {
         console.error('İstatistikler çekilemedi:', e);
     }
@@ -57,6 +62,37 @@ export default async function AdminHomePage() {
                     </div>
                     <div className="text-3xl sm:text-4xl font-bold font-mono text-white mb-2">
                         {toplamOdul}
+                    </div>
+
+                    <div className="flex items-center justify-between mb-3">
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
+                            awardsVisible
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        }`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${awardsVisible ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
+                            <span>{awardsVisible ? 'Sitede Görünür' : 'Sitede Gizli'}</span>
+                        </span>
+
+                        <form action={toggleAwardsVisibilityAction}>
+                            <button
+                                type="submit"
+                                title={awardsVisible ? 'Ana Siteden Gizle' : 'Ana Sitede Göster'}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-[10px] font-mono border border-white/10 transition-colors cursor-pointer"
+                            >
+                                {awardsVisible ? (
+                                    <>
+                                        <EyeOff className="w-3 h-3 text-amber-400" />
+                                        <span>Gizle</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Eye className="w-3 h-3 text-emerald-400" />
+                                        <span>Göster</span>
+                                    </>
+                                )}
+                            </button>
+                        </form>
                     </div>
                     <div className="flex items-center justify-between pt-3 border-t border-white/10 text-xs font-mono">
                         <span className="text-white/40">oduller tablosu</span>

@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export function HomeSectionsNavigator() {
-  const { language, t } = usePortfolio();
+  const { language, t, awardsVisible } = usePortfolio();
 
   const PAGES = [
     {
@@ -139,7 +139,7 @@ export function HomeSectionsNavigator() {
 
       {/* Grid of Page Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {PAGES.map((page) => {
+        {PAGES.filter((p) => p.id !== 'oduller' || awardsVisible).map((page) => {
           const Icon = page.icon;
           return (
             <Link

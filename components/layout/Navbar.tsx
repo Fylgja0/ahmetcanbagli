@@ -34,9 +34,19 @@ export function Navbar() {
     animationsEnabled,
     toggleAnimations,
     t,
+    awardsVisible,
   } = usePortfolio();
 
   const pathname = usePathname();
+  const isAdmin = pathname?.startsWith('/admin');
+
+  // Filter out Awards if hidden by admin
+  const navItems = NAV_ITEMS.filter((item) => {
+    if (item.href === '/oduller' && !awardsVisible) {
+      return false;
+    }
+    return true;
+  });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
@@ -105,31 +115,40 @@ export function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <nav
-          aria-label="Main Navigation"
-          className="hidden lg:flex items-center gap-1 xl:gap-2 text-xs font-mono-code"
-        >
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-3 py-1.5 rounded transition-colors duration-150 relative ${
-                  isActive
-                    ? 'text-[var(--theme-accent)] font-semibold bg-[var(--theme-badge-bg)]'
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                {item.label[language]}
-                {isActive && (
-                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-[var(--theme-accent)] rounded-full" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Desktop Navigation Links (Admin sayfasında gizlenir, sadece sitede gösterilir) */}
+        {isAdmin ? (
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)]/70 text-xs font-mono-code shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[var(--theme-accent)] animate-pulse" />
+            <span className="font-semibold text-white tracking-wide">YÖNETİM PANELİ</span>
+            <span className="text-white/20">|</span>
+            <span className="text-white/50 text-[11px]">Admin Oturumu Aktif</span>
+          </div>
+        ) : (
+          <nav
+            aria-label="Main Navigation"
+            className="hidden lg:flex items-center gap-1 xl:gap-2 text-xs font-mono-code"
+          >
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-3 py-1.5 rounded transition-colors duration-150 relative ${
+                    isActive
+                      ? 'text-[var(--theme-accent)] font-semibold bg-[var(--theme-badge-bg)]'
+                      : 'text-white/70 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  {item.label[language]}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-[var(--theme-accent)] rounded-full" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
 
         {/* Controls: Animation Toggle, Theme, Language, Mobile Toggle */}
         <div className="flex items-center gap-2">
@@ -278,26 +297,104 @@ export function Navbar() {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-[var(--theme-border)] bg-[var(--theme-surface)]/95 backdrop-blur-xl px-4 py-4 space-y-3 font-mono-code text-sm">
-          <nav aria-label="Mobile Navigation" className="flex flex-col space-y-1">
-            {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
-              return (
+          {isAdmin ? (
+            <div className="space-y-2">
+              <div className="text-[10px] uppercase text-[var(--theme-accent)] font-bold tracking-wider px-2">
+                Admin Menüsü
+              </div>
+              <nav aria-label="Mobile Admin Navigation" className="flex flex-col space-y-1">
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  href="/admin"
                   onClick={() => setMobileMenuOpen(false)}
                   className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
-                    isActive
+                    pathname === '/admin'
                       ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>{item.label[language]}</span>
+                  <span>Özet & Dashboard</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
-              );
-            })}
-          </nav>
+                <Link
+                  href="/admin/oduller"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
+                    pathname === '/admin/oduller'
+                      ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
+                      : 'text-white/80 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <span>Ödüller & Başarılar</span>
+                  <span className="text-[10px] text-white/30">&gt;</span>
+                </Link>
+                <Link
+                  href="/admin/projeler"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
+                    pathname === '/admin/projeler'
+                      ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
+                      : 'text-white/80 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <span>Projeler</span>
+                  <span className="text-[10px] text-white/30">&gt;</span>
+                </Link>
+                <Link
+                  href="/admin/mesajlar"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
+                    pathname === '/admin/mesajlar'
+                      ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
+                      : 'text-white/80 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <span>Gelen Mesajlar</span>
+                  <span className="text-[10px] text-white/30">&gt;</span>
+                </Link>
+                <Link
+                  href="/admin/oturumlar"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
+                    pathname === '/admin/oturumlar'
+                      ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
+                      : 'text-white/80 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <span>Aktif Oturumlar</span>
+                  <span className="text-[10px] text-white/30">&gt;</span>
+                </Link>
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-3 py-2 rounded text-xs text-[var(--theme-accent)] hover:bg-white/5 font-semibold flex items-center justify-between mt-2 pt-2 border-t border-white/10"
+                >
+                  <span>← Portfolyoya Dön</span>
+                  <span className="text-[10px] text-[var(--theme-accent)]">&gt;</span>
+                </Link>
+              </nav>
+            </div>
+          ) : (
+            <nav aria-label="Mobile Navigation" className="flex flex-col space-y-1">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-3 py-2 rounded text-xs transition-colors flex items-center justify-between ${
+                      isActive
+                        ? 'bg-[var(--theme-badge-bg)] text-[var(--theme-accent)] font-semibold border-l-2 border-[var(--theme-accent)]'
+                        : 'text-white/80 hover:bg-white/5 hover:text-white'
+                    }`}
+                  >
+                    <span>{item.label[language]}</span>
+                    <span className="text-[10px] text-white/30">&gt;</span>
+                  </Link>
+                );
+              })}
+            </nav>
+          )}
 
           <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-white/60">
             <div className="flex items-center gap-3">

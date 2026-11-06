@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { AppShell } from '@/components/layout/AppShell';
+import { getAwardsVisibility } from '@/lib/settings';
 
 export const viewport: Viewport = {
   themeColor: '#00ff66',
@@ -99,11 +100,13 @@ const personJsonLd = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const awardsVisible = await getAwardsVisibility();
+
   return (
     <html lang="en" data-theme="matrix" suppressHydrationWarning>
       <head>
@@ -113,7 +116,7 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className="antialiased">
-        <AppShell>{children}</AppShell>
+        <AppShell awardsVisible={awardsVisible}>{children}</AppShell>
       </body>
     </html>
   );

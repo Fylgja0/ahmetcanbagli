@@ -1,6 +1,8 @@
 import React from 'react';
 import { sql } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
+import { getAwardsVisibility } from '@/lib/settings';
+import { toggleAwardsVisibilityAction } from '@/app/actions/settings';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -137,9 +139,10 @@ export default async function OdullerPage(props: OdullerPageProps) {
     let oduller: OdulRow[] = [];
     let kategoriler: KategoriRow[] = [];
     let editKayit: OdulRow | null = null;
+    let awardsVisible = true;
 
     try {
-        const [odulRes, katRes, editRes] = await Promise.all([
+        const [odulRes, katRes, editRes, visibility] = await Promise.all([
             sql`
                 SELECT o.*, ot.ad AS kategori_adi 
                 FROM oduller o
@@ -147,12 +150,14 @@ export default async function OdullerPage(props: OdullerPageProps) {
                 ORDER BY o.tarih DESC NULLS LAST, o.id DESC
             `,
             sql`SELECT * FROM odul_turleri ORDER BY ad ASC`,
-            editId ? sql`SELECT * FROM oduller WHERE id = ${editId}` : Promise.resolve([])
+            editId ? sql`SELECT * FROM oduller WHERE id = ${editId}` : Promise.resolve([]),
+            getAwardsVisibility()
         ]);
 
         oduller = odulRes as unknown as OdulRow[];
         kategoriler = katRes as unknown as KategoriRow[];
         editKayit = (editRes?.[0] as unknown as OdulRow) || null;
+        awardsVisible = visibility;
     } catch (e) {
         console.error('Ödüller yüklenirken hata:', e);
     }
@@ -182,6 +187,55 @@ export default async function OdullerPage(props: OdullerPageProps) {
                 <div className="text-xs font-mono px-3.5 py-2 rounded-xl bg-[var(--theme-surface)] border border-[var(--theme-border)] text-white/70">
                     Toplam: <strong className="text-white">{oduller.length}</strong> kayıt
                 </div>
+            </div>
+
+            {/* Awards Genel Görünürlük Kontrol Paneli */}
+            <div className={`p-5 rounded-2xl border transition-all shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+                awardsVisible
+                    ? 'bg-emerald-950/20 border-emerald-500/40'
+                    : 'bg-amber-950/25 border-amber-500/40'
+            }`}>
+                <div className="space-y-1.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold ${
+                            awardsVisible
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                        }`}>
+                            <span className={`w-2 h-2 rounded-full ${awardsVisible ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`} />
+                            <span>{awardsVisible ? 'Ana Sitede Yayında (Görünür)' : 'Ana Siteden Gizlendi (Yayında Değil)'}</span>
+                        </span>
+                        <span className="text-xs font-mono text-white/40">· Ana Sayfa & Navigasyon Durumu</span>
+                    </div>
+                    <p className="text-xs text-white/70 font-mono leading-relaxed">
+                        {awardsVisible
+                            ? 'Ziyaretçiler ana sayfada (HomeAwardsTeaser ve Sayfa Kartı) ve /oduller sayfasında ödülleri görebilir.'
+                            : 'Ziyaretçiler bu bölümü ve sayfayı göremez (/oduller 404 verir, menüden kaldırılır). Ancak siz bu panelden ödülleri yönetmeye devam edebilirsiniz.'}
+                    </p>
+                </div>
+
+                <form action={toggleAwardsVisibilityAction} className="shrink-0">
+                    <button
+                        type="submit"
+                        className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-mono font-bold text-xs cursor-pointer transition-all shadow-md ${
+                            awardsVisible
+                                ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:border-amber-500/50'
+                                : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 hover:border-emerald-500/60'
+                        }`}
+                    >
+                        {awardsVisible ? (
+                            <>
+                                <EyeOff className="w-4 h-4 text-amber-400" />
+                                <span>Ana Siteden Kaldır (Gizle)</span>
+                            </>
+                        ) : (
+                            <>
+                                <Eye className="w-4 h-4 text-emerald-400" />
+                                <span>Ana Sitede Göster (Yayına Al)</span>
+                            </>
+                        )}
+                    </button>
+                </form>
             </div>
 
             {/* Yeni Ekleme veya Düzenleme Formu (INSERT & UPDATE) */}

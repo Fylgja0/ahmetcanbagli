@@ -1,6 +1,9 @@
 import React from 'react';
 import { sql } from '@/lib/db';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { getAdmin } from '@/lib/auth';
+import { getAwardsVisibility } from '@/lib/settings';
 import {
     Trophy,
     Award,
@@ -9,7 +12,8 @@ import {
     Tag,
     Sparkles,
     ArrowLeft,
-    CheckCircle2
+    CheckCircle2,
+    ShieldAlert
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -28,6 +32,14 @@ interface OdulKaydi {
 }
 
 export default async function OdullerPage() {
+    const isVisible = await getAwardsVisibility();
+    const admin = await getAdmin();
+
+    // Eğer ana sitede gizlendiyse ve giriş yapmış bir admin yoksa 404 döndür
+    if (!isVisible && !admin) {
+        notFound();
+    }
+
     let oduller: OdulKaydi[] = [];
     let oneCikanlar: OdulKaydi[] = [];
 
@@ -73,6 +85,24 @@ export default async function OdullerPage() {
                     <span>Veritabanından Canlı Veri (PostgreSQL/Neon)</span>
                 </div>
             </div>
+
+            {/* Admin Gizli Sayfa Önizleme Uyarısı */}
+            {!isVisible && (
+                <div className="p-4 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-300 font-mono text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+                    <div className="flex items-center gap-2.5">
+                        <ShieldAlert className="w-5 h-5 text-amber-400 shrink-0" />
+                        <div>
+                            <span className="font-bold">ÖNİZLEME MODU:</span> Bu sayfa şu anda ana sitede ziyaretçilere <span className="underline font-bold">GİZLİDİR</span>. Yalnızca yönetici olduğunuz için görüntüleyebiliyorsunuz.
+                        </div>
+                    </div>
+                    <Link
+                        href="/admin/oduller"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 font-bold transition-colors whitespace-nowrap self-start sm:self-auto"
+                    >
+                        <span>Admin Panelinde Yönet →</span>
+                    </Link>
+                </div>
+            )}
 
             {/* Başlık Bölümü */}
             <div className="text-center max-w-2xl mx-auto space-y-3">

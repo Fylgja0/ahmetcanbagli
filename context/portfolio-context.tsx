@@ -16,6 +16,7 @@ interface PortfolioContextType {
   selectedProject: Project | null;
   setSelectedProject: (project: Project | null) => void;
   t: UiTranslations;
+  awardsVisible: boolean;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | null>(null);
@@ -24,7 +25,13 @@ const STORAGE_THEME_KEY = 'portfolio_theme';
 const STORAGE_LANG_KEY = 'portfolio_lang';
 const STORAGE_ANIM_KEY = 'portfolio_animations';
 
-export function PortfolioProvider({ children }: { children: React.ReactNode }) {
+export function PortfolioProvider({
+  children,
+  awardsVisible = true,
+}: {
+  children: React.ReactNode;
+  awardsVisible?: boolean;
+}) {
   const [theme, setThemeState] = useState<ThemeId>('matrix');
   const [language, setLanguageState] = useState<LanguageId>('en');
   const [animationsEnabled, setAnimationsEnabledState] = useState<boolean>(true);
@@ -121,6 +128,7 @@ export function PortfolioProvider({ children }: { children: React.ReactNode }) {
         selectedProject,
         setSelectedProject,
         t,
+        awardsVisible,
       }}
     >
       {children}

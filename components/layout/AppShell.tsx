@@ -6,9 +6,15 @@ import { AnimatedBackground } from '@/components/background/AnimatedBackground';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({
+  children,
+  awardsVisible = true,
+}: {
+  children: React.ReactNode;
+  awardsVisible?: boolean;
+}) {
   return (
-    <PortfolioProvider>
+    <PortfolioProvider awardsVisible={awardsVisible}>
       <div className="relative min-h-screen text-slate-100 selection:bg-[var(--theme-accent)] selection:text-black flex flex-col justify-between">
         {/* Animated Canvas Background (Matrix / Quantum / Gothic with pause support) */}
         <AnimatedBackground />

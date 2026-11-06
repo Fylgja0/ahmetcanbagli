@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { sql } from '@/lib/db';
+import { getAwardsVisibility } from '@/lib/settings';
 import { Trophy, ArrowRight, Sparkles } from 'lucide-react';
 
 interface OdulKaydi {
@@ -17,6 +18,11 @@ interface OdulKaydi {
 }
 
 export async function HomeAwardsTeaser() {
+    const isVisible = await getAwardsVisibility();
+    if (!isVisible) {
+        return null;
+    }
+
     let awards: OdulKaydi[] = [];
 
     try {
