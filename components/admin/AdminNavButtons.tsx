@@ -4,9 +4,13 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronLeft, Globe } from 'lucide-react';
+import { usePortfolio } from '@/context/portfolio-context';
+import { adminTranslations } from '@/lib/admin-translations';
 
 export function AdminNavButtons() {
     const pathname = usePathname();
+    const { language } = usePortfolio();
+    const t = adminTranslations[language] || adminTranslations.en;
 
     const isSubPage = pathname !== '/admin' && pathname.startsWith('/admin/');
 
@@ -17,10 +21,10 @@ export function AdminNavButtons() {
                 <Link
                     href="/admin"
                     className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 transition-all cursor-pointer shadow-sm group"
-                    title="Return to Admin Dashboard"
+                    title={t.layout.backToDashboard}
                 >
                     <ChevronLeft className="w-4 h-4 text-amber-400 group-hover:-translate-x-0.5 transition-transform" />
-                    <span>← Back to Dashboard</span>
+                    <span>{t.layout.backToDashboard}</span>
                 </Link>
             )}
 
@@ -28,10 +32,10 @@ export function AdminNavButtons() {
             <Link
                 href="/"
                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold bg-[var(--theme-surface)] text-white hover:text-[var(--theme-accent)] border border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-all group shadow-sm"
-                title="Return to Main Portfolio Site"
+                title={t.layout.backToPortfolio}
             >
                 <Globe className="w-3.5 h-3.5 text-[var(--theme-accent)] group-hover:rotate-12 transition-transform" />
-                <span>Back to Portfolio</span>
+                <span>{t.layout.backToPortfolio}</span>
             </Link>
         </div>
     );

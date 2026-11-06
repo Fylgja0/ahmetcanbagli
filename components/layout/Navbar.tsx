@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { usePortfolio } from '@/context/portfolio-context';
 import { NAV_ITEMS, THEME_CONFIGS, PERSONAL_INFO } from '@/lib/data';
 import { LanguageId, ThemeId } from '@/types/portfolio';
+import { adminTranslations } from '@/lib/admin-translations';
 import { useClickOutside, useKeydown } from '@/hooks/use-click-outside';
 import {
   Terminal,
@@ -39,6 +40,7 @@ export function Navbar() {
 
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
+  const adminT = adminTranslations[language] || adminTranslations.en;
 
   // Filter out Awards if hidden by admin
   const navItems = NAV_ITEMS.filter((item) => {
@@ -119,9 +121,9 @@ export function Navbar() {
         {isAdmin ? (
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-card)]/70 text-xs font-mono-code shadow-sm">
             <span className="w-2 h-2 rounded-full bg-[var(--theme-accent)] animate-pulse" />
-            <span className="font-semibold text-white tracking-wide">ADMIN PORTAL</span>
+            <span className="font-semibold text-white tracking-wide">{adminT.layout.adminPortal}</span>
             <span className="text-white/20">|</span>
-            <span className="text-white/50 text-[11px]">Active Session</span>
+            <span className="text-white/50 text-[11px]">{adminT.layout.sessionActive}</span>
           </div>
         ) : (
           <nav
@@ -300,7 +302,7 @@ export function Navbar() {
           {isAdmin ? (
             <div className="space-y-2">
               <div className="text-[10px] uppercase text-[var(--theme-accent)] font-bold tracking-wider px-2">
-                Admin Menu
+                {adminT.layout.adminMenu}
               </div>
               <nav aria-label="Mobile Admin Navigation" className="flex flex-col space-y-1">
                 <Link
@@ -312,7 +314,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Dashboard & Overview</span>
+                  <span>{adminT.layout.tabs.dashboard}</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -324,7 +326,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Awards & Honors</span>
+                  <span>{adminT.layout.tabs.awards}</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -336,7 +338,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Projects</span>
+                  <span>{adminT.layout.tabs.projects}</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -348,7 +350,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Inbox Messages</span>
+                  <span>{adminT.layout.tabs.messages}</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -360,7 +362,7 @@ export function Navbar() {
                       : 'text-white/80 hover:bg-white/5 hover:text-white'
                   }`}
                 >
-                  <span>Active Sessions</span>
+                  <span>{adminT.layout.tabs.sessions}</span>
                   <span className="text-[10px] text-white/30">&gt;</span>
                 </Link>
                 <Link
@@ -368,7 +370,7 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="px-3 py-2 rounded text-xs text-[var(--theme-accent)] hover:bg-white/5 font-semibold flex items-center justify-between mt-2 pt-2 border-t border-white/10"
                 >
-                  <span>← Back to Portfolio</span>
+                  <span>{adminT.layout.backToPortfolio}</span>
                   <span className="text-[10px] text-[var(--theme-accent)]">&gt;</span>
                 </Link>
               </nav>

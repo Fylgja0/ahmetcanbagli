@@ -2,32 +2,9 @@ import React from 'react';
 import { sql } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
-import {
-    Mail,
-    Trash2,
-    ShieldAlert,
-    History,
-    Check,
-    Calendar
-} from 'lucide-react';
+import { AdminMessagesClient, MesajRow, ImhaRow } from '@/components/admin/AdminMessagesClient';
 
 export const dynamic = 'force-dynamic';
-
-interface MesajRow {
-    id: number;
-    ad_soyad: string;
-    eposta: string;
-    mesaj: string;
-    kvkk_onay: boolean;
-    okundu: boolean;
-    gonderim_zamani: string;
-}
-
-interface ImhaRow {
-    id: number;
-    adet: number;
-    zaman: string;
-}
 
 // Server Action: Mark Message as Read (UPDATE)
 async function okunduYapAction(formData: FormData) {
@@ -114,174 +91,13 @@ export default async function MessagesPage() {
         imhaKayitlari = [];
     }
 
-    const okunmamisSayisi = mesajlar.filter((m) => !m.okundu).length;
-
     return (
-        <div className="space-y-8">
-            {/* Page Header and Action Buttons */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold font-mono tracking-tight text-white flex items-center gap-2.5">
-                        <Mail className="w-6 h-6 text-sky-400" />
-                        <span>Inbox Contact Messages</span>
-                    </h1>
-                    <p className="text-xs font-mono text-white/60 mt-1">
-                        Messages submitted via the portfolio contact form (stored in <code className="text-[var(--theme-accent)]">iletisim_mesajlari</code> table).
-                    </p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                    <div className="text-xs font-mono px-3.5 py-2 rounded-xl bg-[var(--theme-surface)] border border-[var(--theme-border)] text-white/70">
-                        Total: <strong className="text-white">{mesajlar.length}</strong> | Unread:{' '}
-                        <strong className={okunmamisSayisi > 0 ? 'text-red-400' : 'text-emerald-400'}>
-                            {okunmamisSayisi}
-                        </strong>
-                    </div>
-
-                    {/* Legal Compliance / GDPR Anonymization Action */}
-                    <form action={anonimlestirAction}>
-                        <button
-                            type="submit"
-                            title="Anonymize messages older than 1 year according to data protection retention regulations"
-                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-mono font-semibold transition-all shadow-lg shadow-amber-950/40 cursor-pointer"
-                        >
-                            <ShieldAlert className="w-4 h-4" />
-                            <span>Anonymize Expired Messages (&gt; 1 Year)</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            {/* Retention & Audit Log Banner */}
-            <div className="bg-[var(--theme-card)]/80 border border-[var(--theme-border)] rounded-2xl p-5 space-y-3 shadow-xl">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-400">
-                    <History className="w-4 h-4" />
-                    <span>Data Privacy & Retention Policy Status</span>
-                </div>
-                <p className="text-xs font-mono text-white/70 leading-relaxed">
-                    Personal data collected via the contact form is retained for a maximum duration of <strong>1 year</strong>.
-                    Messages past retention are stripped of personal identifiers upon clicking the anonymize action, and the operation count is persisted into the{' '}
-                    <code className="text-amber-300">imha_kayitlari</code> audit log table.
-                </p>
-
-                {imhaKayitlari && imhaKayitlari.length > 0 && (
-                    <div className="pt-2 border-t border-white/10">
-                        <div className="text-[11px] font-mono font-semibold text-white/80 mb-2">
-                            Recent Anonymization Audit Logs:
-                        </div>
-                        <div className="space-y-1.5">
-                            {imhaKayitlari.map((k) => (
-                                <div
-                                    key={k.id}
-                                    className="text-xs font-mono bg-[var(--theme-surface)] border border-white/10 px-3 py-1.5 rounded-lg text-white/80 flex items-center justify-between"
-                                >
-                                    <span>
-                                        Audit #{k.id}: <strong>{k.adet}</strong> records successfully anonymized.
-                                    </span>
-                                    <span className="text-white/40 text-[11px]">
-                                        {new Date(k.zaman).toLocaleString('en-US')}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-
-            {/* Messages List */}
-            {mesajlar.length === 0 ? (
-                <div className="bg-[var(--theme-card)]/60 border border-[var(--theme-border)] rounded-2xl p-12 text-center text-white/40 font-mono text-xs">
-                    No contact messages received yet.
-                </div>
-            ) : (
-                <div className="space-y-4">
-                    {mesajlar.map((m) => {
-                        const isAnonim = m.ad_soyad === 'Anonim';
-                        return (
-                            <div
-                                key={m.id}
-                                className={`p-5 rounded-2xl border transition-all ${
-                                    !m.okundu
-                                        ? 'bg-sky-950/20 border-sky-500/50 shadow-lg shadow-sky-950/20'
-                                        : 'bg-[var(--theme-card)]/90 border-[var(--theme-border)]'
-                                }`}
-                            >
-                                <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-                                    <div className="space-y-1">
-                                        <div className="flex items-center gap-2.5">
-                                            <span className="font-mono font-bold text-sm text-white">
-                                                {m.ad_soyad}
-                                            </span>
-                                            {isAnonim && (
-                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
-                                                    Anonymized Data
-                                                </span>
-                                            )}
-                                            {m.kvkk_onay && (
-                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                                                    Consent Verified
-                                                </span>
-                                            )}
-                                            {!m.okundu && (
-                                                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-500/20 text-sky-300 border border-sky-500/40 animate-pulse">
-                                                    New
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="text-xs font-mono text-white/60">
-                                            {m.eposta}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2 text-xs font-mono text-white/40">
-                                        <Calendar className="w-3.5 h-3.5" />
-                                        <span>{new Date(m.gonderim_zamani).toLocaleString('en-US')}</span>
-                                    </div>
-                                </div>
-
-                                {/* Message Content */}
-                                <div className="p-3.5 rounded-xl bg-[var(--theme-surface)]/80 border border-white/10 text-xs font-mono text-white/90 whitespace-pre-wrap leading-relaxed mb-4">
-                                    {m.mesaj}
-                                </div>
-
-                                {/* Card Actions */}
-                                <div className="flex items-center justify-between pt-2 border-t border-white/10 text-xs font-mono">
-                                    <div>
-                                        <span className="text-white/40">Message ID: #{m.id}</span>
-                                    </div>
-
-                                    <div className="flex items-center gap-2">
-                                        {!m.okundu && (
-                                            <form action={okunduYapAction}>
-                                                <input type="hidden" name="id" value={m.id} />
-                                                <button
-                                                    type="submit"
-                                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-medium transition-colors cursor-pointer"
-                                                >
-                                                    <Check className="w-3.5 h-3.5" />
-                                                    <span>Mark as Read</span>
-                                                </button>
-                                            </form>
-                                        )}
-
-                                        <form action={mesajSilAction}>
-                                            <input type="hidden" name="id" value={m.id} />
-                                            <button
-                                                type="submit"
-                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--theme-surface)] hover:bg-red-500/20 hover:text-red-400 text-white/60 border border-white/10 transition-colors cursor-pointer"
-                                            >
-                                                <Trash2 className="w-3.5 h-3.5" />
-                                                <span>Delete</span>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-        </div>
+        <AdminMessagesClient
+            mesajlar={mesajlar}
+            imhaKayitlari={imhaKayitlari}
+            onMarkRead={okunduYapAction}
+            onDelete={mesajSilAction}
+            onAnonymize={anonimlestirAction}
+        />
     );
 }
-
