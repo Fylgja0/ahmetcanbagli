@@ -217,6 +217,9 @@ export interface AdminTranslations {
     passwordPlaceholder: string;
     submitButton: string;
     footerNote: string;
+    errorInvalidCredentials: string;
+    errorRateLimited: string;
+    errorTemporarilyUnavailable: string;
   };
 }
 
@@ -438,6 +441,9 @@ export const adminTranslations: Record<LanguageId, AdminTranslations> = {
       passwordPlaceholder: '••••••••••••',
       submitButton: 'Panele Giriş Yap',
       footerNote: '2 saatlik oturum süresi • 30 dk hareketsizlik zaman aşımı • bcrypt şifreleme',
+      errorInvalidCredentials: 'Geçersiz e-posta adresi veya şifre.',
+      errorRateLimited: 'Çok fazla başarısız giriş denemesi yapıldı. Lütfen 15 dakika sonra tekrar deneyin.',
+      errorTemporarilyUnavailable: 'Giriş hizmeti geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin.',
     },
   },
 
@@ -658,6 +664,9 @@ export const adminTranslations: Record<LanguageId, AdminTranslations> = {
       passwordPlaceholder: '••••••••••••',
       submitButton: 'Sign In to Dashboard',
       footerNote: '2-hour session lifetime • 30-min inactivity timeout • bcrypt cryptographic hashing',
+      errorInvalidCredentials: 'Invalid email address or password.',
+      errorRateLimited: 'Too many failed login attempts. Please try again in 15 minutes.',
+      errorTemporarilyUnavailable: 'Sign-in service is temporarily unavailable. Please try again later.',
     },
   },
 
@@ -878,6 +887,9 @@ export const adminTranslations: Record<LanguageId, AdminTranslations> = {
       passwordPlaceholder: '••••••••••••',
       submitButton: 'Im Dashboard anmelden',
       footerNote: '2 Stunden Sitzungsdauer • 30 Min. Inaktivitäts-Timeout • bcrypt-Verschlüsselung',
+      errorInvalidCredentials: 'Ungültige E-Mail-Adresse oder ungültiges Passwort.',
+      errorRateLimited: 'Zu viele fehlgeschlagene Anmeldeversuche. Bitte versuchen Sie es in 15 Minuten erneut.',
+      errorTemporarilyUnavailable: 'Der Anmeldedienst ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.',
     },
   },
 
@@ -1098,6 +1110,9 @@ export const adminTranslations: Record<LanguageId, AdminTranslations> = {
       passwordPlaceholder: '••••••••••••',
       submitButton: 'Войти в панель',
       footerNote: 'Срок сессии 2 часа • 30 мин тайм-аут бездействия • криптографическое хеширование bcrypt',
+      errorInvalidCredentials: 'Неверный адрес электронной почты или пароль.',
+      errorRateLimited: 'Слишком много неудачных попыток входа. Пожалуйста, повторите попытку через 15 минут.',
+      errorTemporarilyUnavailable: 'Сервис входа временно недоступен. Пожалуйста, попробуйте позже.',
     },
   },
 };

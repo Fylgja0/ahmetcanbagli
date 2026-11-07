@@ -5,6 +5,11 @@ export interface AdminUser {
   email: string;
 }
 
+export type LoginErrorCode =
+  | 'invalid_credentials'
+  | 'rate_limited'
+  | 'temporarily_unavailable';
+
 export interface ProjectRecord {
   id: number;
   slug: string | null;

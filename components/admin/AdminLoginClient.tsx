@@ -5,15 +5,25 @@ import Link from 'next/link';
 import { ShieldCheck, Lock, Mail, ArrowLeft, AlertCircle } from 'lucide-react';
 import { usePortfolio } from '@/context/portfolio-context';
 import { adminTranslations } from '@/lib/admin-translations';
+import { LoginErrorCode } from '@/types/admin';
 
 interface AdminLoginClientProps {
-  error?: string;
+  error?: LoginErrorCode;
   onLogin: (formData: FormData) => Promise<void>;
 }
 
 export function AdminLoginClient({ error, onLogin }: AdminLoginClientProps) {
   const { language } = usePortfolio();
   const t = adminTranslations[language] || adminTranslations.en;
+
+  const errorMessage =
+    error === 'rate_limited'
+      ? t.login.errorRateLimited
+      : error === 'temporarily_unavailable'
+        ? t.login.errorTemporarilyUnavailable
+        : error === 'invalid_credentials'
+          ? t.login.errorInvalidCredentials
+          : null;
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center p-4 pt-24 sm:pt-28 pb-12 relative">
@@ -42,10 +52,10 @@ export function AdminLoginClient({ error, onLogin }: AdminLoginClientProps) {
           </div>
 
           {/* Error Notice */}
-          {error && (
+          {errorMessage && (
             <div className="mb-6 p-3.5 rounded-lg bg-red-950/60 border border-red-500/30 text-red-300 text-xs flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
-              <span>{error}</span>
+              <span>{errorMessage}</span>
             </div>
           )}
 

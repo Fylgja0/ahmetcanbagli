@@ -81,3 +81,18 @@ CREATE TABLE IF NOT EXISTS imha_kayitlari (
   adet INT NOT NULL,
   zaman TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- 9. Login Rate Limiting Table (Brute-Force Protection)
+CREATE TABLE IF NOT EXISTS giris_denemeleri (
+  anahtar TEXT PRIMARY KEY,
+  deneme_sayisi INT NOT NULL DEFAULT 1,
+  ilk_deneme TIMESTAMPTZ NOT NULL DEFAULT now(),
+  son_deneme TIMESTAMPTZ NOT NULL DEFAULT now(),
+  kilit_bitis TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_giris_denemeleri_kilit_bitis
+  ON giris_denemeleri (kilit_bitis);
+
+CREATE INDEX IF NOT EXISTS idx_giris_denemeleri_son_deneme
+  ON giris_denemeleri (son_deneme);

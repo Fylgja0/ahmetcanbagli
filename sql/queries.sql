@@ -57,3 +57,8 @@ WITH anonymized_rows AS (
 )
 INSERT INTO imha_kayitlari (adet, zaman)
 SELECT COUNT(*), now() FROM anonymized_rows;
+
+-- 9. Security Maintenance: Purge Expired Login Rate-Limit Entries
+DELETE FROM giris_denemeleri
+WHERE (kilit_bitis IS NOT NULL AND kilit_bitis < now())
+   OR son_deneme < now() - interval '15 minutes';
