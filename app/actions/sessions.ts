@@ -16,7 +16,6 @@ interface RawSessionRow {
 
 export async function getAdminSessionsData(): Promise<{
   sessions: AdminSession[];
-  currentToken?: string;
 }> {
   const admin = await requireAdmin();
   const cookieStore = await cookies();
@@ -34,7 +33,8 @@ export async function getAdminSessionsData(): Promise<{
     `) as unknown as RawSessionRow[];
 
     sessions = rows.map((row) => ({
-      token: row.token,
+      tokenPreview: `${row.token.substring(0, 12)}...`,
+      isCurrentDevice: Boolean(currentToken && row.token === currentToken),
       adminId: Number(row.yonetici_id),
       expiresAt: String(row.bitis),
       lastActiveAt: String(row.son_aktivite),
@@ -44,7 +44,7 @@ export async function getAdminSessionsData(): Promise<{
     console.error('Failed to load active sessions:', e);
   }
 
-  return { sessions, currentToken };
+  return { sessions };
 }
 
 function revalidateSessionPaths() {

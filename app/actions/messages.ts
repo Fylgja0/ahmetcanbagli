@@ -45,6 +45,8 @@ export async function getAdminMessagesData(): Promise<{
   messages: ContactMessage[];
   auditLogs: DeletionAuditLog[];
 }> {
+  await requireAdmin();
+
   let messages: ContactMessage[] = [];
   let auditLogs: DeletionAuditLog[] = [];
 

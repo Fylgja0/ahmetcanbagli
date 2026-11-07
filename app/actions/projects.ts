@@ -14,78 +14,17 @@ import { generateSlug } from '@/lib/utils';
 import { Project } from '@/types/portfolio';
 import { ProjectRecord } from '@/types/admin';
 
-let hasVerifiedProjectsTable = false;
-
-/**
- * Ensures the `projeler` table exists and seeds the initial portfolio projects if the table is empty.
- * Avoids running redundant DDL on subsequent requests within the same server instance.
- */
-export async function ensureDefaultProjectsSeeded(): Promise<void> {
-  if (hasVerifiedProjectsTable) return;
-
-  try {
-    await sql`
-      CREATE TABLE IF NOT EXISTS projeler (
-        id SERIAL PRIMARY KEY,
-        slug TEXT,
-        baslik TEXT NOT NULL,
-        kategori TEXT NOT NULL DEFAULT 'backend',
-        github_url TEXT,
-        canli_url TEXT,
-        teknolojiler TEXT,
-        aciklama TEXT NOT NULL,
-        detay TEXT,
-        one_cikan BOOLEAN NOT NULL DEFAULT true,
-        sira INT NOT NULL DEFAULT 0,
-        yayinda BOOLEAN NOT NULL DEFAULT true,
-        ek_bilgiler JSONB,
-        olusturma TIMESTAMPTZ NOT NULL DEFAULT now()
-      );
-    `;
-
-    const countRes = await sql`SELECT COUNT(*)::int AS toplam FROM projeler`;
-    const total = countRes[0]?.toplam || 0;
-
-    if (total === 0) {
-      for (let i = 0; i < FEATURED_PROJECTS.length; i++) {
-        const p = FEATURED_PROJECTS[i];
-        const techStr = p.technologies.join(', ');
-        const summary = p.tagline.tr || p.tagline.en;
-        const details = p.overview.tr || p.overview.en;
-
-        await sql`
-          INSERT INTO projeler (slug, baslik, kategori, github_url, canli_url, teknolojiler, aciklama, detay, one_cikan, sira, yayinda)
-          VALUES (${p.slug}, ${p.title}, ${p.category}, ${p.githubUrl}, ${p.liveUrl || null}, ${techStr}, ${summary}, ${details}, true, ${i + 1}, true)
-        `;
-      }
-    }
-
-    hasVerifiedProjectsTable = true;
-  } catch (e) {
-    console.error('ensureDefaultProjectsSeeded error:', e);
-  }
-}
-
 /**
  * Returns live published projects for `/projects` and the home page.
  * Falls back to static `FEATURED_PROJECTS` if the database is unreachable.
  */
 export async function getLiveProjects(): Promise<Project[]> {
   try {
-    let rows = (await sql`
+    const rows = (await sql`
       SELECT * FROM projeler
       WHERE yayinda = true
       ORDER BY one_cikan DESC, sira ASC, id ASC
     `) as unknown as DbProjectRow[];
-
-    if (rows.length === 0 && !hasVerifiedProjectsTable) {
-      await ensureDefaultProjectsSeeded();
-      rows = (await sql`
-        SELECT * FROM projeler
-        WHERE yayinda = true
-        ORDER BY one_cikan DESC, sira ASC, id ASC
-      `) as unknown as DbProjectRow[];
-    }
 
     return rows.map(mapRowToProject);
   } catch (e) {
@@ -101,9 +40,9 @@ export async function getAdminProjectsData(editId: number | null): Promise<{
   projects: ProjectRecord[];
   editingProject: ProjectRecord | null;
 }> {
-  try {
-    await ensureDefaultProjectsSeeded();
+  await requireAdmin();
 
+  try {
     const rows = (await sql`
       SELECT * FROM projeler
       ORDER BY sira ASC, id ASC

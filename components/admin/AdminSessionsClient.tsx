@@ -19,7 +19,6 @@ import { getLocaleFromLanguage } from '@/lib/utils';
 
 interface AdminSessionsClientProps {
   sessions: AdminSession[];
-  currentToken?: string;
   onPurgeExpired: () => Promise<void>;
   onRevokeOthers: () => Promise<void>;
 }
@@ -45,7 +44,6 @@ function getDeviceIcon(ua: string | null = '') {
 
 export function AdminSessionsClient({
   sessions,
-  currentToken,
   onPurgeExpired,
   onRevokeOthers,
 }: AdminSessionsClientProps) {
@@ -143,11 +141,11 @@ export function AdminSessionsClient({
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {sessions.map((session) => {
-                const isCurrentDevice = session.token === currentToken;
+              {sessions.map((session, index) => {
+                const { isCurrentDevice } = session;
                 return (
                   <tr
-                    key={session.token}
+                    key={`${session.tokenPreview}-${index}`}
                     className={`transition-colors ${
                       isCurrentDevice
                         ? 'bg-emerald-500/10'
@@ -164,7 +162,7 @@ export function AdminSessionsClient({
                             {session.userAgent || t.sessions.unknownClient}
                           </span>
                           <span className="text-[10px] text-white/40 font-mono">
-                            Token: {session.token.substring(0, 12)}...
+                            Token: {session.tokenPreview}
                           </span>
                         </div>
                       </div>

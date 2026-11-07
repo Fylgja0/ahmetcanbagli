@@ -1,3 +1,4 @@
+import 'server-only';
 import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
 
 let cachedClient: NeonQueryFunction<false, false> | null = null;

@@ -92,6 +92,8 @@ export async function getAdminAwardsData(editId: number | null): Promise<{
   categories: AwardCategory[];
   editingAward: AwardRecord | null;
 }> {
+  await requireAdmin();
+
   try {
     const [awardRows, categoryRows] = await Promise.all([
       sql`

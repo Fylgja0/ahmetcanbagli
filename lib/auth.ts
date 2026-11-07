@@ -1,3 +1,4 @@
+import 'server-only';
 import { sql } from './db';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';

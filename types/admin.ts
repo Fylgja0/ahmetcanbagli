@@ -38,7 +38,8 @@ export interface DeletionAuditLog {
 }
 
 export interface AdminSession {
-  token: string;
+  tokenPreview: string;
+  isCurrentDevice: boolean;
   adminId: number;
   expiresAt: string;
   lastActiveAt: string;
