@@ -76,7 +76,10 @@ export function HomeFeaturedTeaser({ initialProjects }: HomeFeaturedTeaserProps)
 
         {/* Featured Project Teaser Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 pt-6 border-t border-white/10">
-          {projects.slice(0, 3).map((proj) => (
+          {projects
+            .filter((proj) => proj.isFeatured !== false)
+            .slice(0, 3)
+            .map((proj) => (
             <div
               key={proj.id}
               className="p-4 rounded-xl border border-white/10 bg-[var(--theme-surface)] flex flex-col justify-between"

@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   PlusCircle,
   Edit3,
@@ -14,19 +15,39 @@ import {
   FolderGit2,
   X,
   Layers,
+  AlertTriangle,
+  CheckCircle2,
+  ArrowRightLeft,
 } from 'lucide-react';
 import { usePortfolio } from '@/context/portfolio-context';
 import { adminTranslations } from '@/lib/admin-translations';
-import { ProjectRecord } from '@/types/admin';
+import {
+  FeaturedProjectOption,
+  MAX_FEATURED_PROJECTS,
+  ProjectMutationResult,
+  ProjectRecord,
+} from '@/types/admin';
 
 interface AdminProjectsClientProps {
   projects: ProjectRecord[];
   editingProject: ProjectRecord | null;
-  onAdd: (formData: FormData) => Promise<void>;
-  onUpdate: (formData: FormData) => Promise<void>;
+  onAdd: (formData: FormData) => Promise<ProjectMutationResult>;
+  onUpdate: (formData: FormData) => Promise<ProjectMutationResult>;
   onTogglePublish: (formData: FormData) => Promise<void>;
-  onToggleFeatured: (formData: FormData) => Promise<void>;
+  onToggleFeatured: (formData: FormData) => Promise<ProjectMutationResult>;
   onDelete: (formData: FormData) => Promise<void>;
+}
+
+interface PendingFeaturedOperation {
+  type: 'create' | 'update' | 'toggle';
+  formData: FormData;
+  candidateTitle: string;
+  excludeId?: number;
+}
+
+interface StatusBanner {
+  type: 'success' | 'error';
+  message: string;
 }
 
 export function AdminProjectsClient({
@@ -40,6 +61,57 @@ export function AdminProjectsClient({
 }: AdminProjectsClientProps) {
   const { language } = usePortfolio();
   const t = adminTranslations[language] || adminTranslations.en;
+  const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusBanner, setStatusBanner] = useState<StatusBanner | null>(null);
+  const [pendingOperation, setPendingOperation] =
+    useState<PendingFeaturedOperation | null>(null);
+  const [featuredModalOptions, setFeaturedModalOptions] = useState<
+    FeaturedProjectOption[]
+  >([]);
+  const [selectedReplaceId, setSelectedReplaceId] = useState<number | null>(
+    null
+  );
+  const [modalError, setModalError] = useState<string | null>(null);
+
+  // Featured projects sorted in the exact same order as the homepage (`ORDER BY sira ASC, id ASC`)
+  const currentFeaturedProjects = useMemo<FeaturedProjectOption[]>(() => {
+    return [...projects]
+      .filter((p) => p.isFeatured)
+      .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)
+      .map((p) => ({
+        id: p.id,
+        title: p.title,
+        category: p.category,
+        summary: p.summary,
+        technologies: p.technologies,
+        sortOrder: p.sortOrder,
+        isPublished: p.isPublished,
+      }));
+  }, [projects]);
+
+  useEffect(() => {
+    if (!statusBanner) return;
+    const timer = window.setTimeout(() => {
+      setStatusBanner(null);
+    }, 6000);
+    return () => window.clearTimeout(timer);
+  }, [statusBanner]);
+
+  useEffect(() => {
+    if (!pendingOperation) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !isSubmitting) {
+        setPendingOperation(null);
+        setSelectedReplaceId(null);
+        setModalError(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [pendingOperation, isSubmitting]);
 
   const getCategoryName = (cat: string) => {
     switch (cat) {
@@ -56,6 +128,198 @@ export function AdminProjectsClient({
     }
   };
 
+  const openReplacementModal = (
+    operation: PendingFeaturedOperation,
+    options: FeaturedProjectOption[],
+    customError?: string | null
+  ) => {
+    setFeaturedModalOptions(options);
+    setPendingOperation(operation);
+    setSelectedReplaceId(null);
+    setModalError(customError ?? null);
+  };
+
+  const closeReplacementModal = () => {
+    if (isSubmitting) return;
+    setPendingOperation(null);
+    setSelectedReplaceId(null);
+    setModalError(null);
+  };
+
+  const executeProjectMutation = async (
+    operation: PendingFeaturedOperation,
+    replaceFeaturedId?: number
+  ) => {
+    const payload = new FormData();
+    operation.formData.forEach((value, key) => {
+      if (key !== 'replaceFeaturedId') {
+        payload.append(key, value);
+      }
+    });
+
+    if (replaceFeaturedId) {
+      payload.set('replaceFeaturedId', String(replaceFeaturedId));
+    }
+
+    setIsSubmitting(true);
+    setModalError(null);
+
+    try {
+      let result: ProjectMutationResult;
+      if (operation.type === 'create') {
+        result = await onAdd(payload);
+      } else if (operation.type === 'update') {
+        result = await onUpdate(payload);
+      } else {
+        result = await onToggleFeatured(payload);
+      }
+
+      if (result.status === 'limit_reached') {
+        const options =
+          result.featuredProjects && result.featuredProjects.length > 0
+            ? result.featuredProjects
+            : currentFeaturedProjects.filter(
+                (item) => item.id !== operation.excludeId
+              );
+        openReplacementModal(
+          operation,
+          options,
+          replaceFeaturedId ? (result.message ?? null) : null
+        );
+        return;
+      }
+
+      if (result.status === 'error') {
+        if (pendingOperation) {
+          setModalError(
+            result.message || 'İşlem sırasında bir hata meydana geldi.'
+          );
+        } else {
+          setStatusBanner({
+            type: 'error',
+            message:
+              result.message || 'İşlem sırasında bir hata meydana geldi.',
+          });
+        }
+        return;
+      }
+
+      // Success
+      setPendingOperation(null);
+      setSelectedReplaceId(null);
+      setModalError(null);
+      setStatusBanner({
+        type: 'success',
+        message: result.message || 'İşlem başarıyla tamamlandı.',
+      });
+
+      if (operation.type === 'create') {
+        formRef.current?.reset();
+        router.refresh();
+      } else if (operation.type === 'update') {
+        router.push('/admin/projects');
+        router.refresh();
+      } else {
+        router.refresh();
+      }
+    } catch {
+      const fallbackMsg =
+        'İşlem sırasında beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.';
+      if (pendingOperation) {
+        setModalError(fallbackMsg);
+      } else {
+        setStatusBanner({
+          type: 'error',
+          message: fallbackMsg,
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+
+    const formData = new FormData(event.currentTarget);
+    const title = formData.get('title')?.toString().trim() || 'Yeni Proje';
+    const wantsFeatured =
+      formData.get('isFeatured') === 'on' ||
+      formData.get('isFeatured') === 'true';
+
+    const operation: PendingFeaturedOperation = {
+      type: editingProject ? 'update' : 'create',
+      formData,
+      candidateTitle: title,
+      excludeId: editingProject?.id,
+    };
+
+    // Editing an already-Featured project or saving a non-Featured project never triggers the replacement modal
+    const isAlreadyFeaturedEdit = Boolean(editingProject?.isFeatured);
+
+    if (wantsFeatured && !isAlreadyFeaturedEdit) {
+      const otherFeatured = currentFeaturedProjects.filter(
+        (p) => p.id !== editingProject?.id
+      );
+
+      if (otherFeatured.length >= MAX_FEATURED_PROJECTS) {
+        openReplacementModal(
+          operation,
+          otherFeatured.slice(0, MAX_FEATURED_PROJECTS)
+        );
+        return;
+      }
+    }
+
+    await executeProjectMutation(operation);
+  };
+
+  const handleToggleFeaturedSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+    project: ProjectRecord
+  ) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+
+    const formData = new FormData(event.currentTarget);
+    const operation: PendingFeaturedOperation = {
+      type: 'toggle',
+      formData,
+      candidateTitle: project.title,
+      excludeId: project.id,
+    };
+
+    // Unfeaturing a currently Featured project is always allowed directly
+    if (!project.isFeatured) {
+      const otherFeatured = currentFeaturedProjects.filter(
+        (p) => p.id !== project.id
+      );
+
+      if (otherFeatured.length >= MAX_FEATURED_PROJECTS) {
+        openReplacementModal(
+          operation,
+          otherFeatured.slice(0, MAX_FEATURED_PROJECTS)
+        );
+        return;
+      }
+    }
+
+    await executeProjectMutation(operation);
+  };
+
+  const handleConfirmReplacement = async () => {
+    if (!pendingOperation || !selectedReplaceId || isSubmitting) return;
+    await executeProjectMutation(pendingOperation, selectedReplaceId);
+  };
+
+  const selectedReplaceProject = useMemo(
+    () =>
+      featuredModalOptions.find((item) => item.id === selectedReplaceId) ??
+      null,
+    [featuredModalOptions, selectedReplaceId]
+  );
+
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -69,10 +333,50 @@ export function AdminProjectsClient({
           </p>
         </div>
 
-        <div className="text-xs font-mono px-3.5 py-2 rounded-xl bg-[var(--theme-surface)] border border-[var(--theme-border)] text-white/70">
-          {t.projects.totalCount(projects.length)}
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="text-xs font-mono px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-center gap-1.5">
+            <Star className="w-3.5 h-3.5 fill-current" />
+            <span>
+              Öne Çıkan: {currentFeaturedProjects.length} /{' '}
+              {MAX_FEATURED_PROJECTS}
+            </span>
+          </div>
+
+          <div className="text-xs font-mono px-3.5 py-2 rounded-xl bg-[var(--theme-surface)] border border-[var(--theme-border)] text-white/70">
+            {t.projects.totalCount(projects.length)}
+          </div>
         </div>
       </div>
+
+      {/* Status Notification Banner */}
+      {statusBanner && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`flex items-center justify-between gap-3 px-4 py-3 rounded-xl border font-mono text-xs transition-all shadow-lg ${
+            statusBanner.type === 'success'
+              ? 'bg-emerald-950/60 border-emerald-500/40 text-emerald-200'
+              : 'bg-red-950/60 border-red-500/40 text-red-200'
+          }`}
+        >
+          <div className="flex items-center gap-2.5">
+            {statusBanner.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            ) : (
+              <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+            )}
+            <span>{statusBanner.message}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setStatusBanner(null)}
+            className="p-1 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+            aria-label="Bildirimi kapat"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
 
       {/* Create or Edit Project Form */}
       <div
@@ -109,7 +413,9 @@ export function AdminProjectsClient({
         </div>
 
         <form
-          action={editingProject ? onUpdate : onAdd}
+          key={editingProject ? `edit-${editingProject.id}` : 'create'}
+          ref={formRef}
+          onSubmit={handleFormSubmit}
           className="space-y-4 font-mono text-xs"
         >
           {editingProject && (
@@ -259,13 +565,18 @@ export function AdminProjectsClient({
                   {t.projects.form.featuredLabel}
                 </span>
               </label>
+              <p className="text-[11px] text-white/45 mt-1">
+                Ana sayfada en fazla {MAX_FEATURED_PROJECTS} proje öne
+                çıkarılabilir.
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3 pt-2">
             <button
               type="submit"
-              className={`px-5 py-2.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shadow-lg ${
+              disabled={isSubmitting}
+              className={`px-5 py-2.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer shadow-lg disabled:opacity-50 ${
                 editingProject
                   ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
                   : 'bg-[var(--theme-accent)] hover:opacity-90 text-black'
@@ -387,7 +698,10 @@ export function AdminProjectsClient({
                     </td>
                     <td className="p-3.5 text-center">
                       {/* Featured Toggle */}
-                      <form action={onToggleFeatured} className="inline-block">
+                      <form
+                        onSubmit={(e) => handleToggleFeaturedSubmit(e, project)}
+                        className="inline-block"
+                      >
                         <input type="hidden" name="id" value={project.id} />
                         <input
                           type="hidden"
@@ -396,12 +710,13 @@ export function AdminProjectsClient({
                         />
                         <button
                           type="submit"
+                          disabled={isSubmitting}
                           title={
                             project.isFeatured
                               ? t.projects.table.featureRemove
                               : t.projects.table.featureAdd
                           }
-                          className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
+                          className={`p-1.5 rounded-lg border transition-all cursor-pointer disabled:opacity-50 ${
                             project.isFeatured
                               ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                               : 'bg-[var(--theme-surface)] text-white/30 border-white/10'
@@ -478,6 +793,176 @@ export function AdminProjectsClient({
           </table>
         </div>
       </div>
+
+      {/* Featured Project Replacement Modal */}
+      {pendingOperation && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="featured-replace-modal-title"
+          onClick={closeReplacementModal}
+        >
+          <div
+            className="w-full max-w-xl rounded-2xl bg-[var(--theme-card)] border border-[var(--theme-border)] shadow-2xl overflow-hidden font-mono"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="p-5 sm:p-6 border-b border-white/10 flex items-start justify-between gap-4 bg-[var(--theme-surface)]/50">
+              <div className="space-y-1.5">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-300 text-[11px] font-bold">
+                  <Star className="w-3.5 h-3.5 fill-current" />
+                  <span>
+                    Öne Çıkan Proje Sınırı (Maksimum {MAX_FEATURED_PROJECTS})
+                  </span>
+                </div>
+                <h3
+                  id="featured-replace-modal-title"
+                  className="text-base sm:text-lg font-bold text-white flex items-center gap-2"
+                >
+                  <ArrowRightLeft className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>Vitrin Projesi Değiştir</span>
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={closeReplacementModal}
+                disabled={isSubmitting}
+                className="p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer disabled:opacity-50"
+                aria-label="Kapat"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 sm:p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+              <p className="text-xs text-white/75 leading-relaxed font-sans">
+                Ana sayfada aynı anda en fazla{' '}
+                <strong className="text-white">
+                  {MAX_FEATURED_PROJECTS} proje
+                </strong>{' '}
+                öne çıkarılabilir.{' '}
+                <strong className="text-emerald-300">
+                  &ldquo;{pendingOperation.candidateTitle}&rdquo;
+                </strong>{' '}
+                projesini vitrine eklemek için aşağıda ana sayfa sırasıyla
+                listelenen mevcut vitrin projelerinden hangisinin yerini
+                alacağını seçin:
+              </p>
+
+              {modalError && (
+                <div className="p-3 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 text-xs flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                  <span>{modalError}</span>
+                </div>
+              )}
+
+              <div className="space-y-2.5">
+                {featuredModalOptions.map((option, index) => {
+                  const isSelected = selectedReplaceId === option.id;
+                  return (
+                    <label
+                      key={option.id}
+                      onClick={() => setSelectedReplaceId(option.id)}
+                      className={`block p-3.5 rounded-xl border transition-all cursor-pointer select-none ${
+                        isSelected
+                          ? 'bg-emerald-500/15 border-emerald-400 shadow-md'
+                          : 'bg-[var(--theme-surface)]/80 border-white/10 hover:border-white/30 hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="radio"
+                          name="replaceFeaturedSelection"
+                           value={option.id}
+                          checked={isSelected}
+                          onChange={() => setSelectedReplaceId(option.id)}
+                          className="mt-1 h-4 w-4 text-emerald-500 border-white/30 bg-slate-900 focus:ring-emerald-400 cursor-pointer"
+                        />
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="inline-flex items-center px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold shrink-0">
+                                {index + 1}. Vitrin Slotu
+                              </span>
+                              <span className="text-xs font-bold text-white truncate">
+                                {option.title}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-white/70">
+                                {getCategoryName(option.category)}
+                              </span>
+                              <span className="text-[10px] text-white/40">
+                                Sıra: {option.sortOrder}
+                              </span>
+                            </div>
+                          </div>
+
+                          <p className="text-xs text-white/60 font-sans mt-1.5 line-clamp-2">
+                            {option.summary}
+                          </p>
+
+                          {option.technologies && (
+                            <p className="text-[11px] text-emerald-300/80 mt-1.5 truncate">
+                              {option.technologies}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+
+              {selectedReplaceProject && (
+                <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-xs text-emerald-100 font-sans leading-relaxed">
+                  <strong className="text-emerald-300 font-mono">
+                    Değişim Özeti:
+                  </strong>{' '}
+                  <strong>&ldquo;{selectedReplaceProject.title}&rdquo;</strong>{' '}
+                  projesinin öne çıkarılma durumu kaldırılacak (proje silinmez)
+                  ve yerine{' '}
+                  <strong>
+                    &ldquo;{pendingOperation.candidateTitle}&rdquo;
+                  </strong>{' '}
+                  projesi vitrine eklenecektir.
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 sm:p-5 border-t border-white/10 bg-[var(--theme-surface)]/40 flex flex-wrap items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={closeReplacementModal}
+                disabled={isSubmitting}
+                className="px-4 py-2 rounded-lg text-xs font-mono font-medium bg-[var(--theme-surface)] hover:bg-white/10 text-white/80 border border-white/10 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                İptal
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirmReplacement}
+                disabled={!selectedReplaceId || isSubmitting}
+                className="px-5 py-2 rounded-lg text-xs font-mono font-bold bg-emerald-500 hover:bg-emerald-400 text-black transition-all cursor-pointer shadow-lg disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <ArrowRightLeft className="w-3.5 h-3.5" />
+                <span>
+                  {isSubmitting
+                    ? 'Değiştiriliyor...'
+                    : 'Seçilen Projeyle Değiştir'}
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

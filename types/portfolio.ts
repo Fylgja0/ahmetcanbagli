@@ -38,6 +38,7 @@ export interface Project {
   engineeringInsights: Record<LanguageId, string[]>;
   futureRoadmap: Record<LanguageId, string[]>;
   highlights: Record<LanguageId, ProjectHighlight[]>;
+  isFeatured?: boolean;
 }
 
 export interface AwardRecord {

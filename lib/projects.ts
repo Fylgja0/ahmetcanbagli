@@ -80,6 +80,7 @@ export function mapRowToProject(row: DbProjectRow): Project {
       githubUrl: row.github_url || staticProj.githubUrl,
       liveUrl: row.canli_url || undefined,
       technologies: techArray.length > 0 ? techArray : staticProj.technologies,
+      isFeatured: Boolean(row.one_cikan),
       tagline: {
         ...staticProj.tagline,
         tr: row.aciklama || staticProj.tagline.tr,
@@ -162,6 +163,7 @@ export function mapRowToProject(row: DbProjectRow): Project {
     githubUrl: row.github_url || '',
     liveUrl: row.canli_url || undefined,
     technologies: techArray,
+    isFeatured: Boolean(row.one_cikan),
     tagline: { tr: desc, en: desc, de: desc, ru: desc },
     overview: { tr: details, en: details, de: details, ru: details },
     highlights: {

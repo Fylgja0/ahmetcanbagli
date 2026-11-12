@@ -26,6 +26,25 @@ export interface ProjectRecord {
   createdAt: string;
 }
 
+export const MAX_FEATURED_PROJECTS = 3;
+
+export interface FeaturedProjectOption {
+  id: number;
+  title: string;
+  category: ProjectCategory;
+  summary: string;
+  technologies: string | null;
+  sortOrder: number;
+  isPublished: boolean;
+}
+
+export interface ProjectMutationResult {
+  status: 'success' | 'limit_reached' | 'error';
+  message?: string;
+  featuredProjects?: FeaturedProjectOption[];
+  replacedProjectId?: number;
+}
+
 export interface ContactMessage {
   id: number;
   fullName: string;
