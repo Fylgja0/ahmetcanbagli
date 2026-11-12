@@ -96,3 +96,14 @@ CREATE INDEX IF NOT EXISTS idx_giris_denemeleri_kilit_bitis
 
 CREATE INDEX IF NOT EXISTS idx_giris_denemeleri_son_deneme
   ON giris_denemeleri (son_deneme);
+
+-- 10. Contact Form Rate Limiting Table (Spam & Abuse Protection)
+CREATE TABLE IF NOT EXISTS iletisim_limitleri (
+  anahtar TEXT PRIMARY KEY,
+  gonderim_sayisi INT NOT NULL DEFAULT 1,
+  pencere_baslangic TIMESTAMPTZ NOT NULL DEFAULT now(),
+  son_gonderim TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_iletisim_limitleri_pencere_baslangic
+  ON iletisim_limitleri (pencere_baslangic);

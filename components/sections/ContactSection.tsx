@@ -24,6 +24,7 @@ interface ContactFormData {
   email: string;
   subject: string;
   message: string;
+  website: string;
 }
 
 export function ContactSection() {
@@ -40,6 +41,7 @@ export function ContactSection() {
     email: '',
     subject: '',
     message: '',
+    website: '',
   });
 
   const [consentGiven, setConsentGiven] = useState(false);
@@ -104,13 +106,16 @@ export function ContactSection() {
   const validate = (): boolean => {
     const errors: Partial<Record<keyof ContactFormData | 'consent', string>> =
       {};
-    if (!formData.name.trim()) {
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
       errors.name = t.contact.validationNameRequired;
     }
     if (!formData.email.trim()) {
       errors.email = t.contact.validationEmailRequired;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       errors.email = t.contact.validationEmailInvalid;
+    }
+    if (formData.subject.replace(/[\r\n\0]+/g, ' ').trim().length > 150) {
+      errors.subject = t.contact.validationSubjectTooLong;
     }
     if (!formData.message.trim() || formData.message.trim().length < 5) {
       errors.message = t.contact.validationMessageRequired;
@@ -120,6 +125,28 @@ export function ContactSection() {
     }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
+  };
+
+  const getServerErrorMessage = (status: ContactActionResult): string => {
+    switch (status.errorCode) {
+      case 'rate_limited':
+        return t.contact.rateLimitError;
+      case 'validation_name':
+        return t.contact.validationNameRequired;
+      case 'validation_email':
+        return t.contact.validationEmailInvalid;
+      case 'validation_subject':
+        return t.contact.validationSubjectTooLong;
+      case 'validation_message':
+        return t.contact.validationMessageRequired;
+      case 'validation_consent':
+        return t.contact.kvkkRequired;
+      case 'validation_required':
+      case 'server_error':
+        return t.contact.submitError;
+      default:
+        return status.error || t.contact.submitError;
+    }
   };
 
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
@@ -140,23 +167,32 @@ export function ContactSection() {
       const data = new FormData();
       data.append('name', formData.name.trim());
       data.append('email', formData.email.trim());
+      data.append('subject', formData.subject.trim());
       const fullMessage = formData.subject.trim()
         ? `[${t.contact.copyPrefixSubject}: ${formData.subject.trim()}]\n\n${formData.message.trim()}`
         : formData.message.trim();
       data.append('message', fullMessage);
       data.append('consent', consentGiven ? 'true' : 'false');
+      data.append('website', formData.website);
 
       const res = await sendMessageAction(null, data);
       setServerStatus(res);
 
       if (res.success) {
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          website: '',
+        });
         setConsentGiven(false);
       }
     } catch (err) {
       console.error(err);
       setServerStatus({
         success: false,
+        errorCode: 'server_error',
         error: t.contact.submitError,
       });
     } finally {
@@ -428,7 +464,24 @@ export function ContactSection() {
               </p>
             </div>
 
-            <div className="space-y-4 font-mono-code text-xs">
+            <div className="relative space-y-4 font-mono-code text-xs">
+              {/* Honeypot field for automated spam bot detection (hidden from human users and assistive tech) */}
+              <div
+                aria-hidden="true"
+                className="absolute -left-[9999px] top-auto w-px h-px overflow-hidden opacity-0 pointer-events-none"
+              >
+                <label htmlFor="contact-website">Website</label>
+                <input
+                  id="contact-website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website}
+                  onChange={(e) => handleInputChange('website', e.target.value)}
+                />
+              </div>
+
               {/* Name & Email Row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
@@ -511,8 +564,21 @@ export function ContactSection() {
                   value={formData.subject}
                   onChange={(e) => handleInputChange('subject', e.target.value)}
                   placeholder={t.contact.subjectPlaceholder}
-                  className="w-full px-3.5 py-2.5 rounded bg-[var(--theme-surface)] border border-[var(--theme-border)] text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[var(--theme-accent)] transition-colors"
+                  className={`w-full px-3.5 py-2.5 rounded bg-[var(--theme-surface)] border text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[var(--theme-accent)] transition-colors ${
+                    formErrors.subject
+                      ? 'border-red-500/80 focus:ring-red-500'
+                      : 'border-[var(--theme-border)]'
+                  }`}
                 />
+                {formErrors.subject && (
+                  <div className="flex items-center gap-1 text-[11px] text-red-400">
+                    <AlertCircle
+                      className="w-3 h-3 shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span>{formErrors.subject}</span>
+                  </div>
+                )}
               </div>
 
               {/* Message */}
@@ -599,7 +665,7 @@ export function ContactSection() {
                   <span>
                     {serverStatus.success
                       ? t.contact.submitSuccess
-                      : serverStatus.error || t.contact.submitError}
+                      : getServerErrorMessage(serverStatus)}
                   </span>
                 </div>
               )}

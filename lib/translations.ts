@@ -159,6 +159,7 @@ export interface UiTranslations {
     validationNameRequired: string;
     validationEmailRequired: string;
     validationEmailInvalid: string;
+    validationSubjectTooLong: string;
     validationMessageRequired: string;
     fallbackHelp: string;
     oneClickMail: string;
@@ -183,6 +184,7 @@ export interface UiTranslations {
     kvkkRequired: string;
     submitSuccess: string;
     submitError: string;
+    rateLimitError: string;
     alternativeMailClient: string;
   };
   awardsTeaser: {
@@ -394,6 +396,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       validationNameRequired: 'Lütfen adınızı girin.',
       validationEmailRequired: 'Lütfen e-posta adresinizi girin.',
       validationEmailInvalid: 'Geçerli bir e-posta formatı girin.',
+      validationSubjectTooLong: 'Konu başlığı en fazla 150 karakter olabilir.',
       validationMessageRequired: 'Lütfen en az 10 karakterden oluşan bir mesaj yazın.',
       fallbackHelp: 'Form doldurmak istemiyorsanız, doğrudan aşağıdaki bağlantılardan birine tıklayarak e-posta uygulamanızda boş bir taslak açabilirsiniz:',
       oneClickMail: 'Formsuz Hızlı E-Posta Başlatıcı',
@@ -418,6 +421,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Lütfen KVKK Aydınlatma Metnini onaylayınız.',
       submitSuccess: 'Mesajınız başarıyla veritabanına kaydedildi. En kısa sürede geri dönüş yapılacaktır.',
       submitError: 'Mesaj iletilirken bir hata meydana geldi.',
+      rateLimitError: 'Çok fazla mesaj gönderim denemesi yaptınız. Lütfen birkaç dakika bekleyip tekrar deneyin.',
       alternativeMailClient: 'Alternatif: Doğrudan E-Posta İstemcisiyle Gönder',
     },
     awardsTeaser: {
@@ -631,6 +635,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       validationNameRequired: 'Please provide your name.',
       validationEmailRequired: 'Please provide your email address.',
       validationEmailInvalid: 'Please provide a valid email format.',
+      validationSubjectTooLong: 'Subject cannot exceed 150 characters.',
       validationMessageRequired: 'Message must contain at least 10 characters.',
       fallbackHelp: 'Prefer not to fill out the form? Click any link below to launch a blank draft addressed directly to Ahmetcan in your preferred email client:',
       oneClickMail: 'Quick 1-Click Mail Launchers',
@@ -655,6 +660,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Please accept the Data Privacy notice.',
       submitSuccess: 'Your message has been successfully saved to the database. We will get back to you shortly.',
       submitError: 'An error occurred while transmitting your message.',
+      rateLimitError: 'Too many message submissions. Please wait a few minutes and try again.',
       alternativeMailClient: 'Alternative: Send Directly via Email Client',
     },
     awardsTeaser: {
@@ -868,6 +874,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       validationNameRequired: 'Bitte geben Sie Ihren Namen an.',
       validationEmailRequired: 'Bitte geben Sie Ihre E-Mail-Adresse an.',
       validationEmailInvalid: 'Bitte geben Sie eine gültige E-Mail-Adresse an.',
+      validationSubjectTooLong: 'Der Betreff darf maximal 150 Zeichen lang sein.',
       validationMessageRequired: 'Die Nachricht muss mindestens 10 Zeichen lang sein.',
       fallbackHelp: 'Möchten Sie das Formular nicht ausfüllen? Klicken Sie unten, um direkt einen Entwurf in Ihrem E-Mail-Programm zu öffnen:',
       oneClickMail: '1-Klick Direkt-Mail-Start',
@@ -892,6 +899,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Bitte stimmen Sie den Datenschutzbestimmungen zu.',
       submitSuccess: 'Ihre Nachricht wurde erfolgreich in der Datenbank gespeichert. Wir melden uns in Kürze.',
       submitError: 'Beim Übermitteln Ihrer Nachricht ist ein Fehler aufgetreten.',
+      rateLimitError: 'Zu viele Nachrichten gesendet. Bitte warten Sie einige Minuten und versuchen Sie es erneut.',
       alternativeMailClient: 'Alternative: Direkt über E-Mail-Client senden',
     },
     awardsTeaser: {
@@ -1105,6 +1113,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       validationNameRequired: 'Пожалуйста, укажите ваше имя.',
       validationEmailRequired: 'Пожалуйста, укажите адрес электронной почты.',
       validationEmailInvalid: 'Укажите корректный формат e-mail.',
+      validationSubjectTooLong: 'Тема сообщения не может превышать 150 символов.',
       validationMessageRequired: 'Сообщение должно содержать не менее 10 символов.',
       fallbackHelp: 'Не хотите заполнять форму? Нажмите любую ссылку ниже, чтобы сразу открыть черновик в вашей почтовой службе:',
       oneClickMail: 'Быстрый запуск почты без формы',
@@ -1129,6 +1138,7 @@ export const translations: Record<LanguageId, UiTranslations> = {
       kvkkRequired: 'Пожалуйста, подтвердите согласие на обработку персональных данных.',
       submitSuccess: 'Ваше сообщение успешно сохранено в базе данных. Мы свяжемся с вами в ближайшее время.',
       submitError: 'Произошла ошибка при отправке сообщения.',
+      rateLimitError: 'Слишком много попыток отправки сообщений. Пожалуйста, подождите несколько минут и попробуйте снова.',
       alternativeMailClient: 'Альтернатива: Отправить напрямую через почтовый клиент',
     },
     awardsTeaser: {

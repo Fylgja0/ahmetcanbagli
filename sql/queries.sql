@@ -62,3 +62,7 @@ SELECT COUNT(*), now() FROM anonymized_rows;
 DELETE FROM giris_denemeleri
 WHERE (kilit_bitis IS NOT NULL AND kilit_bitis < now())
    OR son_deneme < now() - interval '15 minutes';
+
+-- 10. Security Maintenance: Purge Expired Contact Form Rate-Limit Entries
+DELETE FROM iletisim_limitleri
+WHERE pencere_baslangic < now() - interval '10 minutes';
